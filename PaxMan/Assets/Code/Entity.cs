@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-    // Start is called before the first frame update
+    /*
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -24,5 +23,6 @@ public class Entity : MonoBehaviour
     public void SetPosition(Vector2 position)
     {
         transform.position = position;
-    }
+    }*/
+
 }

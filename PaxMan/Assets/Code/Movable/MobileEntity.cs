@@ -2,7 +2,7 @@
 
 public class MobileEntity : Entity
 {
-    public enum MovementDirection : int
+   /* public enum MovementDirection : int
     {
         Up = 0,
         Down = 1,
@@ -68,5 +68,5 @@ public class MobileEntity : Entity
         currentTileY = (int)respawnLocation.y / 22;
         nextTileX = currentTileX;
         nextTileY = currentTileY;
-    }
+    }*/
 }

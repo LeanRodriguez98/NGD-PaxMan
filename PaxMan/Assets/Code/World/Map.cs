@@ -6,10 +6,19 @@ using UnityEngine;
 
 public class Map : MonoBehaviour
 {
+   /* [System.Serializable]
+    public struct PathmapTile
+    {
+        public Vector2Int position;
+        public bool blocking;
+        public bool visited;
+    }
+
+
     public GameObject SmallDotPrefab;
     public GameObject LargeDotPrefab;
 
-    public int dotCount = 0;
+    private int dotCount = 0;
     public int DotCount { get { return dotCount; } }
 
     public List<SmallDot> smallDots = new List<SmallDot>();
@@ -21,8 +30,26 @@ public class Map : MonoBehaviour
     void Start()
     {
         InitPathmap();
-        InitDots();
-        initBigDots();
+        //InitDots();
+        //initBigDots();
+    }
+
+    private void OnDrawGizmos()
+    {
+        
+        foreach (PathmapTile tile in tiles)
+        {
+            if (tile.blocking)
+            {
+                Gizmos.color = Color.red;
+            }
+            else
+            {
+                Gizmos.color = Color.blue;
+            }
+
+            Gizmos.DrawWireSphere(new Vector3(tile.position.x, tile.position.y, 0.0f), 0.1f);
+        }
     }
 
     // Update is called once per frame
@@ -40,16 +67,16 @@ public class Map : MonoBehaviour
             for (int x = 0; x < line.Length; x++)
             {
                 PathmapTile tile = new PathmapTile();
-                tile.posX = x;
-                tile.posY = y;
-                tile.blocking = line[x] == 'x';
+                tile.position.x = x ;
+                tile.position.y = y ;
+                tile.blocking = (line[x] == 'x');
                 tiles.Add(tile);
             }
         }
         return true;
     }
 
-    public bool InitDots()
+    /*public bool InitDots()
     {
         string[] lines = System.IO.File.ReadAllLines("Assets/Data/map.txt");
         for (int y = 0; y < lines.Length; y++)
@@ -202,6 +229,6 @@ public class Map : MonoBehaviour
     bool HasIntersectedCherry(Vector2 aPosition)
     {
         return true;
-    }
+    }*/
 }
 

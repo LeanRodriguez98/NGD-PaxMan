@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Game : MonoBehaviour
 {
-    public GameObject PacManPrefab;
+   /* public GameObject PacManPrefab;
     public GameObject GhostPrefab;
 
     public Map Map;
@@ -165,5 +165,5 @@ public class Game : MonoBehaviour
                 Avatar.SetNextTile(new Vector2Int(nextTileX, nextTileY));
             }
         }
-    }
+    }*/
 }

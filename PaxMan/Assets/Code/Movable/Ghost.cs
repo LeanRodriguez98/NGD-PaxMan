@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Ghost : MobileEntity
 {
-    public enum Behaviour
+    /*public enum Behaviour
     {
         Wander,
         Chase,
@@ -20,7 +20,7 @@ public class Ghost : MobileEntity
     public int desiredMovementY;
 
     public Behaviour myBehaviour;
-    public List<PathmapTile> path = new List<PathmapTile>();
+    public List<Map.PathmapTile> path = new List<Map.PathmapTile>();
 
     // Start is called before the first frame update
     void Start()
@@ -140,5 +140,5 @@ public class Ghost : MobileEntity
     {
         path.Clear();
         path = map.GetPath(currentTileX, currentTileY, 13, 13);
-    }
+    }*/
 }
