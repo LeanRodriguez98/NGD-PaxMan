@@ -9,7 +9,7 @@ public class PacMan : MonoBehaviour
     private Vector2 movement;
     private Rigidbody2D rb2D;
     private const string horizontalAxis = "Horizontal"; 
-    private const string verticalAxis = "Verical";
+    private const string verticalAxis = "Vertical";
     void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
