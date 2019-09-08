@@ -10,6 +10,7 @@ public class PaxMan : MonoBehaviour
     [Range(0.0f, 1.0f)] public float porcentualSpeed;
     public uint lifes;
     private Vector2 movement;
+    private Vector2 previousMovement;
     private Animator animator;
     private Map map;
     private Node currentNode;
@@ -20,6 +21,7 @@ public class PaxMan : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         movement = new Vector2(-1.0f, 0.0f);
+        previousMovement = movement;
         UpdateAnimations();
         map = Map.instance;
         currentNode = map.PositionToNode(transform.position);
@@ -44,14 +46,26 @@ public class PaxMan : MonoBehaviour
         }
 
         currentNode = destinationNode;
+
         do
         {
-            destinationNode = map.GetNextNode(currentNode, movement);
-            yield return null;
+            if (map.GetNextNode(currentNode, movement) != null)
+            {
+                destinationNode = map.GetNextNode(currentNode, movement);
+                previousMovement = movement;
+            }
+            else
+            {
+                destinationNode = map.GetNextNode(currentNode, previousMovement);
+                movement = previousMovement;
+            }
             UpdateAnimations();
+            yield return null;
         } while (destinationNode == null);
+        
         StartCoroutine(Movement());
     }
+
 
     void Update()
     {
