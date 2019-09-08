@@ -6,283 +6,257 @@ using UnityEngine;
 using UnityEditor;
 public class Map : MonoBehaviour
 {
+    public static Map instance;
+
+    [System.Serializable]
+    public struct ConectionColors
+    {
+        public Color obstacleNodeColor;
+        public Color zeroConectionNodeColor;
+        public Color oneConectionNodeColor;
+        public Color twoConectionNodeColor;
+        public Color threeConectionNodeColor;
+        public Color fourConectionNodeColor;
+    }
+
+    [System.Serializable]
+    public struct TypeColor
+    {
+        public Color emptyNodeColor;
+        public Color smallDotNodeColor;
+        public Color bigDotNodeColor;
+        public Color obstacleNodeColor;
+        public Color unexpectedNodeColor;
+    }
 
     public Rect gameArea;
     public Vector2Int divisions;
 
-     [System.Serializable]
-     public struct PathmapTile
-     {
-         public Vector2 position;
-         public bool blocking;
-         public bool visited;
-        public char charFile;
-     }
-    public List<PathmapTile> tiles = new List<PathmapTile>();
+    public List<Node> nodes = new List<Node>();
+    public GameObject SmallDotPrefab;
+    public GameObject LargeDotPrefab;
 
-    
+    public bool drawGizmos;
+    public bool drawGrid;
 
-     public GameObject SmallDotPrefab;
-     public GameObject LargeDotPrefab;
+    public bool drawNodesType;
+    public TypeColor nodeTypeColors;
+    public bool drawNodesConections;
+    public ConectionColors nodeConectionsColors;
+    private string[] lines;
+    private float horizontalNodeDistance;
+    private float verticalNodeDistance;
     /*
-     private int dotCount = 0;
-     public int DotCount { get { return dotCount; } }
+ private int dotCount = 0;
+ public int DotCount { get { return dotCount; } }
 
-     public List<SmallDot> smallDots = new List<SmallDot>();
-     public List<BigDot> bigDots = new List<BigDot>();
-     public List<Cherry> cherry = new List<Cherry>();
-     */
-    // Start is called before the first frame update
+ public List<SmallDot> smallDots = new List<SmallDot>();
+ public List<BigDot> bigDots = new List<BigDot>();
+ public List<Cherry> cherry = new List<Cherry>();
+ */
+
+    private void Awake()
+    {
+        instance = this;
+    }
     void Start()
-     {
-         //StartCoroutine( InitPathmap());
-        InitPathmap();
-         //InitDots();
-         //initBigDots();
+    {
+        if (InitMapFile("Assets/Data/map.txt", out lines))
+        {
+            GenerateMap(lines);
+        }
     }
 
-
-
-     // Update is called once per frame
-     void Update()
-     {
-
-     }
-
-    //public IEnumerator InitPathmap()
-    public void InitPathmap()
+    private bool InitMapFile(string _path, out string[] _lines)
     {
-         string[] lines = File.ReadAllLines("Assets/Data/map.txt");
-         for (int y = 0; y < lines.Length; y++)
-         {
-             char[] line = lines[y].ToCharArray();
-            Debug.Log(line.Length);
-             for (int x = 0; x < line.Length; x++)
-             {
-                PathmapTile tile = new PathmapTile();
-                tile.position.x = gameArea.xMin + (x * (gameArea.width / divisions.x)) + ((gameArea.width / divisions.x)/2.0f);
-                tile.position.y = gameArea.yMax - (y * (gameArea.height / divisions.y)) - ((gameArea.height / divisions.y)/2.0f);
-                tile.blocking = false;
+        _lines = null;
+        try
+        {
+            lines = File.ReadAllLines(_path);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e, this);
+            return false;
+        }
+        return true;
+    }
+
+    public void GenerateMap(string[] _lines)
+    {
+        horizontalNodeDistance = gameArea.width / divisions.x;
+        verticalNodeDistance = gameArea.height / divisions.y;
+
+        for (int y = 0; y < _lines.Length; y++)
+        {
+            char[] line = _lines[y].ToCharArray();
+            for (int x = 0; x < line.Length; x++)
+            {
+                Vector2 nodePosition;
+                nodePosition.x = gameArea.xMin + (x * horizontalNodeDistance) + (horizontalNodeDistance / 2.0f);
+                nodePosition.y = gameArea.yMax - (y * verticalNodeDistance) - (verticalNodeDistance / 2.0f);
+                bool isObstacle = false;
                 switch (line[x])
                 {
                     case 'x':
-                        tile.blocking = true;
+                        isObstacle = true;
                         break;
                     case '.':
-                        Instantiate(SmallDotPrefab, tile.position, Quaternion.identity);
+                        Instantiate(SmallDotPrefab, nodePosition, Quaternion.identity, this.transform);
                         break;
                     case 'o':
-                        Instantiate(LargeDotPrefab, tile.position, Quaternion.identity);
+                        Instantiate(LargeDotPrefab, nodePosition, Quaternion.identity, this.transform);
                         break;
                 }
-                tile.charFile = line[x];
-                 tiles.Add(tile);
-                //yield return null;// new WaitForSeconds(0.10f);
-             }
-         }
-     }
+                char charFile = line[x];
+                nodes.Add(new Node(nodePosition, Node.NodeStates.Ready, isObstacle, charFile));
+            }
+        }
 
-     /*public bool InitDots()
-     {
-         string[] lines = System.IO.File.ReadAllLines("Assets/Data/map.txt");
-         for (int y = 0; y < lines.Length; y++)
-         {
-             char[] line = lines[y].ToCharArray();
-             for (int x = 0; x < line.Length; x++)
-             {
-                 if (line[x] == '.')
-                 {
-                     SmallDot dot = GameObject.Instantiate(SmallDotPrefab).GetComponent<SmallDot>();
-                     dot.SetPosition(new Vector2((x - (line.Length / 2)) * 22 + 11, (-y + (lines.Length / 2)) * 22));
-                     dotCount++;
-                 }
-             }
-         }
-         return true;
-     }
+        Vector2 rightDistance = new Vector2(horizontalNodeDistance, 0.0f);
+        Vector2 upDistance = new Vector2(0.0f, verticalNodeDistance);
 
-     public bool initBigDots()
-     {
-         string[] lines = System.IO.File.ReadAllLines("Assets/Data/map.txt");
-         for (int y = 0; y < lines.Length; y++)
-         {
-             char[] line = lines[y].ToCharArray();
-             for (int x = 0; x < line.Length; x++)
-             {
-                 if (line[x] == 'o')
-                 {
-                     BigDot dot = GameObject.Instantiate(LargeDotPrefab).GetComponent<BigDot>();
-                     dot.SetPosition(new Vector2((x - (line.Length / 2)) * 22 + 11, (-y + (lines.Length / 2)) * 22));
-                     dotCount++;
-                 }
-             }
-         }
-         return true;
-     }
+        foreach (Node currentNode in nodes)
+        {
+            if (!currentNode.IsObstacle)
+            {
+                foreach (Node node in nodes)
+                {
+                    if (!node.IsObstacle)
+                    {
+                        if (currentNode.Position + upDistance == node.Position)
+                        {
+                            node.AddConection(currentNode, nodes);
+                            currentNode.AddConection(node, nodes);
+                        }
 
-     internal bool TileIsValid(int tileX, int tileY)
-     {
-         for (int t = 0; t < tiles.Count; t++)
-         {
-             if (tileX == tiles[t].posX && tileY == tiles[t].posY && !tiles[t].blocking)
-                 return true;
-         }
-         return false;
-     }
+                        if (currentNode.Position + rightDistance == node.Position)
+                        {
+                            node.AddConection(currentNode, nodes);
+                            currentNode.AddConection(node, nodes);
+                        }
+                    }
+                }
+            }
+        }
 
-     public List<PathmapTile> GetPath(int currentTileX, int currentTileY, int targetX, int targetY)
-     {
-         PathmapTile fromTile = GetTile(currentTileX, currentTileY);
-         PathmapTile toTile = GetTile(targetX, targetY);
+    }
 
-         for (int t = 0; t < tiles.Count; t++)
-         {
-             tiles[t].visited = false;
-         }
+    public Node PositionToNode(Vector2 objectPosition)
+    {
+        float distance = float.PositiveInfinity;
+        Node currentNode = null;
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            if (!nodes[i].IsObstacle)
+            {
+                float currentDistance = Vector2.Distance(nodes[i].Position, objectPosition);
+                if (currentDistance < distance)
+                {
+                    currentNode = nodes[i];
+                    distance = currentDistance;
+                }
+            }
+        }
+        return currentNode;
+    }
 
-         List<PathmapTile> path = new List<PathmapTile>();
-         if (Pathfind(fromTile, toTile, path))
-         {
-             return path;
-         }
-         return null;
-     }
+    public Node GetNextNode(Node currentNode, Vector2 direction)
+    {
+        direction *= new Vector2(horizontalNodeDistance, verticalNodeDistance);
+        for (int i = 0; i < currentNode.Adjacents.Count; i++)
+        {
+            if (currentNode.Position + direction == nodes[currentNode.Adjacents[i]].Position)
+            {
+                return nodes[currentNode.Adjacents[i]];
+            }
+        }
+        return null;
+    }
 
-     private bool Pathfind(PathmapTile fromTile, PathmapTile toTile, List<PathmapTile> path)
-     {
-         fromTile.visited = true;
-
-         if (fromTile.blocking)
-             return false;
-         path.Add(fromTile);
-         if (fromTile == toTile)
-             return true;
-
-         List<PathmapTile> neighbours = new List<PathmapTile>();
-
-         PathmapTile up = GetTile(fromTile.posX, fromTile.posY - 1);
-         if (up != null && !up.visited && !up.blocking && !path.Contains(up))
-             neighbours.Insert(0, up);
-
-         PathmapTile down = GetTile(fromTile.posX, fromTile.posY + 1);
-         if (down != null && !down.visited && !down.blocking && !path.Contains(down))
-             neighbours.Insert(0, down);
-
-         PathmapTile right = GetTile(fromTile.posX + 1, fromTile.posY);
-         if (right != null && !right.visited && !right.blocking && !path.Contains(right))
-             neighbours.Insert(0, right);
-
-         PathmapTile left = GetTile(fromTile.posX - 1, fromTile.posY);
-         if (left != null && !left.visited && !left.blocking && !path.Contains(left))
-             neighbours.Insert(0, left);
-
-         for(int n = 0; n < neighbours.Count; n++)
-         {
-             PathmapTile tile = neighbours[n];
-
-             path.Add(tile);
-
-             if (Pathfind(tile, toTile, path))
-                 return true;
-
-             path.Remove(tile);
-         }
-
-         return false;
-     }
-
-     public PathmapTile GetTile(int tileX, int tileY)
-     {
-         for (int t = 0; t < tiles.Count; t++)
-         {
-             if (tileX == tiles[t].posX && tileY == tiles[t].posY)
-                 return tiles[t];
-         }
-
-         return null;
-     }
-
-     public bool HasIntersectedDot(Vector2 aPosition)
-     {
-         for (int d = 0; d < smallDots.Count; d++)
-         {
-             if ((smallDots[d].GetPosition() - aPosition).magnitude < 5.0f)
-             {
-                 GameObject.DestroyImmediate(smallDots[d]);
-                 smallDots.Remove(smallDots[d]);
-                 return true;
-             }
-         }
-
-         return false;
-     }
-
-     public bool HasIntersectedBigDot(Vector2 aPosition)
-     {
-         for (int d = 0; d < bigDots.Count; d++)
-         {
-             if ((bigDots[d].GetPosition() - aPosition).magnitude < 5.0f)
-             {
-                 GameObject.DestroyImmediate(bigDots[d]);
-                 bigDots.Remove(bigDots[d]);
-                 return true;
-             }
-         }
-
-         return false;
-     }
-
-     bool HasIntersectedCherry(Vector2 aPosition)
-     {
-         return true;
-     }*/
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(gameArea.position, gameArea.position + new Vector2(gameArea.width, 0.0f));
-        Gizmos.DrawLine(gameArea.position, gameArea.position + new Vector2(0.0f, gameArea.height));
-        Gizmos.DrawLine(gameArea.position + new Vector2(gameArea.width, 0.0f), gameArea.position + new Vector2(gameArea.width, gameArea.height));
-        Gizmos.DrawLine(gameArea.position + new Vector2(0.0f, gameArea.height), gameArea.position + new Vector2(gameArea.width, gameArea.height));
-
-        for (int i = 0; i < divisions.x; i++)
+        if (drawGrid)
         {
-            Gizmos.DrawLine(new Vector2(gameArea.position.x + ((gameArea.width / (float)divisions.x) * i), gameArea.position.y), new Vector2(gameArea.position.x + ((gameArea.width / (float)divisions.x) * i), gameArea.position.y + gameArea.height));
-        }
-        for (int i = 0; i < divisions.y; i++)
-        {
-            Gizmos.DrawLine(new Vector2(gameArea.position.x, gameArea.position.y + ((gameArea.height / (float)divisions.y) * i)), new Vector2(gameArea.position.x + gameArea.width, gameArea.position.y + ((gameArea.height / (float)divisions.y) * i)));
-        }
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(gameArea.position, gameArea.position + new Vector2(gameArea.width, 0.0f));
+            Gizmos.DrawLine(gameArea.position, gameArea.position + new Vector2(0.0f, gameArea.height));
+            Gizmos.DrawLine(gameArea.position + new Vector2(gameArea.width, 0.0f), gameArea.position + new Vector2(gameArea.width, gameArea.height));
+            Gizmos.DrawLine(gameArea.position + new Vector2(0.0f, gameArea.height), gameArea.position + new Vector2(gameArea.width, gameArea.height));
 
-
-        foreach (PathmapTile tile in tiles)
-        {
-            if (tile.charFile == 'x')
+            for (int i = 0; i < divisions.x; i++)
             {
-                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(new Vector2(gameArea.position.x + ((gameArea.width / (float)divisions.x) * i), gameArea.position.y), new Vector2(gameArea.position.x + ((gameArea.width / (float)divisions.x) * i), gameArea.position.y + gameArea.height));
             }
-            else if (tile.charFile == '.')
+            for (int i = 0; i < divisions.y; i++)
             {
-                Gizmos.color = Color.yellow;
+                Gizmos.DrawLine(new Vector2(gameArea.position.x, gameArea.position.y + ((gameArea.height / (float)divisions.y) * i)), new Vector2(gameArea.position.x + gameArea.width, gameArea.position.y + ((gameArea.height / (float)divisions.y) * i)));
             }
-            else if (tile.charFile == 'o')
-            {
-                Gizmos.color = Color.magenta;
-            }
-            else if( tile.charFile == ' ')
-            {
-                Gizmos.color = Color.green;
-            }
-            else
-            {
-                Gizmos.color = Color.black;
-            }
-            Gizmos.DrawWireSphere(new Vector3(tile.position.x, tile.position.y, 0.0f), 0.05f);
-
 
         }
 
+        if (drawNodesType)
+        {
+            foreach (Node tile in nodes)
+            {
+                if (tile.CharFile == 'x')
+                {
+                    Gizmos.color = nodeTypeColors.obstacleNodeColor;
+                }
+                else if (tile.CharFile == '.')
+                {
+                    Gizmos.color = nodeTypeColors.smallDotNodeColor;
+                }
+                else if (tile.CharFile == 'o')
+                {
+                    Gizmos.color = nodeTypeColors.bigDotNodeColor;
+                }
+                else if (tile.CharFile == ' ')
+                {
+                    Gizmos.color = nodeTypeColors.emptyNodeColor;
+                }
+                else
+                {
+                    Gizmos.color = nodeTypeColors.unexpectedNodeColor;
+                }
+                Gizmos.DrawWireSphere(new Vector3(tile.Position.x, tile.Position.y, 0.0f), 0.05f);
+            }
 
+        }
+        else if (drawNodesConections)
+        {
+            foreach (Node node in nodes)
+            {
+                if (node.IsObstacle)
+                {
+                    Gizmos.color = nodeConectionsColors.obstacleNodeColor;
+                }
+                else
+                {
+                    switch (node.Adjacents.Count)
+                    {
+                        case 0:
+                            Gizmos.color = nodeConectionsColors.zeroConectionNodeColor;
+                            break;
+                        case 1:
+                            Gizmos.color = nodeConectionsColors.oneConectionNodeColor;
+                            break;
+                        case 2:
+                            Gizmos.color = nodeConectionsColors.twoConectionNodeColor;
+                            break;
+                        case 3:
+                            Gizmos.color = nodeConectionsColors.threeConectionNodeColor;
+                            break;
+                        case 4:
+                            Gizmos.color = nodeConectionsColors.fourConectionNodeColor;
+                            break;
+                    }
+
+                }
+                Gizmos.DrawWireSphere(new Vector3((float)node.Position.x, (float)node.Position.y, 0.0f), 0.05f);
+            }
+        }
     }
 }
 

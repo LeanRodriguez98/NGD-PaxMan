@@ -212,11 +212,28 @@ MonoBehaviour:
     width: 5.72
     height: 6.4
   divisions: {x: 26, y: 29}
-  tiles: []
+  nodes: []
   SmallDotPrefab: {fileID: 3297448492165407585, guid: 9ed397e9b08fc9e429bb3fcb4f4270b6,
     type: 3}
   LargeDotPrefab: {fileID: 8769900793030285900, guid: dd5952e74777e3b44aa3af401a19f44a,
     type: 3}
+  drawGizmos: 1
+  drawGrid: 1
+  drawNodesType: 0
+  nodeTypeColors:
+    emptyNodeColor: {r: 0, g: 1, b: 0, a: 1}
+    smallDotNodeColor: {r: 1, g: 1, b: 0, a: 1}
+    bigDotNodeColor: {r: 1, g: 0, b: 1, a: 1}
+    obstacleNodeColor: {r: 0, g: 0, b: 1, a: 1}
+    unexpectedNodeColor: {r: 0, g: 0, b: 0, a: 1}
+  drawNodesConections: 0
+  nodeConectionsColors:
+    obstacleNodeColor: {r: 1, g: 0, b: 0, a: 1}
+    zeroConectionNodeColor: {r: 1, g: 1, b: 1, a: 1}
+    oneConectionNodeColor: {r: 0, g: 0, b: 1, a: 1}
+    twoConectionNodeColor: {r: 1, g: 1, b: 0, a: 1}
+    threeConectionNodeColor: {r: 0, g: 1, b: 0, a: 1}
+    fourConectionNodeColor: {r: 0, g: 1, b: 1, a: 1}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
