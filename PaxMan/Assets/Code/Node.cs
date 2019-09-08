@@ -12,7 +12,7 @@ public class Node
     [SerializeField] private Node parentNode;
     [SerializeField] private bool used;
     [SerializeField] private char charFile;
-
+    [SerializeField] private Rect area;
     public List<int> Adjacents
     {
         get {
@@ -29,6 +29,12 @@ public class Node
     {
         get { return nodeState;  }
         set { nodeState = value; }
+    }
+
+    public Rect Area
+    {
+        get { return area; }
+        set { area = value; }
     }
 
     public Node ParentNode
@@ -63,12 +69,13 @@ public class Node
         [HideInInspector]_count
     }
 
-    public Node(Vector2 _position, NodeStates _state, bool _isObstacle, char _charFile)
+    public Node(Vector2 _position, NodeStates _state, bool _isObstacle, Rect _area, char _charFile)
     {
         isObstacle = _isObstacle;
         position = _position;
         nodeState = originalState = _state;
         used = false;
+        area = _area;
         charFile = _charFile;
     }
 

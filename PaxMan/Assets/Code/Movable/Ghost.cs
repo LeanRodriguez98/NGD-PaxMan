@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ghost : MobileEntity
+public class Ghost : MonoBehaviour
 {
     /*public enum Behaviour
     {

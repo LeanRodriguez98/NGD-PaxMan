@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class PathFinding
 {
-
-
     private Map map;
     private Node startNode;
     private Node destinationNode;

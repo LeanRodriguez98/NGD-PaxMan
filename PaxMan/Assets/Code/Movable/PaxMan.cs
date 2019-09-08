@@ -16,7 +16,6 @@ public class PaxMan : MonoBehaviour
     private Node destinationNode;
     private const string horizontalAxis = "Horizontal";
     private const string verticalAxis = "Vertical";
-    private const string mapLayer = "Map";
     void Start()
     {
         animator = GetComponent<Animator>();

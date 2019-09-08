@@ -34,7 +34,7 @@ public class Map : MonoBehaviour
 
     public List<Node> nodes = new List<Node>();
     public GameObject SmallDotPrefab;
-    public GameObject LargeDotPrefab;
+    public GameObject BigDotPrefab;
 
     public bool drawGizmos;
     public bool drawGrid;
@@ -46,14 +46,10 @@ public class Map : MonoBehaviour
     private string[] lines;
     private float horizontalNodeDistance;
     private float verticalNodeDistance;
-    /*
- private int dotCount = 0;
- public int DotCount { get { return dotCount; } }
 
- public List<SmallDot> smallDots = new List<SmallDot>();
- public List<BigDot> bigDots = new List<BigDot>();
- public List<Cherry> cherry = new List<Cherry>();
- */
+    public List<PickupableObject> smallDots = new List<PickupableObject>();
+    public List<PickupableObject> bigDots = new List<PickupableObject>();
+    public List<PickupableObject> cherrys = new List<PickupableObject>();
 
     private void Awake()
     {
@@ -96,23 +92,41 @@ public class Map : MonoBehaviour
                 nodePosition.x = gameArea.xMin + (x * horizontalNodeDistance) + (horizontalNodeDistance / 2.0f);
                 nodePosition.y = gameArea.yMax - (y * verticalNodeDistance) - (verticalNodeDistance / 2.0f);
                 bool isObstacle = false;
-                switch (line[x])
-                {
-                    case 'x':
-                        isObstacle = true;
-                        break;
-                    case '.':
-                        Instantiate(SmallDotPrefab, nodePosition, Quaternion.identity, this.transform);
-                        break;
-                    case 'o':
-                        Instantiate(LargeDotPrefab, nodePosition, Quaternion.identity, this.transform);
-                        break;
-                }
                 char charFile = line[x];
-                nodes.Add(new Node(nodePosition, Node.NodeStates.Ready, isObstacle, charFile));
+                Rect area = new Rect(new Vector2(gameArea.xMin + (x * horizontalNodeDistance), gameArea.yMax - (y * verticalNodeDistance) - verticalNodeDistance), new Vector2(horizontalNodeDistance, verticalNodeDistance));
+                nodes.Add(new Node(nodePosition, Node.NodeStates.Ready, isObstacle, area, charFile));
             }
         }
+        AddDots(nodes);
+        ConectNodes();
+    }
 
+    public void AddDots(List<Node> _nodes)
+    {
+        foreach (Node node in _nodes)
+        {
+            switch (node.CharFile)
+            {
+                case 'x':
+                    node.IsObstacle = true;
+                    break;
+                case '.':
+                    PickupableObject smallDot = Instantiate(SmallDotPrefab, node.Position, Quaternion.identity, this.transform).GetComponent<PickupableObject>();
+                    smallDot.SetCollider();
+                    smallDots.Add(smallDot);
+                    break;
+                case 'o':
+                    PickupableObject bigDot = Instantiate(BigDotPrefab, node.Position, Quaternion.identity, this.transform).GetComponent<PickupableObject>();
+                    bigDot.SetCollider();
+                    bigDots.Add(bigDot);
+                    break;
+            }
+        }
+    }
+
+  
+    public void ConectNodes()
+    {
         Vector2 rightDistance = new Vector2(horizontalNodeDistance, 0.0f);
         Vector2 upDistance = new Vector2(0.0f, verticalNodeDistance);
 
@@ -139,7 +153,6 @@ public class Map : MonoBehaviour
                 }
             }
         }
-
     }
 
     public Node PositionToNode(Vector2 objectPosition)
@@ -180,6 +193,7 @@ public class Map : MonoBehaviour
         if (drawGrid)
         {
             Gizmos.color = Color.red;
+            
             Gizmos.DrawLine(gameArea.position, gameArea.position + new Vector2(gameArea.width, 0.0f));
             Gizmos.DrawLine(gameArea.position, gameArea.position + new Vector2(0.0f, gameArea.height));
             Gizmos.DrawLine(gameArea.position + new Vector2(gameArea.width, 0.0f), gameArea.position + new Vector2(gameArea.width, gameArea.height));
@@ -193,6 +207,18 @@ public class Map : MonoBehaviour
             {
                 Gizmos.DrawLine(new Vector2(gameArea.position.x, gameArea.position.y + ((gameArea.height / (float)divisions.y) * i)), new Vector2(gameArea.position.x + gameArea.width, gameArea.position.y + ((gameArea.height / (float)divisions.y) * i)));
             }
+
+           /* foreach (Node node in nodes)
+            {
+                Gizmos.color = new Color(UnityEngine.Random.Range(0F, 1F), UnityEngine.Random.Range(0, 1F), UnityEngine.Random.Range(0, 1F));
+
+                Gizmos.DrawLine(node.Area.position, node.Area.position + new Vector2(node.Area.width, 0.0f));
+                Gizmos.DrawLine(node.Area.position, node.Area.position + new Vector2(0.0f, node.Area.height));
+                Gizmos.DrawLine(node.Area.position + new Vector2(node.Area.width, 0.0f), node.Area.position + new Vector2(node.Area.width, node.Area.height));
+                Gizmos.DrawLine(node.Area.position + new Vector2(0.0f, node.Area.height), node.Area.position + new Vector2(node.Area.width, node.Area.height));
+            }*/
+
+
 
         }
 
