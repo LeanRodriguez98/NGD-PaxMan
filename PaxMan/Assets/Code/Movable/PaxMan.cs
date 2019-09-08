@@ -1,37 +1,57 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PaxMan : MonoBehaviour
 {
     public float speed;
     public uint lifes;
-    [Range(0.1f, 1.0f)] public float stopDistance;
     private Vector2 movement;
-    private Rigidbody2D rb2D;
     private Animator animator;
-    private const string horizontalAxis = "Horizontal"; 
+    private Map map;
+    private Node currentNode;
+    private Node destinationNode;
+    private const string horizontalAxis = "Horizontal";
     private const string verticalAxis = "Vertical";
     private const string mapLayer = "Map";
     void Start()
     {
-        rb2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         movement = new Vector2(-1.0f, 0.0f);
+        map = Map.instance;
+        currentNode = map.PositionToNode(transform.position);
+        transform.position = currentNode.Position;
+        destinationNode = map.GetNextNode(currentNode, movement);
+        StartCoroutine(Movement());
+
+    }
+    IEnumerator Movement()
+    {
+        Vector3 displacementDistance = (Vector3)(destinationNode.Position - currentNode.Position) / 10.0f;
+
+        for (int i = 0; i < 10; i++)
+        {
+            transform.position += (Vector3)(destinationNode.Position - currentNode.Position) / 10.0f;
+            yield return null;
+        }
+
+        currentNode = destinationNode;
+        do
+        {
+            destinationNode = map.GetNextNode(currentNode, movement);
+            yield return null;
+            UpdateAnimations();
+        } while (destinationNode == null);
+        StartCoroutine(Movement());
     }
 
     void Update()
     {
-        Movement();
+        InputMovement();
     }
 
-    void FixedUpdate()
-    {
-        rb2D.MovePosition(rb2D.position + movement * speed * Time.fixedDeltaTime);
-        UpdateAnimations();
-
-    }
-
-    private void Movement()
+    private void InputMovement()
     {
         float horizontalMovement = Input.GetAxisRaw(horizontalAxis);
         float verticalMovement = Input.GetAxisRaw(verticalAxis);
@@ -51,21 +71,21 @@ public class PaxMan : MonoBehaviour
     {
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
-        RaycastHit2D raycastHit2D;
-        raycastHit2D = Physics2D.Raycast(transform.position, movement, stopDistance, 1 << LayerMask.NameToLayer(mapLayer));
 
-        if (raycastHit2D.collider == null)
-        {
-            animator.SetBool("Idle", false);
-        }
-        else if (raycastHit2D.collider.gameObject.layer == LayerMask.NameToLayer(mapLayer))
+        if (destinationNode == null)
         {
             animator.SetBool("Idle", true);
+
+        }
+        else
+        {
+            animator.SetBool("Idle", false);
+
         }
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawLine(transform.position, transform.position + ((Vector3)movement / (1.0f / stopDistance)));
+        //Gizmos.DrawLine(transform.position, transform.position + ((Vector3)movement / (1.0f / stopDistance)));
     }
 }
