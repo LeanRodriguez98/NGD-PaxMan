@@ -190,6 +190,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1893501268}
+  - {fileID: 1638533607}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -217,6 +218,11 @@ MonoBehaviour:
     type: 3}
   BigDotPrefab: {fileID: 8769900793030285900, guid: dd5952e74777e3b44aa3af401a19f44a,
     type: 3}
+  cherrys: {fileID: 1638533604}
+  cherrysDuration:
+  - 9.3333
+  - 10
+  - 9.75
   drawGizmos: 1
   drawGrid: 1
   drawNodesType: 0
@@ -236,7 +242,6 @@ MonoBehaviour:
     fourConectionNodeColor: {r: 0, g: 1, b: 1, a: 1}
   smallDots: []
   bigDots: []
-  cherrys: []
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -484,6 +489,98 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1001 &1520770188
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1730323}
+    m_Modifications:
+    - target: {fileID: 7957341255470035117, guid: 993d21501bc680e44bf71044328823ed,
+        type: 3}
+      propertyPath: m_Name
+      value: Cherrys
+      objectReference: {fileID: 0}
+    - target: {fileID: 3304702949290831026, guid: 993d21501bc680e44bf71044328823ed,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3304702949290831026, guid: 993d21501bc680e44bf71044328823ed,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.442
+      objectReference: {fileID: 0}
+    - target: {fileID: 3304702949290831026, guid: 993d21501bc680e44bf71044328823ed,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3304702949290831026, guid: 993d21501bc680e44bf71044328823ed,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3304702949290831026, guid: 993d21501bc680e44bf71044328823ed,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3304702949290831026, guid: 993d21501bc680e44bf71044328823ed,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3304702949290831026, guid: 993d21501bc680e44bf71044328823ed,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3304702949290831026, guid: 993d21501bc680e44bf71044328823ed,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3304702949290831026, guid: 993d21501bc680e44bf71044328823ed,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3304702949290831026, guid: 993d21501bc680e44bf71044328823ed,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3304702949290831026, guid: 993d21501bc680e44bf71044328823ed,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8038266300459041210, guid: 993d21501bc680e44bf71044328823ed,
+        type: 3}
+      propertyPath: pointsValue
+      value: 1000
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 993d21501bc680e44bf71044328823ed, type: 3}
+--- !u!114 &1638533604 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8038266300459041210, guid: 993d21501bc680e44bf71044328823ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 1520770188}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a878549881a59bd4791b9684b0eb6b38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1638533607 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3304702949290831026, guid: 993d21501bc680e44bf71044328823ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 1520770188}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1893501267
 GameObject:
   m_ObjectHideFlags: 0
@@ -2316,6 +2413,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dotCount: 0
   points: 0
+  dotsToSpawnCherry: 46000000aa000000
 --- !u!4 &1982107645
 Transform:
   m_ObjectHideFlags: 0

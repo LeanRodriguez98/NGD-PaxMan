@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public uint dotCount;
     public uint points;
-
+    public int[] dotsToSpawnCherry;
     private Map map;
     private PaxMan player;
     private void Awake()
@@ -24,10 +24,10 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
-        ChechCollisions();
+        CheckCollisions();
     }
 
-    private void ChechCollisions()
+    private void CheckCollisions()
     {
         for (int i = 0; i < map.smallDots.Count; i++)
         {
@@ -35,6 +35,9 @@ public class GameManager : MonoBehaviour
             {
                 points += map.smallDots[i].pointsValue;
                 map.smallDots[i].gameObject.SetActive(false);
+                dotCount++;
+                CheckSpawnCherry();
+
                 break;
             }
         }
@@ -45,17 +48,27 @@ public class GameManager : MonoBehaviour
             {
                 points += map.bigDots[i].pointsValue;
                 map.bigDots[i].gameObject.SetActive(false);
+                dotCount++;
+                CheckSpawnCherry();
+
                 break;
             }
         }
 
-        for (int i = 0; i < map.cherrys.Count; i++)
+        if (map.cherrys.gameObject.activeSelf && map.cherrys.CheckIsPickUped(player.transform))
         {
-            if (map.cherrys[i].gameObject.activeSelf && map.cherrys[i].CheckIsPickUped(player.transform))
+            points += map.cherrys.pointsValue;
+            map.DisableCherry();
+        }
+    }
+
+    private void CheckSpawnCherry()
+    {
+        for (int i = 0; i < dotsToSpawnCherry.Length; i++)
+        {
+            if (dotsToSpawnCherry[i] == dotCount)
             {
-                points += map.cherrys[i].pointsValue;
-                map.cherrys[i].gameObject.SetActive(false);
-                break;
+                map.EnableCherry();
             }
         }
     }

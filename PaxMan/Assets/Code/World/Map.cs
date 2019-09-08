@@ -36,6 +36,9 @@ public class Map : MonoBehaviour
     public GameObject SmallDotPrefab;
     public GameObject BigDotPrefab;
 
+    public PickupableObject cherrys;
+    public float[] cherrysDuration;
+
     public bool drawGizmos;
     public bool drawGrid;
 
@@ -49,7 +52,6 @@ public class Map : MonoBehaviour
 
     public List<PickupableObject> smallDots = new List<PickupableObject>();
     public List<PickupableObject> bigDots = new List<PickupableObject>();
-    public List<PickupableObject> cherrys = new List<PickupableObject>();
 
     private void Awake()
     {
@@ -61,6 +63,7 @@ public class Map : MonoBehaviour
         {
             GenerateMap(lines);
         }
+
     }
 
     private bool InitMapFile(string _path, out string[] _lines)
@@ -98,6 +101,7 @@ public class Map : MonoBehaviour
             }
         }
         AddDots(nodes);
+
         ConectNodes();
     }
 
@@ -122,9 +126,21 @@ public class Map : MonoBehaviour
                     break;
             }
         }
+        cherrys.SetCollider();
+        cherrys.gameObject.SetActive(false);
     }
 
-  
+    public void EnableCherry()
+    {
+        cherrys.gameObject.SetActive(true);
+        Invoke("DisableCherry", cherrysDuration[UnityEngine.Random.Range(0, cherrysDuration.Length)]);
+    }
+
+    public void DisableCherry()
+    {
+        cherrys.gameObject.SetActive(false);
+        CancelInvoke("DisableCherry");
+    }
     public void ConectNodes()
     {
         Vector2 rightDistance = new Vector2(horizontalNodeDistance, 0.0f);
