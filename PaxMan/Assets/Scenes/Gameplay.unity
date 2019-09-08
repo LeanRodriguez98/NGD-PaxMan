@@ -207,7 +207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameArea:
     serializedVersion: 2
-    x: -2.86
+    x: -2.85
     y: -3.2
     width: 5.72
     height: 6.4
@@ -396,9 +396,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65bf1db91f85234459b0c9077ab458fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  maxSpeed: 20
+  speed: 10
+  porcentualSpeed: 0.8
   lifes: 5
-  stopDistance: 0.25
 --- !u!212 &1108523030
 SpriteRenderer:
   m_ObjectHideFlags: 0

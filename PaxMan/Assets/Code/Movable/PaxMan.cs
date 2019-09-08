@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class PaxMan : MonoBehaviour
 {
+    public float maxSpeed;
     public float speed;
+    [Range(0.0f, 1.0f)] public float porcentualSpeed;
     public uint lifes;
     private Vector2 movement;
     private Animator animator;
@@ -19,6 +21,7 @@ public class PaxMan : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         movement = new Vector2(-1.0f, 0.0f);
+        UpdateAnimations();
         map = Map.instance;
         currentNode = map.PositionToNode(transform.position);
         transform.position = currentNode.Position;
@@ -28,11 +31,16 @@ public class PaxMan : MonoBehaviour
     }
     IEnumerator Movement()
     {
-        Vector3 displacementDistance = (Vector3)(destinationNode.Position - currentNode.Position) / 10.0f;
-
-        for (int i = 0; i < 10; i++)
+        if (speed > maxSpeed)
+            speed = maxSpeed;
+        float i = 0.0f;
+        float currentSpeed = maxSpeed - (speed * porcentualSpeed);
+        while (transform.position != (Vector3)destinationNode.Position)
         {
-            transform.position += (Vector3)(destinationNode.Position - currentNode.Position) / 10.0f;
+            if (i > currentSpeed)
+                i = currentSpeed;
+            transform.position = Vector3.Lerp(currentNode.Position, destinationNode.Position, i / currentSpeed);
+            i++;
             yield return null;
         }
 
@@ -73,19 +81,9 @@ public class PaxMan : MonoBehaviour
         animator.SetFloat("Vertical", movement.y);
 
         if (destinationNode == null)
-        {
             animator.SetBool("Idle", true);
-
-        }
         else
-        {
             animator.SetBool("Idle", false);
-
-        }
     }
 
-    private void OnDrawGizmos()
-    {
-        //Gizmos.DrawLine(transform.position, transform.position + ((Vector3)movement / (1.0f / stopDistance)));
-    }
 }
