@@ -108,7 +108,11 @@ public class Editor_Map : Editor
         map.drawGizmos = EditorGUILayout.Toggle("Draw Gizmos", map.drawGizmos);
         if (map.drawGizmos)
         {
+            EditorGUILayout.BeginHorizontal();
             map.drawGrid = EditorGUILayout.Toggle("Draw Grid", map.drawGrid);
+            map.drawNodeID = EditorGUILayout.Toggle("Draw Node ID", map.drawNodeID);
+            EditorGUILayout.EndHorizontal();
+
             EditorGUILayout.BeginHorizontal();
             map.drawNodesType = EditorGUILayout.Toggle("Draw Type Nodes", map.drawNodesType);
             if (map.drawNodesType)

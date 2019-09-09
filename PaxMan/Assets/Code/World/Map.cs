@@ -41,7 +41,7 @@ public class Map : MonoBehaviour
 
     public bool drawGizmos;
     public bool drawGrid;
-
+    public bool drawNodeID;
     public bool drawNodesType;
     public TypeColor nodeTypeColors;
     public bool drawNodesConections;
@@ -224,6 +224,11 @@ public class Map : MonoBehaviour
         return currentNode;
     }
 
+    public Node IdToNode(uint i)
+    {
+        return nodes[(int)i];
+    }
+
     public Node GetNextNode(Node currentNode, Vector2 direction)
     {
         if (horizontalNodeDistance == 0)
@@ -278,7 +283,16 @@ public class Map : MonoBehaviour
 
 
             }
-
+            if (drawNodeID)
+            {
+                GUIStyle style = new GUIStyle();
+                style.fontSize = 15;
+                style.normal.textColor = Color.blue;
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    Handles.Label(nodes[i].Position, i.ToString(), style);
+                }
+            }
             if (drawNodesType)
             {
                 foreach (Node tile in nodes)

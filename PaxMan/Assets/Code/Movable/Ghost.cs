@@ -5,140 +5,70 @@ using UnityEngine;
 
 public class Ghost : MonoBehaviour
 {
-    /*public enum Behaviour
+
+    [System.Serializable]
+    public struct OnHomePatron
     {
-        Wander,
-        Chase,
-        Intercept,
-        Fear,
+        public uint startPositionNodeID;
+        public uint endPositionNodeID;
+    }
+    [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
+    public uint StartPositionnodeID;
+    private Map map;
+    private PathFinding pathFinding;
+    public OnHomePatron homePatron;
+    public List<Vector2> currentPath = new List<Vector2>();
+    public int auxPath = 0;//  Change this
+    public bool aux = true;// Change this
+    private void Start()
+    {
+        map = Map.instance;
+        transform.position = map.IdToNode(StartPositionnodeID).Position;
+        pathFinding = new PathFinding();
+        currentPath = pathFinding.GetPath(transform.position, map.IdToNode(homePatron.startPositionNodeID).Position);
+        StartCoroutine(Movement());
     }
 
-    public bool isClaimable;
-    public bool isDead;
-
-    public int desiredMovementX;
-    public int desiredMovementY;
-
-    public Behaviour myBehaviour;
-    public List<Map.PathmapTile> path = new List<Map.PathmapTile>();
-
-    // Start is called before the first frame update
-    void Start()
+    public IEnumerator Movement()
     {
-        isClaimable = false;
-        isDead = false;
+        Vector2 currentPosition = currentPath[auxPath];
+        Vector2 destinationPosition = currentPath[auxPath + 1];
+        float i = 0.0f;
 
-        desiredMovementX = 0;
-        desiredMovementY = -1;
-    }
-
-    // Update is called once per frame
-    public void onUpdate(Map map, PacMan avatar)
-    {
-        float speed = 30.0f;
-        int nextTileX = currentTileX + desiredMovementX;
-        int nextTileY = currentTileY + desiredMovementY;
-
-        if (isDead)
-            speed = 120.0f;
-
-        if(IsAtDestination())
+        while (transform.position != (Vector3)destinationPosition)
         {
-            if(path.Count > 0)
+            if (i > 10.0f)
             {
-                PathmapTile nextTile = path[0];
-                path.RemoveAt(0);
-                SetNextTile(new Vector2Int(nextTile.posX, nextTile.posY));
+                i = 10.0f;
             }
-            else if(map.TileIsValid(nextTileX, nextTileY))
-            {
-                SetNextTile(new Vector2Int(nextTileX, nextTileY));
-            }
-            else
-            {
-                if(isClaimable)
-                {
-                    BehaveVulnerable();
-                }
-                else
-                {
-                    switch(myBehaviour)
-                    {
-                        case Behaviour.Chase:
-                            BehaveChase(map, avatar);
-                            break;
-                        case Behaviour.Intercept:
-                        case Behaviour.Wander:
-                        default:
-                            BehaveWander();
-                            break;
-                    }
-                }
+            transform.position = Vector3.Lerp(currentPosition, destinationPosition, i / 10.0f);
+            i++;
 
-                isDead = false;
-            }
+            yield return null;
         }
-
-        int tileSize = 22;
-        Vector2 destination = new Vector2(nextTileX * tileSize, nextTileY * tileSize);
-        Vector2 direction = destination - GetPosition();
-
-        float distanceToMove = Time.deltaTime * speed;
-
-        if (distanceToMove > direction.magnitude)
+        if (destinationPosition == currentPath[currentPath.Count-1])
         {
-            SetPosition(destination);
-            currentTileX = nextTileX;
-            currentTileY = nextTileY;
+            auxPath = 0;
+            UpdatePath();
         }
         else
         {
-            direction.Normalize();
-            SetPosition(GetPosition() + direction * distanceToMove);
+            auxPath++;
+            StartCoroutine(Movement());
         }
     }
 
-    private void BehaveWander()
+    private void UpdatePath()
     {
-        System.Random rng = new System.Random();
-        MovementDirection nextDirection = (MovementDirection)(rng.Next((int)MovementDirection.DirectionCount));
-        switch (nextDirection)
+        if (aux)
         {
-            case MovementDirection.Up:
-                desiredMovementX = 0;
-                desiredMovementY = 1;
-                break;
-            case MovementDirection.Down:
-                desiredMovementX = 0;
-                desiredMovementY = -1;
-                break;
-            case MovementDirection.Left:
-                desiredMovementX = -1;
-                desiredMovementY = 0;
-                break;
-            case MovementDirection.Right:
-                desiredMovementX = 1;
-                desiredMovementY = 0;
-                break;
-            default:
-                break;
+            currentPath = pathFinding.GetPath(map.IdToNode(homePatron.startPositionNodeID).Position, map.IdToNode(homePatron.endPositionNodeID).Position);
         }
+        else
+        {
+            currentPath.Reverse();
+        }
+        aux = false;
+        StartCoroutine(Movement());
     }
-
-    private void BehaveChase(Map map, PacMan avatar)
-    {
-        path.Clear();
-        path = map.GetPath(currentTileX, currentTileY, avatar.currentTileX, avatar.currentTileY);
-    }
-
-    private void BehaveVulnerable()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Die(Map map)
-    {
-        path.Clear();
-        path = map.GetPath(currentTileX, currentTileY, 13, 13);
-    }*/
 }

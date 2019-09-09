@@ -43,10 +43,14 @@ public class PathFinding
                 nodePath = GeneratePath(nodePath, n);
 
                 List<Vector2> path = new List<Vector2>();
-
                 for (int i = 0; i < nodePath.Count; i++)
                 {
                     path.Add(nodePath[i].Position);
+                }
+
+                if (path[0] == destinationNode.Position)
+                {
+                    path.Reverse();
                 }
 
                 ResetNodes();
@@ -99,6 +103,7 @@ public class PathFinding
     private Node GetOpenNode()
     {
         return openNodes[openNodes.Count - 1];
+
     }
 
     private uint ManhattanDistance(Vector2 origin, Vector2 destination)
