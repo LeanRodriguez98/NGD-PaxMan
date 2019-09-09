@@ -5,7 +5,7 @@ using UnityEngine;
 public class PickupableObject : MonoBehaviour
 {
     public uint pointsValue;
-    private Collider2D pickUpZone;
+    [HideInInspector] [SerializeField]private Collider2D pickUpZone;
 
     public void SetCollider()
     {
@@ -14,10 +14,11 @@ public class PickupableObject : MonoBehaviour
 
     public bool CheckIsPickUped(Transform transform)
     {
+        if (pickUpZone == null)
+            SetCollider();
+
         if (pickUpZone.OverlapPoint(transform.position))
-        {
             return true;
-        }
         return false;
     }
 

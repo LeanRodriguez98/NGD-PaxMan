@@ -37,7 +37,7 @@ public class Map : MonoBehaviour
     public GameObject BigDotPrefab;
 
     public PickupableObject cherrys;
-    public float[] cherrysDuration;
+    public List<float> cherrysDuration = new List<float>();
 
     public bool drawGizmos;
     public bool drawGrid;
@@ -47,8 +47,8 @@ public class Map : MonoBehaviour
     public bool drawNodesConections;
     public ConectionColors nodeConectionsColors;
     private string[] lines;
-    private float horizontalNodeDistance;
-    private float verticalNodeDistance;
+    public float horizontalNodeDistance;
+    public float verticalNodeDistance;
 
     public List<PickupableObject> smallDots = new List<PickupableObject>();
     public List<PickupableObject> bigDots = new List<PickupableObject>();
@@ -59,11 +59,44 @@ public class Map : MonoBehaviour
     }
     void Start()
     {
+        if (nodes == null)
+        {
+            InitMap();
+            Debug.LogWarning("The map was inited in ejecuton, plase use the \"Init Map\" button in this object", this.gameObject);
+        }
+    }
+
+    public void InitMap()
+    {
+        ClearMap();
         if (InitMapFile("Assets/Data/map.txt", out lines))
         {
             GenerateMap(lines);
         }
+    }
 
+    public void ClearMap()
+    {
+        if (nodes != null)
+        {
+            nodes.Clear();
+        }
+        if (smallDots != null)
+        {
+            foreach (PickupableObject smallDot in smallDots)
+            {
+                DestroyImmediate(smallDot.gameObject);
+            }
+            smallDots.Clear();
+        }
+        if (bigDots != null)
+        {
+            foreach (PickupableObject bigDot in bigDots)
+            {
+                DestroyImmediate(bigDot.gameObject);
+            }
+            bigDots.Clear();
+        }
     }
 
     private bool InitMapFile(string _path, out string[] _lines)
@@ -126,6 +159,7 @@ public class Map : MonoBehaviour
                     break;
             }
         }
+        cherrys.gameObject.SetActive(true);
         cherrys.SetCollider();
         cherrys.gameObject.SetActive(false);
     }
@@ -133,7 +167,7 @@ public class Map : MonoBehaviour
     public void EnableCherry()
     {
         cherrys.gameObject.SetActive(true);
-        Invoke("DisableCherry", cherrysDuration[UnityEngine.Random.Range(0, cherrysDuration.Length)]);
+        Invoke("DisableCherry", cherrysDuration[UnityEngine.Random.Range(0, cherrysDuration.Count)]);
     }
 
     public void DisableCherry()
@@ -192,6 +226,10 @@ public class Map : MonoBehaviour
 
     public Node GetNextNode(Node currentNode, Vector2 direction)
     {
+        if (horizontalNodeDistance == 0)
+            horizontalNodeDistance = gameArea.width / divisions.x;
+        if (verticalNodeDistance == 0)
+            verticalNodeDistance = gameArea.height / divisions.y;
         direction *= new Vector2(horizontalNodeDistance, verticalNodeDistance);
         for (int i = 0; i < currentNode.Adjacents.Count; i++)
         {
@@ -206,99 +244,102 @@ public class Map : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (drawGrid)
+        if (drawGizmos)
         {
-            Gizmos.color = Color.red;
-            
-            Gizmos.DrawLine(gameArea.position, gameArea.position + new Vector2(gameArea.width, 0.0f));
-            Gizmos.DrawLine(gameArea.position, gameArea.position + new Vector2(0.0f, gameArea.height));
-            Gizmos.DrawLine(gameArea.position + new Vector2(gameArea.width, 0.0f), gameArea.position + new Vector2(gameArea.width, gameArea.height));
-            Gizmos.DrawLine(gameArea.position + new Vector2(0.0f, gameArea.height), gameArea.position + new Vector2(gameArea.width, gameArea.height));
 
-            for (int i = 0; i < divisions.x; i++)
+            if (drawGrid)
             {
-                Gizmos.DrawLine(new Vector2(gameArea.position.x + ((gameArea.width / (float)divisions.x) * i), gameArea.position.y), new Vector2(gameArea.position.x + ((gameArea.width / (float)divisions.x) * i), gameArea.position.y + gameArea.height));
-            }
-            for (int i = 0; i < divisions.y; i++)
-            {
-                Gizmos.DrawLine(new Vector2(gameArea.position.x, gameArea.position.y + ((gameArea.height / (float)divisions.y) * i)), new Vector2(gameArea.position.x + gameArea.width, gameArea.position.y + ((gameArea.height / (float)divisions.y) * i)));
-            }
+                Gizmos.color = Color.red;
 
-           /* foreach (Node node in nodes)
-            {
-                Gizmos.color = new Color(UnityEngine.Random.Range(0F, 1F), UnityEngine.Random.Range(0, 1F), UnityEngine.Random.Range(0, 1F));
+                Gizmos.DrawLine(gameArea.position, gameArea.position + new Vector2(gameArea.width, 0.0f));
+                Gizmos.DrawLine(gameArea.position, gameArea.position + new Vector2(0.0f, gameArea.height));
+                Gizmos.DrawLine(gameArea.position + new Vector2(gameArea.width, 0.0f), gameArea.position + new Vector2(gameArea.width, gameArea.height));
+                Gizmos.DrawLine(gameArea.position + new Vector2(0.0f, gameArea.height), gameArea.position + new Vector2(gameArea.width, gameArea.height));
 
-                Gizmos.DrawLine(node.Area.position, node.Area.position + new Vector2(node.Area.width, 0.0f));
-                Gizmos.DrawLine(node.Area.position, node.Area.position + new Vector2(0.0f, node.Area.height));
-                Gizmos.DrawLine(node.Area.position + new Vector2(node.Area.width, 0.0f), node.Area.position + new Vector2(node.Area.width, node.Area.height));
-                Gizmos.DrawLine(node.Area.position + new Vector2(0.0f, node.Area.height), node.Area.position + new Vector2(node.Area.width, node.Area.height));
-            }*/
-
-
-
-        }
-
-        if (drawNodesType)
-        {
-            foreach (Node tile in nodes)
-            {
-                if (tile.CharFile == 'x')
+                for (int i = 0; i < divisions.x; i++)
                 {
-                    Gizmos.color = nodeTypeColors.obstacleNodeColor;
+                    Gizmos.DrawLine(new Vector2(gameArea.position.x + ((gameArea.width / (float)divisions.x) * i), gameArea.position.y), new Vector2(gameArea.position.x + ((gameArea.width / (float)divisions.x) * i), gameArea.position.y + gameArea.height));
                 }
-                else if (tile.CharFile == '.')
+                for (int i = 0; i < divisions.y; i++)
                 {
-                    Gizmos.color = nodeTypeColors.smallDotNodeColor;
+                    Gizmos.DrawLine(new Vector2(gameArea.position.x, gameArea.position.y + ((gameArea.height / (float)divisions.y) * i)), new Vector2(gameArea.position.x + gameArea.width, gameArea.position.y + ((gameArea.height / (float)divisions.y) * i)));
                 }
-                else if (tile.CharFile == 'o')
-                {
-                    Gizmos.color = nodeTypeColors.bigDotNodeColor;
-                }
-                else if (tile.CharFile == ' ')
-                {
-                    Gizmos.color = nodeTypeColors.emptyNodeColor;
-                }
-                else
-                {
-                    Gizmos.color = nodeTypeColors.unexpectedNodeColor;
-                }
-                Gizmos.DrawWireSphere(new Vector3(tile.Position.x, tile.Position.y, 0.0f), 0.05f);
+
+                /* foreach (Node node in nodes)
+                 {
+                     Gizmos.color = new Color(UnityEngine.Random.Range(0F, 1F), UnityEngine.Random.Range(0, 1F), UnityEngine.Random.Range(0, 1F));
+
+                     Gizmos.DrawLine(node.Area.position, node.Area.position + new Vector2(node.Area.width, 0.0f));
+                     Gizmos.DrawLine(node.Area.position, node.Area.position + new Vector2(0.0f, node.Area.height));
+                     Gizmos.DrawLine(node.Area.position + new Vector2(node.Area.width, 0.0f), node.Area.position + new Vector2(node.Area.width, node.Area.height));
+                     Gizmos.DrawLine(node.Area.position + new Vector2(0.0f, node.Area.height), node.Area.position + new Vector2(node.Area.width, node.Area.height));
+                 }*/
+
+
+
             }
 
-        }
-        else if (drawNodesConections)
-        {
-            foreach (Node node in nodes)
+            if (drawNodesType)
             {
-                if (node.IsObstacle)
+                foreach (Node tile in nodes)
                 {
-                    Gizmos.color = nodeConectionsColors.obstacleNodeColor;
-                }
-                else
-                {
-                    switch (node.Adjacents.Count)
+                    if (tile.CharFile == 'x')
                     {
-                        case 0:
-                            Gizmos.color = nodeConectionsColors.zeroConectionNodeColor;
-                            break;
-                        case 1:
-                            Gizmos.color = nodeConectionsColors.oneConectionNodeColor;
-                            break;
-                        case 2:
-                            Gizmos.color = nodeConectionsColors.twoConectionNodeColor;
-                            break;
-                        case 3:
-                            Gizmos.color = nodeConectionsColors.threeConectionNodeColor;
-                            break;
-                        case 4:
-                            Gizmos.color = nodeConectionsColors.fourConectionNodeColor;
-                            break;
+                        Gizmos.color = nodeTypeColors.obstacleNodeColor;
                     }
-
+                    else if (tile.CharFile == '.')
+                    {
+                        Gizmos.color = nodeTypeColors.smallDotNodeColor;
+                    }
+                    else if (tile.CharFile == 'o')
+                    {
+                        Gizmos.color = nodeTypeColors.bigDotNodeColor;
+                    }
+                    else if (tile.CharFile == ' ')
+                    {
+                        Gizmos.color = nodeTypeColors.emptyNodeColor;
+                    }
+                    else
+                    {
+                        Gizmos.color = nodeTypeColors.unexpectedNodeColor;
+                    }
+                    Gizmos.DrawWireSphere(new Vector3(tile.Position.x, tile.Position.y, 0.0f), 0.05f);
                 }
-                Gizmos.DrawWireSphere(new Vector3((float)node.Position.x, (float)node.Position.y, 0.0f), 0.05f);
+
+            }
+            else if (drawNodesConections)
+            {
+                foreach (Node node in nodes)
+                {
+                    if (node.IsObstacle)
+                    {
+                        Gizmos.color = nodeConectionsColors.obstacleNodeColor;
+                    }
+                    else
+                    {
+                        switch (node.Adjacents.Count)
+                        {
+                            case 0:
+                                Gizmos.color = nodeConectionsColors.zeroConectionNodeColor;
+                                break;
+                            case 1:
+                                Gizmos.color = nodeConectionsColors.oneConectionNodeColor;
+                                break;
+                            case 2:
+                                Gizmos.color = nodeConectionsColors.twoConectionNodeColor;
+                                break;
+                            case 3:
+                                Gizmos.color = nodeConectionsColors.threeConectionNodeColor;
+                                break;
+                            case 4:
+                                Gizmos.color = nodeConectionsColors.fourConectionNodeColor;
+                                break;
+                        }
+
+                    }
+                    Gizmos.DrawWireSphere(new Vector3((float)node.Position.x, (float)node.Position.y, 0.0f), 0.05f);
+                }
             }
         }
     }
 }
-

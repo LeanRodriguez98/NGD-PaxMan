@@ -13,8 +13,8 @@ public class PaxMan : MonoBehaviour
     private Vector2 previousMovement;
     private Animator animator;
     private Map map;
-    private Node currentNode;
-    private Node destinationNode;
+    public Node currentNode;
+    public Node destinationNode;
     private const string horizontalAxis = "Horizontal";
     private const string verticalAxis = "Vertical";
     void Start()
