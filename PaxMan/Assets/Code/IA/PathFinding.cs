@@ -15,7 +15,11 @@ public class PathFinding
         openNodes = new List<Node>();
         closedNodes = new List<Node>();
     }
-   
+    public void IgnoreNode(Node n)
+    {
+        n.CloseNode();
+        closedNodes.Add(n);
+    }
     public List<Vector2> GetPath(Node _startNode, Node _destinationNode)
     {
         if (Map.instance == null)

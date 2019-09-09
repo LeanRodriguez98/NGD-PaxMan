@@ -19,12 +19,21 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        Application.targetFrameRate = 60;
         map = Map.instance;
         player = FindObjectOfType<PaxMan>();
     }
     void Update()
     {
         CheckCollisions();
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            foreach (Node node in map.GetAllNodesOfConectionsNumber(new int[] {3,4}))
+            {
+                Debug.Log(node.Position);
+            }
+           
+        }
     }
 
     private void CheckCollisions()

@@ -246,7 +246,22 @@ public class Map : MonoBehaviour
         return null;
     }
 
-
+    public List<Node> GetAllNodesOfConectionsNumber(int[] indexes)
+    {
+        List<Node> _nodes = new List<Node>();
+        foreach (Node node in nodes)
+        {
+            for (int i = 0; i < indexes.Length; i++)
+            {
+                if (node.Adjacents.Count == indexes[i])
+                {
+                    _nodes.Add(node);
+                }
+            }
+            
+        }
+        return _nodes;
+    }
     private void OnDrawGizmos()
     {
         if (drawGizmos)
