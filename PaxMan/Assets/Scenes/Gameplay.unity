@@ -10382,10 +10382,10 @@ MonoBehaviour:
   - 9.3333
   - 10
   - 9.75
-  drawGizmos: 1
+  drawGizmos: 0
   drawGrid: 1
   drawNodeID: 1
-  drawNodesType: 0
+  drawNodesType: 1
   nodeTypeColors:
     emptyNodeColor: {r: 0, g: 1, b: 0, a: 1}
     smallDotNodeColor: {r: 1, g: 1, b: 0, a: 1}
@@ -29982,6 +29982,11 @@ PrefabInstance:
         type: 3}
       propertyPath: pointsValue
       value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6622173843020622991, guid: 993d21501bc680e44bf71044328823ed,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 993d21501bc680e44bf71044328823ed, type: 3}

@@ -57,6 +57,8 @@ public class Editor_Map : Editor
             if (map.BigDotPrefab != null && map.BigDotPrefab.GetComponent<SpriteRenderer>().sprite != null)
                 EditorGUILayout.ObjectField("Preview", map.BigDotPrefab.GetComponent<SpriteRenderer>().sprite, typeof(Sprite), false, null);
         }
+
+        
         EditorGUILayout.Space();
         cherrySettingsFoldOut = EditorGUILayout.Foldout(cherrySettingsFoldOut, "Cherry Settings");
         if (cherrySettingsFoldOut)
@@ -132,6 +134,7 @@ public class Editor_Map : Editor
                 EditorGUILayout.PropertyField(nodeConectionsColors, new GUIContent("Node Connections Colors"), true);
             }
         }
+        serializedObject.ApplyModifiedProperties();
     }
 
 
