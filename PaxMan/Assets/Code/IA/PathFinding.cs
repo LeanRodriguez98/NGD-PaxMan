@@ -15,8 +15,8 @@ public class PathFinding
         openNodes = new List<Node>();
         closedNodes = new List<Node>();
     }
-
-    public List<Vector2> GetPath(Vector2 startPosition, Vector2 destinationPosition)
+   
+    public List<Vector2> GetPath(Node _startNode, Node _destinationNode)
     {
         if (Map.instance == null)
         {
@@ -28,8 +28,8 @@ public class PathFinding
         {
             return new List<Vector2>();
         }
-        startNode = map.PositionToNode(startPosition);
-        destinationNode = map.PositionToNode(destinationPosition);
+        startNode = _startNode;
+        destinationNode = _destinationNode;
 
         startNode.OpenNode();
         openNodes.Add(startNode);
@@ -83,11 +83,12 @@ public class PathFinding
         {
             openNodes[i].RestartNode();
         }
-
+        openNodes.Clear();
         for (int i = 0; i < closedNodes.Count; i++)
         {
             closedNodes[i].RestartNode();
         }
+        closedNodes.Clear();
     }
     private List<Node> GeneratePath(List<Node> list, Node n)
     {
@@ -102,7 +103,17 @@ public class PathFinding
 
     private Node GetOpenNode()
     {
-        return openNodes[openNodes.Count - 1];
+        Node n = null;
+        uint currentMinDistance = int.MaxValue;
+        for (int i = 0; i < openNodes.Count; i++)
+        {
+            if (ManhattanDistance(openNodes[i].Position, destinationNode.Position) < currentMinDistance)
+            {
+                n = openNodes[i];
+                currentMinDistance = ManhattanDistance(openNodes[i].Position, destinationNode.Position);
+            }
+        }
+        return n;
 
     }
 

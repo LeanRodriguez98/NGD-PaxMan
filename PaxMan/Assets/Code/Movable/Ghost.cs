@@ -50,7 +50,7 @@ public class Ghost : MonoBehaviour
         map = Map.instance;
         transform.position = map.IdToNode(StartPositionnodeID).Position;
         pathFinding = new PathFinding();
-        currentPath = pathFinding.GetPath(transform.position, map.IdToNode(homePatron.startPositionNodeID).Position);
+        currentPath = pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(homePatron.startPositionNodeID));
         StartCoroutine(Movement());
     }
 
@@ -87,13 +87,13 @@ public class Ghost : MonoBehaviour
     {
         if (aux)
         {
-            currentPath = pathFinding.GetPath(map.IdToNode(homePatron.startPositionNodeID).Position, map.IdToNode(homePatron.endPositionNodeID).Position);
+            currentPath = pathFinding.GetPath(map.IdToNode(homePatron.startPositionNodeID), map.IdToNode(homePatron.endPositionNodeID));
         }
         else
         {
-            currentPath.Reverse();
+            currentPath = pathFinding.GetPath(map.IdToNode(homePatron.endPositionNodeID), map.IdToNode(homePatron.startPositionNodeID));
         }
-        aux = false;
+        aux = !aux;
         StartCoroutine(Movement());
     }
 }
