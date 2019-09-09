@@ -5,6 +5,31 @@ using UnityEngine;
 
 public class Ghost : MonoBehaviour
 {
+    public enum States
+    {
+        idle = 0,
+        leaveingHome = 1,
+        patrol = 2,
+        goToScatter = 3,
+        scatter = 4,
+        chase = 5,
+        panic = 6,
+        goToHome = 7,
+        _count
+    }
+
+    public enum Flags
+    {
+        onStartGame = 0,
+        onIdle = 1,
+        onOpenDoor = 2,
+        onStartPatrol = 3,
+        onGoToScatter = 4,
+        onScatter = 5,
+        onSeePaxMan = 6,
+        OnPanic = 7,
+        _count
+    }
 
     [System.Serializable]
     public struct OnHomePatron
