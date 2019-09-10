@@ -8,7 +8,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7325839173099340688}
+  - component: {fileID: 8245241214333218126}
   - component: {fileID: 8770722337967143860}
   - component: {fileID: 5508071324394057815}
   m_Layer: 0
@@ -18,25 +18,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &7325839173099340688
-RectTransform:
+--- !u!4 &8245241214333218126
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4519282131420516549}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.313, y: 0.23, z: -0.048609212}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1, y: 1}
-  m_Pivot: {x: 0, y: 0}
 --- !u!212 &8770722337967143860
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -97,12 +92,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0eda6de1df662d4aa915b09871ca498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTileX: 0
-  currentTileY: 0
-  nextTileX: 0
-  nextTileY: 0
-  isClaimable: 0
-  isDead: 0
-  desiredMovementX: 0
-  desiredMovementY: 0
-  myBehaviour: 0
+  StartPositionnodeID: 349
+  homePatron:
+    startPositionNodeID: 323
+    endPositionNodeID: 375
+  patrolPatron:
+    countOfConectionNodesIDPosibleTarget: 0300000004000000
+    excludedNodesID: 0f010000100100001101000012010000430100004401000045010000460100005c0100005d0100005e0100005f01000060010000610100007701000078010000790100007a010000
+  currentPath: []
+  pathStepIndex: 0
+  aux: 1

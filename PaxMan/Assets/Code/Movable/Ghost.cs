@@ -131,11 +131,11 @@ public class Ghost : MonoBehaviour
                         {
                             posibleDestinations.Add(node);
                         }
+                        addNode = true;
                     }
                 }
-
                 destinationNode = posibleDestinations[UnityEngine.Random.Range(0, (posibleDestinations.Count))];
-                pathFinding.IgnoreNode(map.PositionToNode(currentPath[currentPath.Count-2])); //ignore the previous node because he can't go backwards 
+                pathFinding.IgnoreNode(map.PositionToNode(currentPath[currentPath.Count-2])); //ignore the previous node because the ghosts can't go backwards 
                 currentPath = pathFinding.GetPath(map.PositionToNode(transform.position), destinationNode);
                 break;
         }
