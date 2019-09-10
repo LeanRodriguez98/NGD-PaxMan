@@ -57,7 +57,7 @@ public class Ghost : MonoBehaviour
     }
 
     [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
-    public uint StartPositionnodeID;
+    public uint StartPositionNodeID;
     private Map map;
     private FSM fsm;
     private PathFinding pathFinding;
@@ -67,11 +67,13 @@ public class Ghost : MonoBehaviour
     public List<Vector2> currentPath = new List<Vector2>();// Make private leater
     public int pathStepIndex = 0;                          // Make private leater
     private bool canMove = true;
+
+  
     private void Start()
     {
         map = Map.instance;
         SetFSM();
-        transform.position = map.IdToNode(StartPositionnodeID).Position;
+        transform.position = map.IdToNode(StartPositionNodeID).Position;
         pathFinding = new PathFinding();
         currentPath = pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(homePatron.startPositionNodeID));
         StartCoroutine(Movement());
@@ -102,6 +104,7 @@ public class Ghost : MonoBehaviour
                 i++;
                 yield return null;
             }
+            NewTileVerifications();
             if (destinationPosition == currentPath[currentPath.Count - 1])
                 UpdatePath();
             else
@@ -109,7 +112,25 @@ public class Ghost : MonoBehaviour
         }
     }
 
-    private void UpdatePath()
+    private void NewTileVerifications()
+    {
+        switch (fsm.GetState())
+        {
+            case (int)States.goToScatter:
+                for (int i = 0; i < scatterPatron.scatterPosibleStartNodeID.Length; i++)
+                {
+                    if (map.PositionToNode(transform.position) == map.IdToNode(scatterPatron.scatterPosibleStartNodeID[i]))
+                    {
+                        fsm.SendEvent((int)Flags.onScatter);
+                        UpdatePath();
+                    }
+                }
+                break;
+
+        }
+    }
+
+        private void UpdatePath()
     {
         switch (fsm.GetState())
         {
@@ -169,10 +190,16 @@ public class Ghost : MonoBehaviour
                         posibleDestinations.Add(node);
                     addNode = true;
                 }
+
             }
+            //posibleDestinations.Remove(map.PositionToNode(transform.position));
+            //Debug.Log("Same eliminated: " + (Vector2)transform.position + " - " + map.PositionToNode(transform.position).Position);
+
             destinationNode = posibleDestinations[UnityEngine.Random.Range(0, (posibleDestinations.Count))];
             LockPreviousPosition();
             currentPath = pathFinding.GetPath(map.PositionToNode(transform.position), destinationNode);
+            posibleDestinations.Clear();
+
         }
     }
 
@@ -183,13 +210,17 @@ public class Ghost : MonoBehaviour
         for (int i = 0; i < scatterPatron.scatterPosibleStartNodeID.Length; i++)
             scatterPosibleStartNodes.Add(map.IdToNode(scatterPatron.scatterPosibleStartNodeID[i]));
         Node destinationNode = pathFinding.GetNearestNode(map.PositionToNode(transform.position), scatterPosibleStartNodes);
-        currentPath = pathFinding.GetPath(map.PositionToNode(transform.position), destinationNode);
         scatterPatron.iterations = 0;
         fsm.SendEvent((int)Flags.onScatter);
+        if (destinationNode != map.PositionToNode(transform.position))
+            currentPath = pathFinding.GetPath(map.PositionToNode(transform.position), destinationNode);
+        else
+            UpdatePath();
     }
 
     private void Scatter()
     {
+        LockPreviousPosition();
         int targetIndex = 0;
         Node currentNode = map.PositionToNode(transform.position);
         for (int i = 0; i < scatterPatron.scatterPosibleStartNodeID.Length; i++)
