@@ -20,6 +20,8 @@ public class PathFinding
         n.CloseNode();
         closedNodes.Add(n);
     }
+
+
     public List<Vector2> GetPath(Node _startNode, Node _destinationNode)
     {
         if (Map.instance == null)
@@ -39,7 +41,7 @@ public class PathFinding
         openNodes.Add(startNode);
         while (openNodes.Count > 0)
         {
-            Node n = GetOpenNode();
+            Node n = GetNearestNode(destinationNode, openNodes);
             if (n == destinationNode)
             {
                 List<Node> nodePath = new List<Node>();
@@ -105,22 +107,21 @@ public class PathFinding
         return list;
     }
 
-    private Node GetOpenNode()
+    public Node GetNearestNode(Node _currentNode, List<Node> _targets)
     {
         Node n = null;
         uint currentMinDistance = int.MaxValue;
-        for (int i = 0; i < openNodes.Count; i++)
+        for (int i = 0; i < _targets.Count; i++)
         {
-            if (ManhattanDistance(openNodes[i].Position, destinationNode.Position) < currentMinDistance)
+            uint manhattanDistance = ManhattanDistance(_currentNode.Position, _targets[i].Position);
+            if (manhattanDistance < currentMinDistance)
             {
-                n = openNodes[i];
-                currentMinDistance = ManhattanDistance(openNodes[i].Position, destinationNode.Position);
+                n = _targets[i];
+                currentMinDistance = manhattanDistance;
             }
         }
         return n;
-
     }
-
     private uint ManhattanDistance(Vector2 origin, Vector2 destination)
     {
         uint x = (uint)Mathf.Abs(origin.x - destination.x);

@@ -10382,9 +10382,9 @@ MonoBehaviour:
   - 9.3333
   - 10
   - 9.75
-  drawGizmos: 0
+  drawGizmos: 1
   drawGrid: 1
-  drawNodeID: 0
+  drawNodeID: 1
   drawNodesType: 0
   nodeTypeColors:
     emptyNodeColor: {r: 0, g: 1, b: 0, a: 1}
@@ -40088,6 +40088,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
         type: 3}
+      propertyPath: scatterPatron.scatterPosibleStartNodeID.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
       propertyPath: patrolPatron.countOfNodesConectionPosibleTarget.Array.data[0]
       value: 3
       objectReference: {fileID: 0}
@@ -40095,6 +40100,36 @@ PrefabInstance:
         type: 3}
       propertyPath: patrolPatron.countOfNodesConectionPosibleTarget.Array.data[1]
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: scatterPatron.goToScattProbability
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: scatterPatron.leaveScattProbability
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: scatterPatron.scatterPosibleStartNodeID.Array.data[0]
+      value: 124
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: scatterPatron.scatterPosibleStartNodeID.Array.data[1]
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: scatterPatron.scatterPosibleStartNodeID.Array.data[2]
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: scatterPatron.scatterPosibleStartNodeID.Array.data[3]
+      value: 129
       objectReference: {fileID: 0}
     - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
         type: 3}
