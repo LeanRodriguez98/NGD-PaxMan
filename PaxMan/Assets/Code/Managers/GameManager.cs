@@ -26,14 +26,6 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         CheckCollisions();
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            foreach (Node node in map.GetAllNodesOfConectionsNumber(new int[] {3,4}))
-            {
-                Debug.Log(node.Position);
-            }
-           
-        }
     }
 
     private void CheckCollisions()

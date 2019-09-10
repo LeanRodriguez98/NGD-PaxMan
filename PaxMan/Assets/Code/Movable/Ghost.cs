@@ -64,11 +64,10 @@ public class Ghost : MonoBehaviour
     public OnHomePatron homePatron;
     public PatrolPatron patrolPatron;
     public ScatterPatron scatterPatron;
-    public List<Vector2> currentPath = new List<Vector2>();// Make private leater
     public int pathStepIndex = 0;                          // Make private leater
+    public List<Vector2> currentPath = new List<Vector2>();// Make private leater
     private bool canMove = true;
 
-  
     private void Start()
     {
         map = Map.instance;
@@ -88,22 +87,53 @@ public class Ghost : MonoBehaviour
         fsm.SetRelation((int)States.patrol, (int)Flags.onGoToScatter, (int)States.goToScatter);
         fsm.SetRelation((int)States.goToScatter, (int)Flags.onScatter, (int)States.scatter);
         fsm.SetRelation((int)States.scatter, (int)Flags.onStartPatrol, (int)States.patrol);
+
+        fsm.SetRelation((int)States.patrol, (int)Flags.OnPanic, (int)States.panic);
+        fsm.SetRelation((int)States.goToScatter, (int)Flags.OnPanic, (int)States.panic);
+        fsm.SetRelation((int)States.scatter, (int)Flags.OnPanic, (int)States.panic);
+
+
+        fsm.SetRelation((int)States.panic, (int)Flags.onStartPatrol, (int)States.patrol);
+
+
+
     }
+
+    Vector2 auxvec;
+    Vector2 currentPosition;
+    Vector2 destinationPosition;
     public IEnumerator Movement()
     {
         while (canMove)
         {
-            Vector2 currentPosition = currentPath[pathStepIndex];
-            Vector2 destinationPosition = currentPath[pathStepIndex + 1];
-            float i = 0.0f;
-            while (transform.position != (Vector3)destinationPosition)
+            if (currentPath.Count >= 2)
             {
-                if (i > 10.0f)
-                    i = 10.0f;
-                transform.position = Vector3.Lerp(currentPosition, destinationPosition, i / 10.0f);
-                i++;
-                yield return null;
+                currentPosition = currentPath[pathStepIndex];
+                destinationPosition = currentPath[pathStepIndex + 1];
+                auxvec = destinationPosition - currentPosition;
+                float i = 0.0f;
+                while (transform.position != (Vector3)destinationPosition)
+                {
+                    if (i > 10.0f)
+                        i = 10.0f;
+                    transform.position = Vector3.Lerp(currentPosition, destinationPosition, i / 10.0f);
+                    if (fsm.GetState() != (int)States.panic)
+                    {
+                        i++;
+                    }
+                    else
+                    {
+                        if ((Vector2)transform.position == currentPosition)
+                        {
+                            UpdatePath();
+                            break;
+                        }
+                        i--;
+                    }
+                    yield return null;
+                }
             }
+
             NewTileVerifications();
             if (destinationPosition == currentPath[currentPath.Count - 1])
                 UpdatePath();
@@ -127,10 +157,11 @@ public class Ghost : MonoBehaviour
                 }
                 break;
 
+
         }
     }
 
-        private void UpdatePath()
+    private void UpdatePath()
     {
         switch (fsm.GetState())
         {
@@ -149,6 +180,13 @@ public class Ghost : MonoBehaviour
             case (int)States.scatter:
                 Scatter();
                 break;
+            case (int)States.panic:
+                pathFinding.IgnoreNode(map.PositionToNode(transform.position + (Vector3)(auxvec)));
+                currentPath = pathFinding.GetPath(map.PositionToNode(transform.position + (Vector3)(auxvec)), map.PositionToNode(currentPath[0]));
+                pathStepIndex = -1;
+                fsm.SendEvent((int)Flags.onStartPatrol);
+                break;
+
         }
         pathStepIndex = 0;
     }
@@ -240,6 +278,11 @@ public class Ghost : MonoBehaviour
         }
     }
 
+    private void Panic()
+    {
+
+    }
+
     private void LockPreviousPosition()
     {
         pathFinding.IgnoreNode(map.PositionToNode(currentPath[pathStepIndex]));
@@ -250,6 +293,12 @@ public class Ghost : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             fsm.SendEvent((int)Flags.onOpenDoor);
+        }
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            fsm.SendEvent((int)Flags.OnPanic);
+
         }
     }
 }
