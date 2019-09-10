@@ -17,6 +17,8 @@ public class PaxMan : MonoBehaviour
     public Node destinationNode;
     private const string horizontalAxis = "Horizontal";
     private const string verticalAxis = "Vertical";
+
+    private bool canMove = true;
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -32,38 +34,40 @@ public class PaxMan : MonoBehaviour
     }
     IEnumerator Movement()
     {
-        if (speed > maxSpeed)
-            speed = maxSpeed;
-        float i = 0.0f;
-        float currentSpeed = maxSpeed - (speed * porcentualSpeed);
-        while (transform.position != (Vector3)destinationNode.Position)
+        while (canMove)
         {
-            if (i > currentSpeed)
-                i = currentSpeed;
-            transform.position = Vector3.Lerp(currentNode.Position, destinationNode.Position, i / currentSpeed);
-            i++;
-            yield return null;
+            if (speed > maxSpeed)
+                speed = maxSpeed;
+            float i = 0.0f;
+            float currentSpeed = maxSpeed - (speed * porcentualSpeed);
+            while (transform.position != (Vector3)destinationNode.Position)
+            {
+                if (i > currentSpeed)
+                    i = currentSpeed;
+                transform.position = Vector3.Lerp(currentNode.Position, destinationNode.Position, i / currentSpeed);
+                i++;
+                yield return null;
+            }
+
+            currentNode = destinationNode;
+
+            do
+            {
+                if (map.GetNextNode(currentNode, movement) != null)
+                {
+                    destinationNode = map.GetNextNode(currentNode, movement);
+                    previousMovement = movement;
+                }
+                else
+                {
+                    destinationNode = map.GetNextNode(currentNode, previousMovement);
+                    movement = previousMovement;
+                }
+                UpdateAnimations();
+                yield return null;
+            } while (destinationNode == null);
         }
 
-        currentNode = destinationNode;
-
-        do
-        {
-            if (map.GetNextNode(currentNode, movement) != null)
-            {
-                destinationNode = map.GetNextNode(currentNode, movement);
-                previousMovement = movement;
-            }
-            else
-            {
-                destinationNode = map.GetNextNode(currentNode, previousMovement);
-                movement = previousMovement;
-            }
-            UpdateAnimations();
-            yield return null;
-        } while (destinationNode == null);
-        
-        StartCoroutine(Movement());
     }
 
 

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 [CustomEditor(typeof(Map))]
 public class Editor_Map : Editor
@@ -29,13 +27,9 @@ public class Editor_Map : Editor
         Map map = (Map)target;
         style = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontSize = 25, };
         if (GUILayout.Button("Init Map"))
-        {
             map.InitMap();
-        }
         if (GUILayout.Button("Clear Map"))
-        {
             map.ClearMap();
-        }
         gridFoldOut = EditorGUILayout.Foldout(gridFoldOut, "Grid");
         if (gridFoldOut)
         {
@@ -57,8 +51,6 @@ public class Editor_Map : Editor
             if (map.BigDotPrefab != null && map.BigDotPrefab.GetComponent<SpriteRenderer>().sprite != null)
                 EditorGUILayout.ObjectField("Preview", map.BigDotPrefab.GetComponent<SpriteRenderer>().sprite, typeof(Sprite), false, null);
         }
-
-        
         EditorGUILayout.Space();
         cherrySettingsFoldOut = EditorGUILayout.Foldout(cherrySettingsFoldOut, "Cherry Settings");
         if (cherrySettingsFoldOut)
@@ -114,7 +106,6 @@ public class Editor_Map : Editor
             map.drawGrid = EditorGUILayout.Toggle("Draw Grid", map.drawGrid);
             map.drawNodeID = EditorGUILayout.Toggle("Draw Node ID", map.drawNodeID);
             EditorGUILayout.EndHorizontal();
-
             EditorGUILayout.BeginHorizontal();
             map.drawNodesType = EditorGUILayout.Toggle("Draw Type Nodes", map.drawNodesType);
             if (map.drawNodesType)
@@ -136,6 +127,4 @@ public class Editor_Map : Editor
         }
         serializedObject.ApplyModifiedProperties();
     }
-
-
 }

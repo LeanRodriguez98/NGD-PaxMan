@@ -10382,7 +10382,7 @@ MonoBehaviour:
   - 9.3333
   - 10
   - 9.75
-  drawGizmos: 1
+  drawGizmos: 0
   drawGrid: 1
   drawNodeID: 0
   drawNodesType: 0
@@ -40080,6 +40080,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Ghost
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: patrolPatron.countOfNodesConectionPosibleTarget.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: patrolPatron.countOfNodesConectionPosibleTarget.Array.data[0]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: patrolPatron.countOfNodesConectionPosibleTarget.Array.data[1]
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
         type: 3}

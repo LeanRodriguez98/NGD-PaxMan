@@ -34,13 +34,16 @@ public class Ghost : MonoBehaviour
     [System.Serializable]
     public struct OnHomePatron
     {
+        [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
         public uint startPositionNodeID;
+        [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
         public uint endPositionNodeID;
     }
     [System.Serializable]
     public struct PatrolPatron
     {
-        public int[] countOfConectionNodesIDPosibleTarget;
+        public int[] countOfNodesConectionPosibleTarget;
+        [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
         public int[] excludedNodesID;
     }
 
@@ -53,7 +56,7 @@ public class Ghost : MonoBehaviour
     public PatrolPatron patrolPatron;
     public List<Vector2> currentPath = new List<Vector2>();// Make private leater
     public int pathStepIndex = 0;                          // Make private leater
-    public bool aux = true;// Change this                  // Make private leater
+    private bool canMove = true;
     private void Start()
     {
         map = Map.instance;
@@ -69,31 +72,25 @@ public class Ghost : MonoBehaviour
 
     public IEnumerator Movement()
     {
-        Vector2 currentPosition = currentPath[pathStepIndex];
-        Vector2 destinationPosition = currentPath[pathStepIndex + 1];
-        float i = 0.0f;
-
-        while (transform.position != (Vector3)destinationPosition)
+        while (canMove)
         {
-            if (i > 10.0f)
+            Vector2 currentPosition = currentPath[pathStepIndex];
+            Vector2 destinationPosition = currentPath[pathStepIndex + 1];
+            float i = 0.0f;
+            while (transform.position != (Vector3)destinationPosition)
             {
-                i = 10.0f;
+                if (i > 10.0f)
+                    i = 10.0f;
+                transform.position = Vector3.Lerp(currentPosition, destinationPosition, i / 10.0f);
+                i++;
+                yield return null;
             }
-            transform.position = Vector3.Lerp(currentPosition, destinationPosition, i / 10.0f);
-            i++;
+            if (destinationPosition == currentPath[currentPath.Count - 1])
+                UpdatePath();
+            else
+                pathStepIndex++;
+        }
 
-            yield return null;
-        }
-        if (destinationPosition == currentPath[currentPath.Count - 1])
-        {
-            pathStepIndex = 0;
-            UpdatePath();
-        }
-        else
-        {
-            pathStepIndex++;
-            StartCoroutine(Movement());
-        }
     }
 
     private void UpdatePath()
@@ -101,11 +98,10 @@ public class Ghost : MonoBehaviour
         switch (fsm.GetState())
         {
             case (int)States.idle:
-                if (aux)
-                    currentPath = pathFinding.GetPath(map.IdToNode(homePatron.startPositionNodeID), map.IdToNode(homePatron.endPositionNodeID));
-                else
-                    currentPath = pathFinding.GetPath(map.IdToNode(homePatron.endPositionNodeID), map.IdToNode(homePatron.startPositionNodeID));
-                aux = !aux;
+                currentPath = pathFinding.GetPath(map.IdToNode(homePatron.startPositionNodeID), map.IdToNode(homePatron.endPositionNodeID));
+                uint auxID = homePatron.startPositionNodeID;
+                homePatron.startPositionNodeID = homePatron.endPositionNodeID;
+                homePatron.endPositionNodeID = auxID;
                 break;
             case (int)States.leaveingHome:
                 currentPath = pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(272));
@@ -115,7 +111,7 @@ public class Ghost : MonoBehaviour
                 Node destinationNode = null;
                 List<Node> posibleDestinations = new List<Node>();
                 bool addNode = true;
-                foreach (Node node in map.GetAllNodesOfConectionsNumber(patrolPatron.countOfConectionNodesIDPosibleTarget))
+                foreach (Node node in map.GetAllNodesOfConectionsNumber(patrolPatron.countOfNodesConectionPosibleTarget))
                 {
                     if (node != map.PositionToNode(transform.position))
                     {
@@ -135,11 +131,11 @@ public class Ghost : MonoBehaviour
                     }
                 }
                 destinationNode = posibleDestinations[UnityEngine.Random.Range(0, (posibleDestinations.Count))];
-                pathFinding.IgnoreNode(map.PositionToNode(currentPath[currentPath.Count-2])); //ignore the previous node because the ghosts can't go backwards 
+                pathFinding.IgnoreNode(map.PositionToNode(currentPath[pathStepIndex])); //ignore the previous node because the ghosts can't go backwards 
                 currentPath = pathFinding.GetPath(map.PositionToNode(transform.position), destinationNode);
+                pathStepIndex = 0;
                 break;
         }
-        StartCoroutine(Movement());
 
     }
 
