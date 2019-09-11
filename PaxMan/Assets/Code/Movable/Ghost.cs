@@ -56,16 +56,48 @@ public class Ghost : MonoBehaviour
         [HideInInspector] public uint iterations;
     }
 
+    [System.Serializable]
+    public struct ScaredPatron
+    {
+        public float scaredTime;
+    }
+
+    [System.Serializable]
+    public struct Sprites
+    {
+        [HideInInspector] public SpriteRenderer spriteRenderer;
+        public Sprite defaultSprite;
+        public Sprite scaredSprite;
+        public Sprite desdSprite;
+    }
+
+    [System.Serializable]
+    public class IA
+    {
+        public IA(int _states, int _flags)
+        {
+            fsm = new FSM(_states, _flags);
+            pathFinding = new PathFinding();
+            pathStepIndex = 0;
+            currentPath = new List<Vector2>();
+        }
+        public FSM fsm;
+        public PathFinding pathFinding;
+        public int pathStepIndex;
+        public Vector2 currentPosition;
+        public Vector2 destinationPosition;
+        public List<Vector2> currentPath;
+    }
+
     [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
     public uint StartPositionNodeID;
     private Map map;
-    private FSM fsm;
-    private PathFinding pathFinding;
+    private IA ia;
+    public Sprites sprites;
     public OnHomePatron homePatron;
     public PatrolPatron patrolPatron;
     public ScatterPatron scatterPatron;
-    public int pathStepIndex = 0;                          // Make private leater
-    public List<Vector2> currentPath = new List<Vector2>();// Make private leater
+    public ScaredPatron scaredPatron;
     private bool canMove = true;
 
     private void Start()
@@ -73,57 +105,52 @@ public class Ghost : MonoBehaviour
         map = Map.instance;
         SetFSM();
         transform.position = map.IdToNode(StartPositionNodeID).Position;
-        pathFinding = new PathFinding();
-        currentPath = pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(homePatron.startPositionNodeID));
+        ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(homePatron.startPositionNodeID));
+        sprites.spriteRenderer = GetComponent<SpriteRenderer>();
+        SetDefaultSprite();
         StartCoroutine(Movement());
     }
 
     private void SetFSM()
     {
-        fsm = new FSM((int)States._count, (int)Flags._count);
-        fsm.SetState((int)States.idle);
-        fsm.SetRelation((int)States.idle, (int)Flags.onOpenDoor, (int)States.leaveingHome);
-        fsm.SetRelation((int)States.leaveingHome, (int)Flags.onStartPatrol, (int)States.patrol);
-        fsm.SetRelation((int)States.patrol, (int)Flags.onGoToScatter, (int)States.goToScatter);
-        fsm.SetRelation((int)States.goToScatter, (int)Flags.onScatter, (int)States.scatter);
-        fsm.SetRelation((int)States.scatter, (int)Flags.onStartPatrol, (int)States.patrol);
+        ia = new IA((int)States._count, (int)Flags._count);
+        ia.fsm.SetState((int)States.idle);
+        ia.fsm.SetRelation((int)States.idle, (int)Flags.onOpenDoor, (int)States.leaveingHome);
+        ia.fsm.SetRelation((int)States.leaveingHome, (int)Flags.onStartPatrol, (int)States.patrol);
+        ia.fsm.SetRelation((int)States.patrol, (int)Flags.onGoToScatter, (int)States.goToScatter);
+        ia.fsm.SetRelation((int)States.goToScatter, (int)Flags.onScatter, (int)States.scatter);
+        ia.fsm.SetRelation((int)States.scatter, (int)Flags.onStartPatrol, (int)States.patrol);
 
-        fsm.SetRelation((int)States.patrol, (int)Flags.OnPanic, (int)States.panic);
-        fsm.SetRelation((int)States.goToScatter, (int)Flags.OnPanic, (int)States.panic);
-        fsm.SetRelation((int)States.scatter, (int)Flags.OnPanic, (int)States.panic);
-
-
-        fsm.SetRelation((int)States.panic, (int)Flags.onStartPatrol, (int)States.patrol);
+        ia.fsm.SetRelation((int)States.patrol, (int)Flags.OnPanic, (int)States.panic);
+        ia.fsm.SetRelation((int)States.goToScatter, (int)Flags.OnPanic, (int)States.panic);
+        ia.fsm.SetRelation((int)States.scatter, (int)Flags.OnPanic, (int)States.panic);
 
 
+        ia.fsm.SetRelation((int)States.panic, (int)Flags.onStartPatrol, (int)States.patrol);
 
     }
 
-    Vector2 auxvec;
-    Vector2 currentPosition;
-    Vector2 destinationPosition;
     public IEnumerator Movement()
     {
         while (canMove)
         {
-            if (currentPath.Count >= 2)
+            if (ia.currentPath.Count >= 2)
             {
-                currentPosition = currentPath[pathStepIndex];
-                destinationPosition = currentPath[pathStepIndex + 1];
-                auxvec = destinationPosition - currentPosition;
+                ia.currentPosition = ia.currentPath[ia.pathStepIndex];
+                ia.destinationPosition = ia.currentPath[ia.pathStepIndex + 1];
                 float i = 0.0f;
-                while (transform.position != (Vector3)destinationPosition)
+                while (transform.position != (Vector3)ia.destinationPosition)
                 {
                     if (i > 10.0f)
                         i = 10.0f;
-                    transform.position = Vector3.Lerp(currentPosition, destinationPosition, i / 10.0f);
-                    if (fsm.GetState() != (int)States.panic)
+                    transform.position = Vector3.Lerp(ia.currentPosition, ia.destinationPosition, i / 10.0f);
+                    if (ia.fsm.GetState() != (int)States.panic)
                     {
                         i++;
                     }
                     else
                     {
-                        if ((Vector2)transform.position == currentPosition)
+                        if ((Vector2)transform.position == ia.currentPosition)
                         {
                             UpdatePath();
                             break;
@@ -135,35 +162,33 @@ public class Ghost : MonoBehaviour
             }
 
             NewTileVerifications();
-            if (destinationPosition == currentPath[currentPath.Count - 1])
+            if (ia.destinationPosition == ia.currentPath[ia.currentPath.Count - 1])
                 UpdatePath();
             else
-                pathStepIndex++;
+                ia.pathStepIndex++;
         }
     }
 
     private void NewTileVerifications()
     {
-        switch (fsm.GetState())
+        switch (ia.fsm.GetState())
         {
             case (int)States.goToScatter:
                 for (int i = 0; i < scatterPatron.scatterPosibleStartNodeID.Length; i++)
                 {
                     if (map.PositionToNode(transform.position) == map.IdToNode(scatterPatron.scatterPosibleStartNodeID[i]))
                     {
-                        fsm.SendEvent((int)Flags.onScatter);
+                        ia.fsm.SendEvent((int)Flags.onScatter);
                         UpdatePath();
                     }
                 }
                 break;
-
-
         }
     }
 
     private void UpdatePath()
     {
-        switch (fsm.GetState())
+        switch (ia.fsm.GetState())
         {
             case (int)States.idle:
                 Idle();
@@ -181,19 +206,16 @@ public class Ghost : MonoBehaviour
                 Scatter();
                 break;
             case (int)States.panic:
-                pathFinding.IgnoreNode(map.PositionToNode(transform.position + (Vector3)(auxvec)));
-                currentPath = pathFinding.GetPath(map.PositionToNode(transform.position + (Vector3)(auxvec)), map.PositionToNode(currentPath[0]));
-                pathStepIndex = -1;
-                fsm.SendEvent((int)Flags.onStartPatrol);
+                Panic();
                 break;
 
         }
-        pathStepIndex = 0;
+        ia.pathStepIndex = 0;
     }
 
     private void Idle()
     {
-        currentPath = pathFinding.GetPath(map.IdToNode(homePatron.startPositionNodeID), map.IdToNode(homePatron.endPositionNodeID));
+        ia.currentPath = ia.pathFinding.GetPath(map.IdToNode(homePatron.startPositionNodeID), map.IdToNode(homePatron.endPositionNodeID));
         uint auxID = homePatron.startPositionNodeID;
         homePatron.startPositionNodeID = homePatron.endPositionNodeID;
         homePatron.endPositionNodeID = auxID;
@@ -201,15 +223,17 @@ public class Ghost : MonoBehaviour
 
     private void LeavingHome()
     {
-        currentPath = pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(272));
-        fsm.SendEvent((int)Flags.onStartPatrol);
+        ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(272));
+        ia.fsm.SendEvent((int)Flags.onStartPatrol);
     }
 
     private void Patrol()
     {
+        
+
         if (UnityEngine.Random.Range(0, 101) < scatterPatron.goToScattProbability)
         {
-            fsm.SendEvent((int)Flags.onGoToScatter);
+            ia.fsm.SendEvent((int)Flags.onGoToScatter);
             UpdatePath();
         }
         else
@@ -228,16 +252,11 @@ public class Ghost : MonoBehaviour
                         posibleDestinations.Add(node);
                     addNode = true;
                 }
-
             }
-            //posibleDestinations.Remove(map.PositionToNode(transform.position));
-            //Debug.Log("Same eliminated: " + (Vector2)transform.position + " - " + map.PositionToNode(transform.position).Position);
-
             destinationNode = posibleDestinations[UnityEngine.Random.Range(0, (posibleDestinations.Count))];
             LockPreviousPosition();
-            currentPath = pathFinding.GetPath(map.PositionToNode(transform.position), destinationNode);
+            ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), destinationNode);
             posibleDestinations.Clear();
-
         }
     }
 
@@ -247,11 +266,11 @@ public class Ghost : MonoBehaviour
         List<Node> scatterPosibleStartNodes = new List<Node>();
         for (int i = 0; i < scatterPatron.scatterPosibleStartNodeID.Length; i++)
             scatterPosibleStartNodes.Add(map.IdToNode(scatterPatron.scatterPosibleStartNodeID[i]));
-        Node destinationNode = pathFinding.GetNearestNode(map.PositionToNode(transform.position), scatterPosibleStartNodes);
+        Node destinationNode = ia.pathFinding.GetNearestNode(map.PositionToNode(transform.position), scatterPosibleStartNodes);
         scatterPatron.iterations = 0;
-        fsm.SendEvent((int)Flags.onScatter);
+        ia.fsm.SendEvent((int)Flags.onScatter);
         if (destinationNode != map.PositionToNode(transform.position))
-            currentPath = pathFinding.GetPath(map.PositionToNode(transform.position), destinationNode);
+            ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), destinationNode);
         else
             UpdatePath();
     }
@@ -266,13 +285,13 @@ public class Ghost : MonoBehaviour
                 targetIndex = i + 1;
         if (targetIndex >= scatterPatron.scatterPosibleStartNodeID.Length)
             targetIndex = 0;
-        currentPath = pathFinding.GetPath(currentNode, map.IdToNode(scatterPatron.scatterPosibleStartNodeID[targetIndex]));
+        ia.currentPath = ia.pathFinding.GetPath(currentNode, map.IdToNode(scatterPatron.scatterPosibleStartNodeID[targetIndex]));
         scatterPatron.iterations++;
         if (scatterPatron.iterations >= scatterPatron.scatterPosibleStartNodeID.Length)
         {
             if (UnityEngine.Random.Range(0, 101) < scatterPatron.leaveScattProbability)
             {
-                fsm.SendEvent((int)Flags.onStartPatrol);
+                ia.fsm.SendEvent((int)Flags.onStartPatrol);
             }
             scatterPatron.iterations = 0;
         }
@@ -280,25 +299,34 @@ public class Ghost : MonoBehaviour
 
     private void Panic()
     {
+        ia.pathFinding.IgnoreNode(map.PositionToNode(transform.position + (Vector3)(ia.destinationPosition - ia.currentPosition)));
+        ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position + (Vector3)(ia.destinationPosition - ia.currentPosition)), map.PositionToNode(ia.currentPath[0]));
+        ia.pathStepIndex = -1;
+        sprites.spriteRenderer.sprite = sprites.scaredSprite;
+        Invoke("SetDefaultSprite",scaredPatron.scaredTime);
+        ia.fsm.SendEvent((int)Flags.onStartPatrol);
+    }
 
+    public void SetDefaultSprite()
+    {
+        sprites.spriteRenderer.sprite = sprites.defaultSprite;
     }
 
     private void LockPreviousPosition()
     {
-        pathFinding.IgnoreNode(map.PositionToNode(currentPath[pathStepIndex]));
+        ia.pathFinding.IgnoreNode(map.PositionToNode(ia.currentPath[ia.pathStepIndex]));
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            fsm.SendEvent((int)Flags.onOpenDoor);
+            ia.fsm.SendEvent((int)Flags.onOpenDoor);
         }
 
         if (Input.GetKeyDown(KeyCode.M))
         {
-            fsm.SendEvent((int)Flags.OnPanic);
-
+            ia.fsm.SendEvent((int)Flags.OnPanic);
         }
     }
 }

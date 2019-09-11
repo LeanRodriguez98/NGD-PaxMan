@@ -10382,7 +10382,7 @@ MonoBehaviour:
   - 9.3333
   - 10
   - 9.75
-  drawGizmos: 1
+  drawGizmos: 0
   drawGrid: 1
   drawNodeID: 1
   drawNodesType: 0
@@ -40151,6 +40151,29 @@ PrefabInstance:
       propertyPath: test.m_Extent.z
       value: -4.54
       objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: sprites.defaultSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9f751d776385d974fab28e7726e7efed,
+        type: 3}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: sprites.scaredSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ed1e023394dcbbc4ebcec131cb31e8c0,
+        type: 3}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: sprites.desdSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 394d3317ca35e4d4d81be19793b6e526,
+        type: 3}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: scaredPatron.scaredTime
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -40205,6 +40228,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770722337967143860, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8f50973729c0c14280c65e9106e240e, type: 3}
