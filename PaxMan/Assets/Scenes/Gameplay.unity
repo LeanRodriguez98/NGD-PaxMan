@@ -23688,38 +23688,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65bf1db91f85234459b0c9077ab458fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 20
-  speed: 10
-  porcentualSpeed: 0.8
+  movementSettings:
+    maxSpeed: 20
+    speed: 10
+    porcentualSpeed: 0.8
   lifes: 5
-  currentNode:
-    adjacentsIndex: 
-    position: {x: 0, y: 0}
-    nodeState: 0
-    originalState: 0
-    isObstacle: 0
-    used: 0
-    charFile: 0
-    area:
-      serializedVersion: 2
-      x: 0
-      y: 0
-      width: 0
-      height: 0
-  destinationNode:
-    adjacentsIndex: 
-    position: {x: 0, y: 0}
-    nodeState: 0
-    originalState: 0
-    isObstacle: 0
-    used: 0
-    charFile: 0
-    area:
-      serializedVersion: 2
-      x: 0
-      y: 0
-      width: 0
-      height: 0
 --- !u!212 &1108523030
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -40173,6 +40146,36 @@ PrefabInstance:
         type: 3}
       propertyPath: scaredPatron.scaredTime
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: maxSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: speed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: porcentualSpeed
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: movementSettings.maxSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: movementSettings.speed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5508071324394057815, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: movementSettings.porcentualSpeed
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
         type: 3}

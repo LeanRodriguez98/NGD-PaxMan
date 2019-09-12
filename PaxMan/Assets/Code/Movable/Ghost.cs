@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ghost : MonoBehaviour
+public class Ghost : MobileEntity
 {
     public enum States
     {
@@ -98,7 +98,6 @@ public class Ghost : MonoBehaviour
     public PatrolPatron patrolPatron;
     public ScatterPatron scatterPatron;
     public ScaredPatron scaredPatron;
-    private bool canMove = true;
 
     private void Start()
     {
@@ -132,22 +131,20 @@ public class Ghost : MonoBehaviour
 
     public IEnumerator Movement()
     {
+        float iterations;
+        float currentSpeed;
         while (canMove)
         {
             if (ia.currentPath.Count >= 2)
             {
                 ia.currentPosition = ia.currentPath[ia.pathStepIndex];
                 ia.destinationPosition = ia.currentPath[ia.pathStepIndex + 1];
-                float i = 0.0f;
-                while (transform.position != (Vector3)ia.destinationPosition)
+                Reset(out currentSpeed, out iterations);
+                while (IsEqualToPosition(ia.destinationPosition))
                 {
-                    if (i > 10.0f)
-                        i = 10.0f;
-                    transform.position = Vector3.Lerp(ia.currentPosition, ia.destinationPosition, i / 10.0f);
+                    MoveOnTile(ia.currentPosition, ia.destinationPosition, iterations, currentSpeed);
                     if (ia.fsm.GetState() != (int)States.panic)
-                    {
-                        i++;
-                    }
+                        iterations++;
                     else
                     {
                         if ((Vector2)transform.position == ia.currentPosition)
@@ -155,7 +152,7 @@ public class Ghost : MonoBehaviour
                             UpdatePath();
                             break;
                         }
-                        i--;
+                        iterations--;
                     }
                     yield return null;
                 }
@@ -223,14 +220,12 @@ public class Ghost : MonoBehaviour
 
     private void LeavingHome()
     {
-        ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(272));
+        ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(272)); // <---- Change this
         ia.fsm.SendEvent((int)Flags.onStartPatrol);
     }
 
     private void Patrol()
     {
-        
-
         if (UnityEngine.Random.Range(0, 101) < scatterPatron.goToScattProbability)
         {
             ia.fsm.SendEvent((int)Flags.onGoToScatter);

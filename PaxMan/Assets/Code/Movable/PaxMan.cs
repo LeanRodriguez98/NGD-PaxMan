@@ -3,26 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PaxMan : MonoBehaviour
+public class PaxMan : MobileEntity
 {
-    public float maxSpeed;
-    public float speed;
-    [Range(0.0f, 1.0f)] public float porcentualSpeed;
     public uint lifes;
     private Vector2 movement;
     private Vector2 previousMovement;
     private Animator animator;
     private Map map;
-    public Node currentNode;
-    public Node destinationNode;
+    private Node currentNode;
+    private Node destinationNode;
     private const string horizontalAxis = "Horizontal";
     private const string verticalAxis = "Vertical";
 
-    private bool canMove = true;
     void Start()
     {
         animator = GetComponent<Animator>();
-        movement = new Vector2(-1.0f, 0.0f);
+        movement = Vector2.left;
         previousMovement = movement;
         UpdateAnimations();
         map = Map.instance;
@@ -32,25 +28,20 @@ public class PaxMan : MonoBehaviour
         StartCoroutine(Movement());
 
     }
-    IEnumerator Movement()
+    private IEnumerator Movement()
     {
+        float iterations;
+        float currentSpeed;
         while (canMove)
         {
-            if (speed > maxSpeed)
-                speed = maxSpeed;
-            float i = 0.0f;
-            float currentSpeed = maxSpeed - (speed * porcentualSpeed);
-            while (transform.position != (Vector3)destinationNode.Position)
+            Reset(out currentSpeed,out iterations);
+            while (IsEqualToPosition(destinationNode.Position))
             {
-                if (i > currentSpeed)
-                    i = currentSpeed;
-                transform.position = Vector3.Lerp(currentNode.Position, destinationNode.Position, i / currentSpeed);
-                i++;
+                MoveOnTile(currentNode.Position, destinationNode.Position, iterations, currentSpeed);
+                iterations++;
                 yield return null;
             }
-
             currentNode = destinationNode;
-
             do
             {
                 if (map.GetNextNode(currentNode, movement) != null)
@@ -67,7 +58,6 @@ public class PaxMan : MonoBehaviour
                 yield return null;
             } while (destinationNode == null);
         }
-
     }
 
 
@@ -87,8 +77,8 @@ public class PaxMan : MonoBehaviour
         }
         if (verticalMovement != 0.0f)
         {
-            movement.y = verticalMovement;
             movement.x = 0;
+            movement.y = verticalMovement;
         }
     }
 
