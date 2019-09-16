@@ -29,6 +29,14 @@ public class Map : MonoBehaviour
         public Color unexpectedNodeColor;
     }
 
+    [System.Serializable]
+    public struct WarpZone
+    {
+        public WarpZone(Node a, Node b) { warpNodeA = a; warpNodeB = b; }
+        public Node warpNodeA;
+        public Node warpNodeB;
+    }
+
     public Rect gameArea;
     public Vector2Int divisions;
 
@@ -49,6 +57,8 @@ public class Map : MonoBehaviour
     private string[] lines;
     public float horizontalNodeDistance;
     public float verticalNodeDistance;
+
+    public List<WarpZone> warpZones = new List<WarpZone>();
 
     public List<PickupableObject> smallDots = new List<PickupableObject>();
     public List<PickupableObject> bigDots = new List<PickupableObject>();
@@ -188,23 +198,20 @@ public class Map : MonoBehaviour
                 {
                     if (!node.IsObstacle)
                     {
-                        if (currentNode.Position + upDistance == node.Position)
+                        if (currentNode.Position + upDistance == node.Position || currentNode.Position + rightDistance == node.Position)
                         {
-                            node.AddConection(currentNode, nodes);
-                            currentNode.AddConection(node, nodes);
-                        }
-
-                        if (currentNode.Position + rightDistance == node.Position)
-                        {
-                            node.AddConection(currentNode, nodes);
-                            currentNode.AddConection(node, nodes);
+                            AddNodeConection(currentNode, node);
                         }
                     }
                 }
             }
         }
     }
-
+    public void AddNodeConection(Node a, Node b)
+    {
+        a.AddConection(b, nodes);
+        b.AddConection(a, nodes);
+    }
     public Node PositionToNode(Vector2 objectPosition)
     {
         float distance = float.PositiveInfinity;
@@ -231,11 +238,14 @@ public class Map : MonoBehaviour
 
     public Node GetNextNode(Node currentNode, Vector2 direction)
     {
+     
         if (horizontalNodeDistance == 0)
             horizontalNodeDistance = gameArea.width / divisions.x;
         if (verticalNodeDistance == 0)
             verticalNodeDistance = gameArea.height / divisions.y;
+
         direction *= new Vector2(horizontalNodeDistance, verticalNodeDistance);
+
         for (int i = 0; i < currentNode.Adjacents.Count; i++)
         {
             if (currentNode.Position + direction == nodes[currentNode.Adjacents[i]].Position)
@@ -243,7 +253,58 @@ public class Map : MonoBehaviour
                 return nodes[currentNode.Adjacents[i]];
             }
         }
+
+        return GetWarpNode(currentNode);
+    }
+
+    public Node GetWarpNode(Node currentNode)
+    {
+        for (int i = 0; i < warpZones.Count; i++)
+        {
+            if (currentNode.Position == warpZones[i].warpNodeA.Position)
+            {
+                return warpZones[i].warpNodeB;
+            }
+            else if (currentNode.Position == warpZones[i].warpNodeB.Position)
+            {
+                return warpZones[i].warpNodeA;
+            }
+        }
         return null;
+    }
+
+    public bool IsWarpZone(Node currentNode)
+    {
+        for (int i = 0; i < warpZones.Count; i++)
+        {
+            if (currentNode.Position == warpZones[i].warpNodeA.Position || currentNode.Position == warpZones[i].warpNodeB.Position)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Vector2 GetWarpDestination(Node currentNode)
+    {
+        for (int i = 0; i < warpZones.Count; i++)
+        {
+            if (currentNode.Position == warpZones[i].warpNodeA.Position)
+            {
+                return warpZones[i].warpNodeB.Position;
+            }
+            else if (currentNode.Position == warpZones[i].warpNodeB.Position)
+            {
+                return warpZones[i].warpNodeA.Position;
+            }
+        }
+        return Vector2.zero;
+    }
+
+    public void AddWarpZone(Node a, Node b)
+    {
+        WarpZone warp = new WarpZone(a, b);
+        warpZones.Add(warp);
     }
 
     public List<Node> GetAllNodesOfConectionsNumber(int[] indexes)

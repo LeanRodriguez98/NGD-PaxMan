@@ -91,7 +91,6 @@ public class Ghost : MobileEntity
 
     [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
     public uint StartPositionNodeID;
-    private Map map;
     private IA ia;
     public Sprites sprites;
     public OnHomePatron homePatron;
@@ -99,9 +98,9 @@ public class Ghost : MobileEntity
     public ScatterPatron scatterPatron;
     public ScaredPatron scaredPatron;
 
-    private void Start()
+    public override void Start()
     {
-        map = Map.instance;
+        base.Start();
         SetFSM();
         transform.position = map.IdToNode(StartPositionNodeID).Position;
         ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(homePatron.startPositionNodeID));
@@ -159,6 +158,7 @@ public class Ghost : MobileEntity
             }
 
             NewTileVerifications();
+
             if (ia.destinationPosition == ia.currentPath[ia.currentPath.Count - 1])
                 UpdatePath();
             else
@@ -181,6 +181,7 @@ public class Ghost : MobileEntity
                 }
                 break;
         }
+
     }
 
     private void UpdatePath()
@@ -220,7 +221,7 @@ public class Ghost : MobileEntity
 
     private void LeavingHome()
     {
-        ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(272)); // <---- Change this
+        ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(344)); // <---- Change this
         ia.fsm.SendEvent((int)Flags.onStartPatrol);
     }
 

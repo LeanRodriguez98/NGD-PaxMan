@@ -12,9 +12,15 @@ public class MobileEntity : MonoBehaviour
     }
 
     public MovementSettings movementSettings;
+    protected Map map;
     protected bool canMove = true;
 
-    public void Reset(out float _currentSpeed, out float _itarations)
+    public virtual void Start()
+    {
+        map = Map.instance;
+    }
+
+    protected void Reset(out float _currentSpeed, out float _itarations)
     {
         if (movementSettings.speed > movementSettings.maxSpeed)
             movementSettings.speed = movementSettings.maxSpeed;
@@ -32,5 +38,13 @@ public class MobileEntity : MonoBehaviour
     protected bool IsEqualToPosition(Vector2 _positionToComparate)
     {
         return (transform.position != (Vector3)_positionToComparate);
+    }
+
+    protected void CheckWarpZone(Node _currentNode)
+    {
+        if (map.IsWarpZone(_currentNode))
+        {
+            transform.position = map.GetWarpDestination(_currentNode);
+        }
     }
 }

@@ -7,6 +7,9 @@ public class Editor_Map : Editor
     private string[] nodeStates;
     private int from;
     private int to;
+    private int nodeIndexA;
+    private int nodeIndexB;
+
 
     private bool gridFoldOut = false;
     private bool prefabsFoldOut = false;
@@ -67,6 +70,26 @@ public class Editor_Map : Editor
         nodesFoldOut = EditorGUILayout.Foldout(nodesFoldOut, "Nodes");
         if (nodesFoldOut)
         {
+            EditorGUILayout.LabelField("Add a warp zone");
+            nodeIndexA = EditorGUILayout.IntField("Node Index A", nodeIndexA);
+            nodeIndexB = EditorGUILayout.IntField("Node Index B", nodeIndexB);
+            if (GUILayout.Button("Add warp"))
+            {
+                map.AddWarpZone(map.IdToNode((uint)nodeIndexA), map.IdToNode((uint)nodeIndexB));
+                map.AddNodeConection(map.IdToNode((uint)nodeIndexA), map.IdToNode((uint)nodeIndexB));
+            }
+            if (GUILayout.Button("Remove Warps"))
+            {
+                map.warpZones.Clear();
+            }
+            if (map.warpZones.Count != 0)
+            {
+                SerializedProperty warpConections = serializedObject.FindProperty("warpZones");
+                EditorGUILayout.PropertyField(warpConections, new GUIContent("Warp Conections"), true);
+            }
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Show nodes data");
             from = EditorGUILayout.IntField("Show From", from);
             to = EditorGUILayout.IntField("To", to);
             if (from < 0)

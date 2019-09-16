@@ -9,19 +9,18 @@ public class PaxMan : MobileEntity
     private Vector2 movement;
     private Vector2 previousMovement;
     private Animator animator;
-    private Map map;
     private Node currentNode;
     private Node destinationNode;
     private const string horizontalAxis = "Horizontal";
     private const string verticalAxis = "Vertical";
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
         animator = GetComponent<Animator>();
         movement = Vector2.left;
         previousMovement = movement;
         UpdateAnimations();
-        map = Map.instance;
         currentNode = map.PositionToNode(transform.position);
         transform.position = currentNode.Position;
         destinationNode = map.GetNextNode(currentNode, movement);
@@ -57,6 +56,8 @@ public class PaxMan : MobileEntity
                 UpdateAnimations();
                 yield return null;
             } while (destinationNode == null);
+
+            CheckWarpZone(currentNode);
         }
     }
 
