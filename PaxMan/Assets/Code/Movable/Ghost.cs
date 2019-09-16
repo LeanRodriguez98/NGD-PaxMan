@@ -68,7 +68,7 @@ public class Ghost : MobileEntity
         [HideInInspector] public SpriteRenderer spriteRenderer;
         public Sprite defaultSprite;
         public Sprite scaredSprite;
-        public Sprite desdSprite;
+        public Sprite deadSprite;
     }
 
     [System.Serializable]
@@ -91,12 +91,14 @@ public class Ghost : MobileEntity
 
     [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
     public uint StartPositionNodeID;
-    private IA ia;
+    protected IA ia;
     public Sprites sprites;
     public OnHomePatron homePatron;
     public PatrolPatron patrolPatron;
     public ScatterPatron scatterPatron;
     public ScaredPatron scaredPatron;
+
+    protected const string mapLayer = "Map";
 
     public override void Start()
     {
@@ -122,9 +124,11 @@ public class Ghost : MobileEntity
         ia.fsm.SetRelation((int)States.patrol, (int)Flags.OnPanic, (int)States.panic);
         ia.fsm.SetRelation((int)States.goToScatter, (int)Flags.OnPanic, (int)States.panic);
         ia.fsm.SetRelation((int)States.scatter, (int)Flags.OnPanic, (int)States.panic);
-
+        ia.fsm.SetRelation((int)States.chase, (int)Flags.OnPanic, (int)States.panic);
 
         ia.fsm.SetRelation((int)States.panic, (int)Flags.onStartPatrol, (int)States.patrol);
+        ia.fsm.SetRelation((int)States.patrol, (int)Flags.onSeePaxMan, (int)States.chase);
+        ia.fsm.SetRelation((int)States.chase, (int)Flags.onStartPatrol, (int)States.patrol);
 
     }
 
@@ -180,11 +184,18 @@ public class Ghost : MobileEntity
                     }
                 }
                 break;
+            case (int)States.patrol:
+                FindPaxMan();
+                break;
         }
 
     }
 
-    private void UpdatePath()
+    public virtual bool FindPaxMan() { return false; }
+
+    public virtual void Chase() { }
+
+    protected void UpdatePath()
     {
         switch (ia.fsm.GetState())
         {
@@ -206,7 +217,9 @@ public class Ghost : MobileEntity
             case (int)States.panic:
                 Panic();
                 break;
-
+            case (int)States.chase:
+                Chase();
+                break;
         }
         ia.pathStepIndex = 0;
     }
@@ -313,7 +326,7 @@ public class Ghost : MobileEntity
         ia.pathFinding.IgnoreNode(map.PositionToNode(ia.currentPath[ia.pathStepIndex]));
     }
 
-    private void Update()
+    public virtual void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {

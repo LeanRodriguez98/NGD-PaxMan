@@ -13,6 +13,7 @@ public class Node
     [SerializeField] private bool used;
     [SerializeField] private char charFile;
     [SerializeField] private Rect area;
+    [SerializeField] private uint index;
     public List<int> Adjacents
     {
         get {
@@ -23,6 +24,11 @@ public class Node
             }
 
             return adjacentsIndex; }
+    }
+
+    public int Index
+    {
+        get { return (int)index; }
     }
 
     public NodeStates NodeState
@@ -69,13 +75,14 @@ public class Node
         [HideInInspector]_count
     }
 
-    public Node(Vector2 _position, NodeStates _state, bool _isObstacle, Rect _area, char _charFile)
+    public Node(Vector2 _position, NodeStates _state, bool _isObstacle, Rect _area, uint _index ,char _charFile)
     {
         isObstacle = _isObstacle;
         position = _position;
         nodeState = originalState = _state;
         used = false;
         area = _area;
+        index = _index;
         charFile = _charFile;
     }
 

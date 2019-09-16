@@ -128,7 +128,7 @@ public class Map : MonoBehaviour
     {
         horizontalNodeDistance = gameArea.width / divisions.x;
         verticalNodeDistance = gameArea.height / divisions.y;
-
+        uint iterations = 0;
         for (int y = 0; y < _lines.Length; y++)
         {
             char[] line = _lines[y].ToCharArray();
@@ -140,11 +140,12 @@ public class Map : MonoBehaviour
                 bool isObstacle = false;
                 char charFile = line[x];
                 Rect area = new Rect(new Vector2(gameArea.xMin + (x * horizontalNodeDistance), gameArea.yMax - (y * verticalNodeDistance) - verticalNodeDistance), new Vector2(horizontalNodeDistance, verticalNodeDistance));
-                nodes.Add(new Node(nodePosition, Node.NodeStates.Ready, isObstacle, area, charFile));
+                nodes.Add(new Node(nodePosition, Node.NodeStates.Ready, isObstacle, area, iterations , charFile));
+                Debug.Log(iterations);
+                iterations++;
             }
         }
         AddDots(nodes);
-
         ConectNodes();
     }
 
@@ -323,6 +324,63 @@ public class Map : MonoBehaviour
         }
         return _nodes;
     }
+
+    public bool IsPaxManVisible(Vector2 currentPosition)
+    {
+        Node currentNode = PositionToNode(currentPosition);
+        Node paxManNode = PositionToNode(GameManager.instance.player.transform.position);
+
+        if (currentNode.Position == paxManNode.Position)
+        {
+            return true;
+        }
+
+        int iterations = 0;
+        Node auxNode = nodes[currentNode.Index + iterations]; 
+        while (!auxNode.IsObstacle)
+        {
+            iterations++;
+            auxNode = nodes[currentNode.Index + iterations];
+            if (paxManNode.Position == auxNode.Position)
+                return true;
+        }
+
+
+        iterations = 0;
+        auxNode = nodes[currentNode.Index + iterations];
+        while (!auxNode.IsObstacle)
+        {
+            iterations--;
+            auxNode = nodes[currentNode.Index + iterations];
+            if (paxManNode.Position == auxNode.Position)
+                return true;
+        }
+
+
+        iterations = 0;
+        auxNode = nodes[currentNode.Index + iterations];
+        while (!auxNode.IsObstacle)
+        {
+            iterations+= divisions.x;
+            auxNode = nodes[currentNode.Index + iterations];
+            if (paxManNode.Position == auxNode.Position)
+                return true;
+        }
+
+
+        iterations = 0;
+        auxNode = nodes[currentNode.Index + iterations];
+        while (!auxNode.IsObstacle)
+        {
+            iterations -= divisions.x;
+            auxNode = nodes[currentNode.Index + iterations];
+            if (paxManNode.Position == auxNode.Position)
+                return true;
+        }
+
+
+        return false;
+    }
     private void OnDrawGizmos()
     {
         if (drawGizmos)
@@ -366,7 +424,7 @@ public class Map : MonoBehaviour
                 style.normal.textColor = Color.blue;
                 for (int i = 0; i < nodes.Count; i++)
                 {
-                    Handles.Label(nodes[i].Position, i.ToString(), style);
+                    Handles.Label(nodes[i].Position, nodes[i].Index.ToString(), style);
                 }
             }
             if (drawNodesType)

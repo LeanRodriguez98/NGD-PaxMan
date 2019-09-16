@@ -54,7 +54,8 @@ public class PaxMan : MobileEntity
                     movement = previousMovement;
                 }
                 UpdateAnimations();
-                yield return null;
+                if (destinationNode == null)
+                    yield return null;
             } while (destinationNode == null);
 
             CheckWarpZone(currentNode);

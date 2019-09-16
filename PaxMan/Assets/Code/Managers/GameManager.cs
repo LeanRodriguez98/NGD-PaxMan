@@ -10,7 +10,8 @@ public class GameManager : MonoBehaviour
     public uint points;
     public int[] dotsToSpawnCherry;
     private Map map;
-    private PaxMan player;
+    public PaxMan player;
+    private Ghost[] ghosts;
     private void Awake()
     {
         if (instance == null)
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60;
         map = Map.instance;
         player = FindObjectOfType<PaxMan>();
+        ghosts = FindObjectsOfType<Ghost>();
     }
     void Update()
     {
@@ -38,7 +40,6 @@ public class GameManager : MonoBehaviour
                 map.smallDots[i].gameObject.SetActive(false);
                 dotCount++;
                 CheckSpawnCherry();
-
                 break;
             }
         }
@@ -51,7 +52,6 @@ public class GameManager : MonoBehaviour
                 map.bigDots[i].gameObject.SetActive(false);
                 dotCount++;
                 CheckSpawnCherry();
-
                 break;
             }
         }
@@ -73,4 +73,5 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
 }
