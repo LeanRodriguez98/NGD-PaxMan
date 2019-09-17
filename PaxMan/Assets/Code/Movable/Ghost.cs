@@ -157,7 +157,7 @@ public class Ghost : MobileEntity
                         }
                         iterations--;
                     }
-                    yield return null;
+                    yield return new WaitForFixedUpdate(); 
                 }
             }
 

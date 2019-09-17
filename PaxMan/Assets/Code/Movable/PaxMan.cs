@@ -48,7 +48,7 @@ public class PaxMan : MobileEntity
             {
                 MoveOnTile(currentNode.Position, destinationNode.Position, iterations, currentSpeed);
                 iterations++;
-                yield return null;
+                yield return new WaitForFixedUpdate();
             }
             currentNode = destinationNode;
             do
@@ -65,7 +65,7 @@ public class PaxMan : MobileEntity
                 }
                 UpdateAnimations();
                 if (destinationNode == null)
-                    yield return null;
+                    yield return new WaitForFixedUpdate();
             } while (destinationNode == null);
 
             CheckWarpZone(currentNode);
