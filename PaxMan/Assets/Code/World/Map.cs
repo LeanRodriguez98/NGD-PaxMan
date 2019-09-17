@@ -141,7 +141,6 @@ public class Map : MonoBehaviour
                 char charFile = line[x];
                 Rect area = new Rect(new Vector2(gameArea.xMin + (x * horizontalNodeDistance), gameArea.yMax - (y * verticalNodeDistance) - verticalNodeDistance), new Vector2(horizontalNodeDistance, verticalNodeDistance));
                 nodes.Add(new Node(nodePosition, Node.NodeStates.Ready, isObstacle, area, iterations , charFile));
-                Debug.Log(iterations);
                 iterations++;
             }
         }

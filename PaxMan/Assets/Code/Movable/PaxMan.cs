@@ -14,6 +14,16 @@ public class PaxMan : MobileEntity
     private const string horizontalAxis = "Horizontal";
     private const string verticalAxis = "Vertical";
 
+    public Vector2 Direction
+    {
+        get { return movement.normalized; }
+    }
+
+    public Vector2 Position
+    {
+        get { return (Vector2)transform.position; }
+    }
+
     public override void Start()
     {
         base.Start();
