@@ -18261,6 +18261,7 @@ MonoBehaviour:
   homePatron:
     startPositionNodeID: 404
     endPositionNodeID: 464
+    leavingPositionNodeID: 344
   patrolPatron:
     countOfNodesConectionPosibleTarget: 0300000004000000
     excludedNodesID: 7601000077010000920100009301000094010000950100009601000097010000b0010000b1010000b2010000b3010000b4010000b5010000ce010000cf010000d0010000d1010000d2010000d3010000
@@ -25803,6 +25804,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pinky
       objectReference: {fileID: 0}
+    - target: {fileID: 4519282131420516549, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -30138,6 +30144,234 @@ Transform:
   m_Father: {fileID: 1730323}
   m_RootOrder: 61
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1198093933
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: patrolPatron.countOfNodesConectionPosibleTarget.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: scatterPatron.scatterPosibleStartNodeID.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: patrolPatron.countOfNodesConectionPosibleTarget.Array.data[0]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: patrolPatron.countOfNodesConectionPosibleTarget.Array.data[1]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: scatterPatron.goToScattProbability
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: scatterPatron.leaveScattProbability
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: scatterPatron.scatterPosibleStartNodeID.Array.data[0]
+      value: 124
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: scatterPatron.scatterPosibleStartNodeID.Array.data[1]
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: scatterPatron.scatterPosibleStartNodeID.Array.data[2]
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: scatterPatron.scatterPosibleStartNodeID.Array.data[3]
+      value: 129
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: StartPositionNodeID
+      value: 433
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: test.m_Extent.x
+      value: 1.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: test.m_Extent.y
+      value: 3.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: test.m_Extent.z
+      value: -4.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: sprites.defaultSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9f751d776385d974fab28e7726e7efed,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: sprites.scaredSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ed1e023394dcbbc4ebcec131cb31e8c0,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: sprites.desdSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 394d3317ca35e4d4d81be19793b6e526,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: scaredPatron.scaredTime
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: maxSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: speed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: porcentualSpeed
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: movementSettings.maxSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: movementSettings.speed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: movementSettings.porcentualSpeed
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: homePatron.startPositionNodeID
+      value: 403
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: homePatron.endPositionNodeID
+      value: 463
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: sprites.deadSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 394d3317ca35e4d4d81be19793b6e526,
+        type: 3}
+    - target: {fileID: 4519282131420516549, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_Name
+      value: Clyde
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.331
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.048609212
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770722337967143860, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f8f50973729c0c14280c65e9106e240e, type: 3}
+--- !u!1 &1198093934 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4519282131420516549, guid: f8f50973729c0c14280c65e9106e240e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1198093933}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1198093935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1198093934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cde6cde6a1027be4fa460c298a4f1639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSettings:
+    maxSpeed: 20
+    speed: 10
+    porcentualSpeed: 0.8
+  StartPositionNodeID: 436
+  sprites:
+    spriteRenderer: {fileID: 0}
+    defaultSprite: {fileID: 21300000, guid: 583ac31a342feae489b30e6933e12822, type: 3}
+    scaredSprite: {fileID: 21300000, guid: ed1e023394dcbbc4ebcec131cb31e8c0, type: 3}
+    deadSprite: {fileID: 21300000, guid: 394d3317ca35e4d4d81be19793b6e526, type: 3}
+  homePatron:
+    startPositionNodeID: 406
+    endPositionNodeID: 466
+    leavingPositionNodeID: 345
+  patrolPatron:
+    countOfNodesConectionPosibleTarget: 0300000004000000
+    excludedNodesID: 7601000077010000920100009301000094010000950100009601000097010000b0010000b1010000b2010000b3010000b4010000b5010000ce010000cf010000d0010000d1010000d2010000d30100005801000059010000
+  scatterPatron:
+    scatterPosibleStartNodeID: bc020000a7020000130300000e03000068030000730300001903000016030000
+    goToScattProbability: 10
+    leaveScattProbability: 50
+    iterations: 0
+  scaredPatron:
+    scaredTime: 10
 --- !u!1 &1207373827
 GameObject:
   m_ObjectHideFlags: 0
@@ -33991,6 +34225,197 @@ Transform:
   m_Father: {fileID: 1730323}
   m_RootOrder: 122
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1461031771
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: patrolPatron.countOfNodesConectionPosibleTarget.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: scatterPatron.scatterPosibleStartNodeID.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: patrolPatron.countOfNodesConectionPosibleTarget.Array.data[0]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: patrolPatron.countOfNodesConectionPosibleTarget.Array.data[1]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: scatterPatron.goToScattProbability
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: scatterPatron.leaveScattProbability
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: scatterPatron.scatterPosibleStartNodeID.Array.data[0]
+      value: 124
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: scatterPatron.scatterPosibleStartNodeID.Array.data[1]
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: scatterPatron.scatterPosibleStartNodeID.Array.data[2]
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: scatterPatron.scatterPosibleStartNodeID.Array.data[3]
+      value: 129
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: StartPositionNodeID
+      value: 433
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: test.m_Extent.x
+      value: 1.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: test.m_Extent.y
+      value: 3.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: test.m_Extent.z
+      value: -4.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: sprites.defaultSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9f751d776385d974fab28e7726e7efed,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: sprites.scaredSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ed1e023394dcbbc4ebcec131cb31e8c0,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: sprites.desdSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 394d3317ca35e4d4d81be19793b6e526,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: scaredPatron.scaredTime
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: maxSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: speed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: porcentualSpeed
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: movementSettings.maxSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: movementSettings.speed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: movementSettings.porcentualSpeed
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: homePatron.startPositionNodeID
+      value: 403
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: homePatron.endPositionNodeID
+      value: 463
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: sprites.deadSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 394d3317ca35e4d4d81be19793b6e526,
+        type: 3}
+    - target: {fileID: 4519282131420516549, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_Name
+      value: Inky
+      objectReference: {fileID: 0}
+    - target: {fileID: 4519282131420516549, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.109
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.048609212
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770722337967143860, guid: f8f50973729c0c14280c65e9106e240e,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f8f50973729c0c14280c65e9106e240e, type: 3}
 --- !u!1 &1471255867
 GameObject:
   m_ObjectHideFlags: 0
@@ -38533,6 +38958,48 @@ Transform:
   m_Father: {fileID: 1730323}
   m_RootOrder: 55
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1789962498 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4519282131420516549, guid: f8f50973729c0c14280c65e9106e240e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1461031771}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1789962499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1789962498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cde6cde6a1027be4fa460c298a4f1639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSettings:
+    maxSpeed: 20
+    speed: 10
+    porcentualSpeed: 0.8
+  StartPositionNodeID: 435
+  sprites:
+    spriteRenderer: {fileID: 0}
+    defaultSprite: {fileID: 21300000, guid: c2fe34b62a8e37341bb62b76f2975b39, type: 3}
+    scaredSprite: {fileID: 21300000, guid: ed1e023394dcbbc4ebcec131cb31e8c0, type: 3}
+    deadSprite: {fileID: 21300000, guid: 394d3317ca35e4d4d81be19793b6e526, type: 3}
+  homePatron:
+    startPositionNodeID: 405
+    endPositionNodeID: 465
+    leavingPositionNodeID: 345
+  patrolPatron:
+    countOfNodesConectionPosibleTarget: 0300000004000000
+    excludedNodesID: 7601000077010000920100009301000094010000950100009601000097010000b0010000b1010000b2010000b3010000b4010000b5010000ce010000cf010000d0010000d1010000d2010000d3010000
+  scatterPatron:
+    scatterPosibleStartNodeID: c5020000c8020000220300002703000081030000760300001c0300001f030000
+    goToScattProbability: 10
+    leaveScattProbability: 50
+    iterations: 0
+  scaredPatron:
+    scaredTime: 10
 --- !u!1 &1800630668
 GameObject:
   m_ObjectHideFlags: 0
@@ -42489,6 +42956,7 @@ MonoBehaviour:
   homePatron:
     startPositionNodeID: 403
     endPositionNodeID: 463
+    leavingPositionNodeID: 344
   patrolPatron:
     countOfNodesConectionPosibleTarget: 0300000004000000
     excludedNodesID: 7601000077010000920100009301000094010000950100009601000097010000b0010000b1010000b2010000b3010000b4010000b5010000ce010000cf010000d0010000d1010000d2010000d3010000
@@ -44338,7 +44806,7 @@ PrefabInstance:
     - target: {fileID: 4519282131420516549, guid: f8f50973729c0c14280c65e9106e240e,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
         type: 3}

@@ -37,6 +37,8 @@ public class Ghost : MobileEntity
         public uint startPositionNodeID;
         [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
         public uint endPositionNodeID;
+        [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
+        public uint leavingPositionNodeID;
     }
     [System.Serializable]
     public struct PatrolPatron
@@ -98,7 +100,6 @@ public class Ghost : MobileEntity
     public ScatterPatron scatterPatron;
     public ScaredPatron scaredPatron;
 
-    protected const string mapLayer = "Map";
 
     public override void Start()
     {
@@ -157,16 +158,29 @@ public class Ghost : MobileEntity
                         }
                         iterations--;
                     }
-                    yield return new WaitForFixedUpdate(); 
+                    yield return new WaitForFixedUpdate();
                 }
-            }
 
+            }
             NewTileVerifications();
 
-            if (ia.destinationPosition == ia.currentPath[ia.currentPath.Count - 1])
-                UpdatePath();
-            else
-                ia.pathStepIndex++;
+            try
+            {
+                if (ia.currentPath.Count - 1 < 0)
+                {
+                    throw new System.Exception();
+                }
+                if (ia.destinationPosition == ia.currentPath[ia.currentPath.Count - 1])
+                    UpdatePath();
+                else
+                    ia.pathStepIndex++;
+            }
+            catch (System.Exception)
+            {
+                Debug.Log(ia.currentPath.Count);
+                throw;
+            }
+            
         }
     }
 
@@ -188,10 +202,12 @@ public class Ghost : MobileEntity
                 FindPaxMan();
                 break;
         }
-
     }
 
-    public virtual bool FindPaxMan() { return false; }
+    public virtual bool FindPaxMan()
+    {
+        return false;
+    }
 
     public virtual void Chase() { }
 
@@ -234,7 +250,7 @@ public class Ghost : MobileEntity
 
     private void LeavingHome()
     {
-        ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(344)); // <---- Change this
+        ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(homePatron.leavingPositionNodeID));
         ia.fsm.SendEvent((int)Flags.onStartPatrol);
     }
 
@@ -252,8 +268,9 @@ public class Ghost : MobileEntity
             bool addNode = true;
             foreach (Node node in map.GetAllNodesOfConectionsNumber(patrolPatron.countOfNodesConectionPosibleTarget))
             {
-                if (node != map.PositionToNode(transform.position))
+                if (node.Position != map.PositionToNode(transform.position).Position)
                 {
+                    
                     for (int i = 0; i < patrolPatron.excludedNodesID.Length; i++)
                         if (node == map.IdToNode((uint)patrolPatron.excludedNodesID[i]))
                             addNode = false;
@@ -278,7 +295,7 @@ public class Ghost : MobileEntity
         Node destinationNode = ia.pathFinding.GetNearestNode(map.PositionToNode(transform.position), scatterPosibleStartNodes);
         scatterPatron.iterations = 0;
         ia.fsm.SendEvent((int)Flags.onScatter);
-        if (destinationNode != map.PositionToNode(transform.position))
+        if (destinationNode.Position != map.PositionToNode(transform.position).Position)
             ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), destinationNode);
         else
             UpdatePath();
@@ -299,9 +316,7 @@ public class Ghost : MobileEntity
         if (scatterPatron.iterations >= scatterPatron.scatterPosibleStartNodeID.Length)
         {
             if (UnityEngine.Random.Range(0, 101) < scatterPatron.leaveScattProbability)
-            {
                 ia.fsm.SendEvent((int)Flags.onStartPatrol);
-            }
             scatterPatron.iterations = 0;
         }
     }
@@ -312,7 +327,7 @@ public class Ghost : MobileEntity
         ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position + (Vector3)(ia.destinationPosition - ia.currentPosition)), map.PositionToNode(ia.currentPath[0]));
         ia.pathStepIndex = -1;
         sprites.spriteRenderer.sprite = sprites.scaredSprite;
-        Invoke("SetDefaultSprite",scaredPatron.scaredTime);
+        Invoke("SetDefaultSprite", scaredPatron.scaredTime);
         ia.fsm.SendEvent((int)Flags.onStartPatrol);
     }
 
@@ -329,13 +344,9 @@ public class Ghost : MobileEntity
     public virtual void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
-        {
             ia.fsm.SendEvent((int)Flags.onOpenDoor);
-        }
 
         if (Input.GetKeyDown(KeyCode.M))
-        {
             ia.fsm.SendEvent((int)Flags.OnPanic);
-        }
     }
 }

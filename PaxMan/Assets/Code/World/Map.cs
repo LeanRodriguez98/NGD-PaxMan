@@ -329,10 +329,7 @@ public class Map : MonoBehaviour
         Node currentNode = PositionToNode(currentPosition);
         Node paxManNode = PositionToNode(GameManager.instance.player.transform.position);
 
-        if (currentNode.Position == paxManNode.Position)
-        {
-            return true;
-        }
+        
 
         int iterations = 0;
         Node auxNode = nodes[currentNode.Index + iterations]; 

@@ -79,8 +79,9 @@ public class PathFinding
             }
         }
         ResetNodes();
-
-        return new List<Vector2>();
+        List<Vector2> nullPath = new List<Vector2>();
+        nullPath.Add(startNode.Position);
+        return nullPath;
     }
 
     private void ResetNodes()
