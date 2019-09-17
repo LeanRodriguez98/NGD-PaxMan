@@ -25807,7 +25807,7 @@ PrefabInstance:
     - target: {fileID: 4519282131420516549, guid: f8f50973729c0c14280c65e9106e240e,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
         type: 3}
@@ -30372,6 +30372,42 @@ MonoBehaviour:
     iterations: 0
   scaredPatron:
     scaredTime: 10
+--- !u!114 &1198093936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1198093934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6336dc43243b9824783369909ef88fe3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSettings:
+    maxSpeed: 20
+    speed: 10
+    porcentualSpeed: 0.8
+  StartPositionNodeID: 436
+  sprites:
+    spriteRenderer: {fileID: 0}
+    defaultSprite: {fileID: 21300000, guid: 583ac31a342feae489b30e6933e12822, type: 3}
+    scaredSprite: {fileID: 21300000, guid: ed1e023394dcbbc4ebcec131cb31e8c0, type: 3}
+    deadSprite: {fileID: 21300000, guid: 394d3317ca35e4d4d81be19793b6e526, type: 3}
+  homePatron:
+    startPositionNodeID: 406
+    endPositionNodeID: 466
+    leavingPositionNodeID: 345
+  patrolPatron:
+    countOfNodesConectionPosibleTarget: 0300000004000000
+    excludedNodesID: 7601000077010000920100009301000094010000950100009601000097010000b0010000b1010000b2010000b3010000b4010000b5010000ce010000cf010000d0010000d1010000d2010000d30100005801000059010000
+  scatterPatron:
+    scatterPosibleStartNodeID: 
+    goToScattProbability: 0
+    leaveScattProbability: 0
+    iterations: 0
+  scaredPatron:
+    scaredTime: 0
 --- !u!1 &1207373827
 GameObject:
   m_ObjectHideFlags: 0
@@ -34352,7 +34388,7 @@ PrefabInstance:
     - target: {fileID: 4519282131420516549, guid: f8f50973729c0c14280c65e9106e240e,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
         type: 3}
@@ -38973,7 +39009,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1789962498}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cde6cde6a1027be4fa460c298a4f1639, type: 3}
+  m_Script: {fileID: 11500000, guid: fc7755a5cc9092e4996e30e9ab010814, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   movementSettings:
@@ -38989,7 +39025,7 @@ MonoBehaviour:
   homePatron:
     startPositionNodeID: 405
     endPositionNodeID: 465
-    leavingPositionNodeID: 345
+    leavingPositionNodeID: 435
   patrolPatron:
     countOfNodesConectionPosibleTarget: 0300000004000000
     excludedNodesID: 7601000077010000920100009301000094010000950100009601000097010000b0010000b1010000b2010000b3010000b4010000b5010000ce010000cf010000d0010000d1010000d2010000d3010000
@@ -44806,7 +44842,7 @@ PrefabInstance:
     - target: {fileID: 4519282131420516549, guid: f8f50973729c0c14280c65e9106e240e,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8245241214333218126, guid: f8f50973729c0c14280c65e9106e240e,
         type: 3}
