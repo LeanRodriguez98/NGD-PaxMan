@@ -18,6 +18,7 @@ public class MobileEntity : MonoBehaviour
     public virtual void Start()
     {
         map = Map.instance;
+
     }
 
     protected void Reset(out float _currentSpeed, out float _itarations)

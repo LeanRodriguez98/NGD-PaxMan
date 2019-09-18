@@ -6,14 +6,19 @@ using UnityEngine;
 public class PaxMan : MobileEntity
 {
     public uint lifes;
+    public uint startNodeId;
     private Vector2 movement;
     private Vector2 previousMovement;
     private Animator animator;
     private Node currentNode;
     private Node destinationNode;
+    private GameManager gameManager; 
+    private const string animationHorizontalTriggerName = "Horizontal";
+    private const string animationVerticalTriggerName = "Vertical";
+    private const string animationIdleTriggerName = "Idle";
     private const string horizontalAxis = "Horizontal";
     private const string verticalAxis = "Vertical";
-
+    private const string ghostTag = "Ghost";
     public Vector2 Direction
     {
         get { return movement.normalized; }
@@ -28,15 +33,21 @@ public class PaxMan : MobileEntity
     {
         base.Start();
         animator = GetComponent<Animator>();
+        gameManager = GameManager.instance;
+        InitMovement();
+    }
+
+    public void InitMovement()
+    {
         movement = Vector2.left;
         previousMovement = movement;
         UpdateAnimations();
-        currentNode = map.PositionToNode(transform.position);
+        currentNode = map.IdToNode(startNodeId);
         transform.position = currentNode.Position;
         destinationNode = map.GetNextNode(currentNode, movement);
         StartCoroutine(Movement());
-
     }
+
     private IEnumerator Movement()
     {
         float iterations;
@@ -96,13 +107,26 @@ public class PaxMan : MobileEntity
 
     private void UpdateAnimations()
     {
-        animator.SetFloat("Horizontal", movement.x);
-        animator.SetFloat("Vertical", movement.y);
+        animator.SetFloat(animationHorizontalTriggerName, movement.x);
+        animator.SetFloat(animationVerticalTriggerName, movement.y);
 
         if (destinationNode == null)
-            animator.SetBool("Idle", true);
+            animator.SetBool(animationIdleTriggerName, true);
         else
-            animator.SetBool("Idle", false);
+            animator.SetBool(animationIdleTriggerName, false);
     }
 
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag(ghostTag))
+        {
+            BoxCollider2D collider2D = collision.gameObject.GetComponent<BoxCollider2D>();
+            if (collider2D.bounds.Contains(transform.position))
+            {
+                StopAllCoroutines();
+                gameManager.OnDeadPaxMan();
+            }
+        }
+    }
 }

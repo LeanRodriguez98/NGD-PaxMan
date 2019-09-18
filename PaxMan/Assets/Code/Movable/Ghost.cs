@@ -104,18 +104,29 @@ public class Ghost : MobileEntity
     public override void Start()
     {
         base.Start();
-        SetFSM();
+        ia = new IA((int)States._count, (int)Flags._count);
+        SetFSMRelations();
+        StartIA();
+    }
+
+    
+
+    public void StartIA()
+    {
         transform.position = map.IdToNode(StartPositionNodeID).Position;
+        ia.pathStepIndex = 0;
         ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(homePatron.startPositionNodeID));
         sprites.spriteRenderer = GetComponent<SpriteRenderer>();
         SetDefaultSprite();
+        ia.fsm.SetState((int)States.idle);
         StartCoroutine(Movement());
     }
 
-    private void SetFSM()
+
+
+    private void SetFSMRelations()
     {
-        ia = new IA((int)States._count, (int)Flags._count);
-        ia.fsm.SetState((int)States.idle);
+
         ia.fsm.SetRelation((int)States.idle, (int)Flags.onOpenDoor, (int)States.leaveingHome);
         ia.fsm.SetRelation((int)States.leaveingHome, (int)Flags.onStartPatrol, (int)States.patrol);
         ia.fsm.SetRelation((int)States.patrol, (int)Flags.onGoToScatter, (int)States.goToScatter);
