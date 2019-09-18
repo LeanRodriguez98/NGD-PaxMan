@@ -30,9 +30,13 @@ public class Map : MonoBehaviour
     }
 
     [System.Serializable]
-    public struct WarpZone
+    public class WarpZone
     {
-        public WarpZone(Node a, Node b) { warpNodeA = a; warpNodeB = b; }
+        public WarpZone(Node a, Node b)
+        {
+            warpNodeA = a;
+            warpNodeB = b;
+        }
         public Node warpNodeA;
         public Node warpNodeB;
     }
@@ -150,6 +154,10 @@ public class Map : MonoBehaviour
 
     public void AddDots(List<Node> _nodes)
     {
+        GameObject smallDotsParent = new GameObject("SmallDots");
+        smallDotsParent.transform.parent = this.gameObject.transform;
+        GameObject bigDotsParent = new GameObject("BigDots");
+        bigDotsParent.transform.parent = this.gameObject.transform;
         foreach (Node node in _nodes)
         {
             switch (node.CharFile)
@@ -158,12 +166,12 @@ public class Map : MonoBehaviour
                     node.IsObstacle = true;
                     break;
                 case '.':
-                    PickupableObject smallDot = Instantiate(SmallDotPrefab, node.Position, Quaternion.identity, this.transform).GetComponent<PickupableObject>();
+                    PickupableObject smallDot = Instantiate(SmallDotPrefab, node.Position, Quaternion.identity, smallDotsParent.transform).GetComponent<PickupableObject>();
                     smallDot.SetCollider();
                     smallDots.Add(smallDot);
                     break;
                 case 'o':
-                    PickupableObject bigDot = Instantiate(BigDotPrefab, node.Position, Quaternion.identity, this.transform).GetComponent<PickupableObject>();
+                    PickupableObject bigDot = Instantiate(BigDotPrefab, node.Position, Quaternion.identity, bigDotsParent.transform).GetComponent<PickupableObject>();
                     bigDot.SetCollider();
                     bigDots.Add(bigDot);
                     break;
