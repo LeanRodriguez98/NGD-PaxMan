@@ -95,20 +95,27 @@ public class Map : MonoBehaviour
         {
             nodes.Clear();
         }
-        if (smallDots != null)
+        if (smallDots.Count > 0)
         {
+            GameObject parent = null;
+            parent = smallDots[0].gameObject.transform.parent.gameObject;
+
             foreach (PickupableObject smallDot in smallDots)
             {
                 DestroyImmediate(smallDot.gameObject);
             }
+            DestroyImmediate(parent);
             smallDots.Clear();
         }
-        if (bigDots != null)
+        if (bigDots.Count > 0)
         {
+            GameObject parent = null;
+            parent = bigDots[0].gameObject.transform.parent.gameObject;
             foreach (PickupableObject bigDot in bigDots)
             {
                 DestroyImmediate(bigDot.gameObject);
             }
+            DestroyImmediate(parent);
             bigDots.Clear();
         }
     }
@@ -144,7 +151,7 @@ public class Map : MonoBehaviour
                 bool isObstacle = false;
                 char charFile = line[x];
                 Rect area = new Rect(new Vector2(gameArea.xMin + (x * horizontalNodeDistance), gameArea.yMax - (y * verticalNodeDistance) - verticalNodeDistance), new Vector2(horizontalNodeDistance, verticalNodeDistance));
-                nodes.Add(new Node(nodePosition, Node.NodeStates.Ready, isObstacle, area, iterations , charFile));
+                nodes.Add(new Node(nodePosition, Node.NodeStates.Ready, isObstacle, area, iterations, charFile));
                 iterations++;
             }
         }
@@ -246,7 +253,7 @@ public class Map : MonoBehaviour
 
     public Node GetNextNode(Node currentNode, Vector2 direction)
     {
-     
+
         if (horizontalNodeDistance == 0)
             horizontalNodeDistance = gameArea.width / divisions.x;
         if (verticalNodeDistance == 0)
@@ -327,7 +334,7 @@ public class Map : MonoBehaviour
                     _nodes.Add(node);
                 }
             }
-            
+
         }
         return _nodes;
     }
@@ -337,10 +344,10 @@ public class Map : MonoBehaviour
         Node currentNode = PositionToNode(currentPosition);
         Node paxManNode = PositionToNode(GameManager.instance.player.transform.position);
 
-        
+
 
         int iterations = 0;
-        Node auxNode = nodes[currentNode.Index + iterations]; 
+        Node auxNode = nodes[currentNode.Index + iterations];
         while (!auxNode.IsObstacle)
         {
             iterations++;
@@ -365,7 +372,7 @@ public class Map : MonoBehaviour
         auxNode = nodes[currentNode.Index + iterations];
         while (!auxNode.IsObstacle)
         {
-            iterations+= divisions.x;
+            iterations += divisions.x;
             auxNode = nodes[currentNode.Index + iterations];
             if (paxManNode.Position == auxNode.Position)
                 return true;
