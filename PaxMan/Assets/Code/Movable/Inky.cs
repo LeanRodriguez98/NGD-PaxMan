@@ -15,7 +15,7 @@ public class Inky : Ghost
 
     public override bool FindPaxMan()
     {
-        if (IsPaxManInsideRadius(transform.position,12))//<---- Change this
+        if (IsPaxManInsideRadius(transform.position, 12))//<---- Change this
         {
             ia.fsm.SendEvent((int)Flags.onSeePaxMan);
             ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), GetDestinationNode());
@@ -37,7 +37,7 @@ public class Inky : Ghost
     private bool IsPaxManInsideRadius(Vector2 center, uint radius)
     {
         uint a = ia.pathFinding.ManhattanDistance(map.PositionToNode(center).Position, map.PositionToNode(GameManager.instance.GameData.paxManPosition).Position);
-        if (a <= radius )
+        if (a <= radius)
             return true;
         return false;
     }
@@ -63,16 +63,10 @@ public class Inky : Ghost
         Vector2 blinkyNodePosition = map.PositionToNode(GameManager.instance.GameData.blinkyPosition).Position;
 
         Node target = map.PositionToNode((middleDestination - blinkyNodePosition) * 2);//<--- Change this / el doble de la distancia
-        target = ia.pathFinding.GetNearestValidNode(target);
-        //if (target.Index != map.PositionToNode(transform.position).Index)
-        //{
-            return target;
-        //}
-        //else
-        //{
+        target = ia.pathFinding.GetNearestValidNode(target, transform.position);
+        return target;
 
-        //}
-        //return null;
+
     }
 
 }

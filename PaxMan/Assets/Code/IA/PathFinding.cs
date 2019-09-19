@@ -15,12 +15,12 @@ public class PathFinding
         openNodes = new List<Node>();
         closedNodes = new List<Node>();
     }
+
     public void IgnoreNode(Node n)
     {
         n.CloseNode();
         closedNodes.Add(n);
     }
-
 
     public List<Vector2> GetPath(Node _startNode, Node _destinationNode)
     {
@@ -124,15 +124,15 @@ public class PathFinding
         return n;
     }
 
-    public Node GetNearestValidNode(Node _target)
+    public Node GetNearestValidNode(Node _target, Vector2 _currentPosition)
     {
-        if (!_target.IsObstacle)
+        if (!_target.IsObstacle && _target.Position != map.PositionToNode(_currentPosition).Position )
         {
             return _target;
         }
         for (int i = 0; i < _target.Adjacents.Count; i++)
         {
-            Node n = GetNearestValidNode(map.nodes[_target.Adjacents[i]]);
+            Node n = GetNearestValidNode(map.nodes[_target.Adjacents[i]], _currentPosition);
             if (n != null)
             {
                 return n;
