@@ -123,11 +123,35 @@ public class PathFinding
         }
         return n;
     }
+
+    public Node GetNearestValidNode(Node _target)
+    {
+        if (!_target.IsObstacle)
+        {
+            return _target;
+        }
+        for (int i = 0; i < _target.Adjacents.Count; i++)
+        {
+            Node n = GetNearestValidNode(map.nodes[_target.Adjacents[i]]);
+            if (n != null)
+            {
+                return n;
+            }
+        }
+        return null;
+    }
     public uint ManhattanDistance(Vector2 origin, Vector2 destination)
     {
+        origin.x /= map.horizontalNodeDistance;
+        destination.x /= map.horizontalNodeDistance;
+
+        origin.y /= map.verticalNodeDistance;
+        destination.y /= map.verticalNodeDistance;
+
         uint x = (uint)Mathf.Abs(origin.x - destination.x);
         uint y = (uint)Mathf.Abs(origin.y - destination.y);
-        return x + y;
+
+         return x + y;
     }
 }
 
