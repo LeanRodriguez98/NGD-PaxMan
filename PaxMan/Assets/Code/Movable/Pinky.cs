@@ -18,7 +18,7 @@ public class Pinky : Ghost
         if (map.IsPaxManVisible(transform.position))
         {
             ia.fsm.SendEvent((int)Flags.onSeePaxMan);
-            ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), TileToGo(4));
+            ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position),TileToGo(4));
             ia.pathStepIndex = -1;
             return true;
         }
@@ -36,7 +36,7 @@ public class Pinky : Ghost
         for (uint i = _maxDistance; i > 0; i--)
         {
             Node n = map.PositionToNode(GameManager.instance.player.Position + (GameManager.instance.player.Direction * i * nodeDistance));
-            if (!n.IsObstacle)
+            if (!n.IsObstacle && n.Index != map.PositionToNode(transform.position).Index)
                 return n;
         }
         return null;
