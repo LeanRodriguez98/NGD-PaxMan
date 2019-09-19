@@ -123,7 +123,7 @@ public class PathFinding
         }
         return n;
     }
-    private uint ManhattanDistance(Vector2 origin, Vector2 destination)
+    public uint ManhattanDistance(Vector2 origin, Vector2 destination)
     {
         uint x = (uint)Mathf.Abs(origin.x - destination.x);
         uint y = (uint)Mathf.Abs(origin.y - destination.y);

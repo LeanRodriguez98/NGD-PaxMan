@@ -342,9 +342,7 @@ public class Map : MonoBehaviour
     public bool IsPaxManVisible(Vector2 currentPosition)
     {
         Node currentNode = PositionToNode(currentPosition);
-        Node paxManNode = PositionToNode(GameManager.instance.player.transform.position);
-
-
+        Node paxManNode = PositionToNode(GameManager.instance.GameData.paxManPosition);
 
         int iterations = 0;
         Node auxNode = nodes[currentNode.Index + iterations];
@@ -392,6 +390,9 @@ public class Map : MonoBehaviour
 
         return false;
     }
+
+    
+
     private void OnDrawGizmos()
     {
         if (drawGizmos)

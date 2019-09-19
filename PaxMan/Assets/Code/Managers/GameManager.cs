@@ -5,14 +5,33 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 
+    public struct GlobalGameData
+    {
+        public Vector2 paxManPosition;
+        public Vector2 paxManDirection;
+        public Vector2 blinkyPosition;
+    }
+
     public static GameManager instance;
     public uint dotCount;
     public uint points;
     public int[] dotsToSpawnCherry;
+    private GlobalGameData globalGameData;
     private Map map;
     private UI_CanvasManager canvasManager;
-    public PaxMan player;
+    private PaxMan player;
+    private Blinky blinky;
+    private Inky inky;
+    private Pinky pinky;
+    private Clyde clyde;
     private Ghost[] ghosts;
+
+    public GlobalGameData GameData
+    {
+        get { return globalGameData; }
+    }
+        
+
     private void Awake()
     {
         if (instance == null)
@@ -25,11 +44,19 @@ public class GameManager : MonoBehaviour
         map = Map.instance;
         canvasManager = UI_CanvasManager.instance;
         player = FindObjectOfType<PaxMan>();
+        blinky = FindObjectOfType<Blinky>();
+        inky = FindObjectOfType<Inky>();
+        pinky = FindObjectOfType<Pinky>();
+        clyde = FindObjectOfType<Clyde>();
         ghosts = FindObjectsOfType<Ghost>();
     }
     void Update()
     {
         CheckCollisions();
+
+        globalGameData.paxManPosition = player.transform.position;
+        globalGameData.paxManDirection = player.Direction;
+        globalGameData.blinkyPosition = blinky.transform.position;
     }
 
     private void CheckCollisions()

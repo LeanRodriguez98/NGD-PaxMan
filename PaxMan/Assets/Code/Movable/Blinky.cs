@@ -19,7 +19,7 @@ public class Blinky : Ghost
         if (map.IsPaxManVisible(transform.position))
         {
             ia.fsm.SendEvent((int)Flags.onSeePaxMan);
-            ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.PositionToNode(GameManager.instance.player.Position));
+            ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.PositionToNode(GameManager.instance.GameData.paxManPosition));
             ia.pathStepIndex = -1;
             return true;
         }

@@ -20,4 +20,11 @@ public class Inky : Ghost
 
     public override void Chase()
     { }
+
+    private bool IsPaxManInsideRadius(Vector2 center, uint radius)
+    {
+        if (ia.pathFinding.ManhattanDistance(map.PositionToNode(center).Position, map.PositionToNode(GameManager.instance.GameData.paxManPosition).Position) <= radius )
+            return true;
+        return false;
+    }
 }

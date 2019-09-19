@@ -20,4 +20,6 @@ public class Clyde : Ghost
 
     public override void Chase()
     { }
+
+    
 }
