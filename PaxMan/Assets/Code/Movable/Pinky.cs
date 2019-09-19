@@ -28,14 +28,15 @@ public class Pinky : Ghost
     private Node TileToGo(uint _maxDistance)
     {
         float nodeDistance = 0.0f;
-        if (GameManager.instance.GameData.paxManDirection.x > 0.0f)
-            nodeDistance = map.horizontalNodeDistance;
-        else if (GameManager.instance.GameData.paxManDirection.y > 0.0f)
-            nodeDistance = map.verticalNodeDistance;
+        if (GameManager.instance.GameData.paxManDirection.x != 0.0f)
+            nodeDistance = map.horizontalNodeDistance * GameManager.instance.GameData.paxManDirection.x;
+        else if (GameManager.instance.GameData.paxManDirection.y != 0.0f)
+            nodeDistance = map.verticalNodeDistance * GameManager.instance.GameData.paxManDirection.y;
 
         for (uint i = _maxDistance; i > 0; i--)
         {
             Node n = map.PositionToNode(GameManager.instance.GameData.paxManPosition + (GameManager.instance.GameData.paxManDirection * i * nodeDistance));
+
             if (!n.IsObstacle && n.Index != map.PositionToNode(transform.position).Index)
                 return n;
         }
