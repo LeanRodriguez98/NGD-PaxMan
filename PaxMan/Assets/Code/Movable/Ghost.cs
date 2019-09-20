@@ -368,6 +368,7 @@ public class Ghost : MobileEntity
         ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position + (Vector3)(ia.destinationPosition - ia.currentPosition)), map.PositionToNode(ia.currentPath[0]));
         ia.pathStepIndex = -1;
         sprites.spriteRenderer.sprite = sprites.scaredSprite;
+        CancelInvoke("SetDefaultSprite");
         Invoke("SetDefaultSprite", scaredPatron.scaredTime);
         scaredPatron.isScared = true;
         ia.fsm.SendEvent((int)Flags.onStartPatrol);
@@ -422,5 +423,10 @@ public class Ghost : MobileEntity
 
         if (Input.GetKeyDown(KeyCode.M))
             ia.fsm.SendEvent((int)Flags.onPanic);
+    }
+
+    public void SetPanic()
+    {
+        ia.fsm.SendEvent((int)Flags.onPanic);
     }
 }

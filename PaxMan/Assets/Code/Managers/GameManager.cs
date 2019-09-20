@@ -82,6 +82,7 @@ public class GameManager : MonoBehaviour
                 map.bigDots[i].gameObject.SetActive(false);
                 dotCount++;
                 CheckSpawnCherry();
+                SetPoweredPaxMan();
                 break;
             }
         }
@@ -104,6 +105,15 @@ public class GameManager : MonoBehaviour
                 map.EnableCherry();
             }
         }
+    }
+
+    private void SetPoweredPaxMan()
+    {
+        player.EnablePower();
+        blinky.SetPanic();
+        pinky.SetPanic();
+        inky.SetPanic();
+        clyde.SetPanic();
     }
 
     public void StopAllGameCorrutines()
