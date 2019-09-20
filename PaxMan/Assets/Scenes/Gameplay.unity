@@ -18786,6 +18786,7 @@ MonoBehaviour:
     iterations: 0
   scaredPatron:
     scaredTime: 10
+    isScared: 0
 --- !u!61 &376081982
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -30897,7 +30898,8 @@ MonoBehaviour:
     leaveScattProbability: 0
     iterations: 0
   scaredPatron:
-    scaredTime: 0
+    scaredTime: 10
+    isScared: 0
 --- !u!1 &1208652818
 GameObject:
   m_ObjectHideFlags: 0
@@ -38324,6 +38326,7 @@ MonoBehaviour:
     iterations: 0
   scaredPatron:
     scaredTime: 10
+    isScared: 0
 --- !u!61 &1789962500
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -44008,6 +44011,7 @@ MonoBehaviour:
     iterations: 0
   scaredPatron:
     scaredTime: 10
+    isScared: 0
 --- !u!61 &1982106156
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -44066,7 +44070,6 @@ MonoBehaviour:
   dotCount: 0
   points: 0
   dotsToSpawnCherry: 46000000aa000000
-  player: {fileID: 0}
 --- !u!4 &1982107645
 Transform:
   m_ObjectHideFlags: 0

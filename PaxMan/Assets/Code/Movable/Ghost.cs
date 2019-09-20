@@ -62,6 +62,7 @@ public class Ghost : MobileEntity
     public struct ScaredPatron
     {
         public float scaredTime;
+        [HideInInspector] public bool isScared;
     }
 
     [System.Serializable]
@@ -109,7 +110,7 @@ public class Ghost : MobileEntity
         StartIA();
     }
 
-    
+
 
     public void StartIA()
     {
@@ -175,7 +176,7 @@ public class Ghost : MobileEntity
             }
             NewTileVerifications();
 
-            try
+            try // <----- remove this
             {
                 if (ia.currentPath.Count - 1 < 0)
                 {
@@ -191,7 +192,7 @@ public class Ghost : MobileEntity
                 Debug.Log(ia.currentPath.Count);
                 throw;
             }
-            
+
         }
     }
 
@@ -210,7 +211,10 @@ public class Ghost : MobileEntity
                 }
                 break;
             case (int)States.patrol:
-                FindPaxMan();
+                if (!scaredPatron.isScared)
+                {
+                    FindPaxMan();
+                }
                 break;
         }
     }
@@ -284,11 +288,12 @@ public class Ghost : MobileEntity
             Node destinationNode = null;
             List<Node> posibleDestinations = new List<Node>();
             bool addNode = true;
+
             foreach (Node node in map.GetAllNodesOfConectionsNumber(patrolPatron.countOfNodesConectionPosibleTarget))
             {
                 if (node.Position != map.PositionToNode(transform.position).Position)
                 {
-                    
+
                     for (int i = 0; i < patrolPatron.excludedNodesID.Length; i++)
                         if (node == map.IdToNode((uint)patrolPatron.excludedNodesID[i]))
                             addNode = false;
@@ -346,12 +351,14 @@ public class Ghost : MobileEntity
         ia.pathStepIndex = -1;
         sprites.spriteRenderer.sprite = sprites.scaredSprite;
         Invoke("SetDefaultSprite", scaredPatron.scaredTime);
+        scaredPatron.isScared = true;
         ia.fsm.SendEvent((int)Flags.onStartPatrol);
     }
 
     public void SetDefaultSprite()
     {
         sprites.spriteRenderer.sprite = sprites.defaultSprite;
+        scaredPatron.isScared = false;
     }
 
     private void LockPreviousPosition()
@@ -361,8 +368,8 @@ public class Ghost : MobileEntity
 
     protected bool IsPaxManInsideRadius(Vector2 center, uint radius)
     {
-        uint a = ia.pathFinding.ManhattanDistance(map.PositionToNode(center).Position, map.PositionToNode(gameManager.GameData.paxManPosition).Position);
-        if (a <= radius)
+        uint distanceToPaxMan = ia.pathFinding.ManhattanDistance(map.PositionToNode(center).Position, map.PositionToNode(gameManager.GameData.paxManPosition).Position);
+        if (distanceToPaxMan <= radius)
             return true;
         return false;
     }
