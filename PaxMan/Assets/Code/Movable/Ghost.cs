@@ -26,7 +26,8 @@ public class Ghost : MobileEntity
         onGoToScatter = 4,
         onScatter = 5,
         onSeePaxMan = 6,
-        OnPanic = 7,
+        onPanic = 7,
+        onDead = 8,
         _count
     }
 
@@ -101,6 +102,7 @@ public class Ghost : MobileEntity
     public ScatterPatron scatterPatron;
     public ScaredPatron scaredPatron;
 
+    private const string paxManTag = "Player";
 
     public override void Start()
     {
@@ -120,6 +122,7 @@ public class Ghost : MobileEntity
         sprites.spriteRenderer = GetComponent<SpriteRenderer>();
         SetDefaultSprite();
         ia.fsm.SetState((int)States.idle);
+        dead = false;
         StartCoroutine(Movement());
     }
 
@@ -134,15 +137,21 @@ public class Ghost : MobileEntity
         ia.fsm.SetRelation((int)States.goToScatter, (int)Flags.onScatter, (int)States.scatter);
         ia.fsm.SetRelation((int)States.scatter, (int)Flags.onStartPatrol, (int)States.patrol);
 
-        ia.fsm.SetRelation((int)States.patrol, (int)Flags.OnPanic, (int)States.panic);
-        ia.fsm.SetRelation((int)States.goToScatter, (int)Flags.OnPanic, (int)States.panic);
-        ia.fsm.SetRelation((int)States.scatter, (int)Flags.OnPanic, (int)States.panic);
-        ia.fsm.SetRelation((int)States.chase, (int)Flags.OnPanic, (int)States.panic);
+        ia.fsm.SetRelation((int)States.patrol, (int)Flags.onPanic, (int)States.panic);
+        ia.fsm.SetRelation((int)States.goToScatter, (int)Flags.onPanic, (int)States.panic);
+        ia.fsm.SetRelation((int)States.scatter, (int)Flags.onPanic, (int)States.panic);
+        ia.fsm.SetRelation((int)States.chase, (int)Flags.onPanic, (int)States.panic);
 
         ia.fsm.SetRelation((int)States.panic, (int)Flags.onStartPatrol, (int)States.patrol);
         ia.fsm.SetRelation((int)States.patrol, (int)Flags.onSeePaxMan, (int)States.chase);
         ia.fsm.SetRelation((int)States.chase, (int)Flags.onStartPatrol, (int)States.patrol);
 
+        ia.fsm.SetRelation((int)States.panic, (int)Flags.onDead, (int)States.goToHome);
+        ia.fsm.SetRelation((int)States.patrol, (int)Flags.onDead, (int)States.goToHome);
+        ia.fsm.SetRelation((int)States.goToScatter, (int)Flags.onDead, (int)States.goToHome);
+        ia.fsm.SetRelation((int)States.scatter, (int)Flags.onDead, (int)States.goToHome);
+
+        ia.fsm.SetRelation((int)States.goToHome, (int)Flags.onIdle, (int)States.idle);
     }
 
     public IEnumerator Movement()
@@ -214,6 +223,15 @@ public class Ghost : MobileEntity
                 if (!scaredPatron.isScared)
                 {
                     FindPaxMan();
+                }
+                break;
+            case (int)States.goToHome:
+                if (map.PositionToNode(transform.position).Index == homePatron.startPositionNodeID)
+                {
+                    ia.fsm.SendEvent((int)Flags.onIdle);
+                    ia.pathStepIndex = 0;
+                    ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(homePatron.startPositionNodeID));
+                    sprites.spriteRenderer.sprite = sprites.defaultSprite;
                 }
                 break;
         }
@@ -373,12 +391,36 @@ public class Ghost : MobileEntity
             return true;
         return false;
     }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (!dead && scaredPatron.isScared && collision.gameObject.CompareTag(paxManTag))
+        {
+            BoxCollider2D collider2D = collision.gameObject.GetComponent<BoxCollider2D>();
+            if (collider2D.bounds.Contains(transform.position))
+            {
+                ia.fsm.SendEvent((int)Flags.onDead);
+                dead = true;
+                GoToHome();
+                Debug.Log(gameObject.name + " Dead");
+            }
+        }
+    }
+
+    private void GoToHome()
+    {
+        ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(homePatron.startPositionNodeID));
+        ia.currentPath.Insert(0, (Vector2)transform.position);
+        ia.pathStepIndex = 0;
+        sprites.spriteRenderer.sprite = sprites.deadSprite;
+    }
+
     public virtual void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
             ia.fsm.SendEvent((int)Flags.onOpenDoor);
 
         if (Input.GetKeyDown(KeyCode.M))
-            ia.fsm.SendEvent((int)Flags.OnPanic);
+            ia.fsm.SendEvent((int)Flags.onPanic);
     }
 }

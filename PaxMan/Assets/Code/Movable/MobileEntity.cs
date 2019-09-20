@@ -15,6 +15,7 @@ public class MobileEntity : MonoBehaviour
     protected Map map;
     protected GameManager gameManager;
     protected bool canMove = true;
+    protected bool dead;
 
     public virtual void Start()
     {

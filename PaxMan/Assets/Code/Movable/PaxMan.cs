@@ -12,7 +12,7 @@ public class PaxMan : MobileEntity
     private Animator animator;
     private Node currentNode;
     private Node destinationNode;
-    private bool dead;
+    private bool powered;
     private const string animationHorizontalTriggerName = "Horizontal";
     private const string animationVerticalTriggerName = "Vertical";
     private const string animationIdleTriggerName = "Idle";
@@ -46,6 +46,7 @@ public class PaxMan : MobileEntity
         transform.position = currentNode.Position;
         destinationNode = map.GetNextNode(currentNode, movement);
         dead = false;
+        powered = false;
         StartCoroutine(Movement());
     }
 
@@ -88,6 +89,16 @@ public class PaxMan : MobileEntity
     void Update()
     {
         InputMovement();
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            powered = true;
+            Invoke("DersablePower", 10.0f);
+        }
+    }
+
+    public void DersablePower()
+    {
+        powered = false;
     }
 
     private void InputMovement()
@@ -120,7 +131,7 @@ public class PaxMan : MobileEntity
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (!dead && collision.gameObject.CompareTag(ghostTag))
+        if (!powered && !dead && collision.gameObject.CompareTag(ghostTag))
         {
             BoxCollider2D collider2D = collision.gameObject.GetComponent<BoxCollider2D>();
             if (collider2D.bounds.Contains(transform.position))
