@@ -29,19 +29,19 @@ public class Pinky : Ghost
     {
         float nodeDistance = 0.0f;
         Vector2 targetDirection = Vector2.zero;
-        if (GameManager.instance.GameData.paxManDirection.x != 0.0f)
+        if (gameManager.GameData.paxManDirection.x != 0.0f)
         {
-            nodeDistance = map.horizontalNodeDistance * GameManager.instance.GameData.paxManDirection.x;
+            nodeDistance = map.horizontalNodeDistance * gameManager.GameData.paxManDirection.x;
             targetDirection = Vector2.right;
         }
-        else if (GameManager.instance.GameData.paxManDirection.y != 0.0f)
+        else if (gameManager.GameData.paxManDirection.y != 0.0f)
         {
-            nodeDistance = map.verticalNodeDistance * GameManager.instance.GameData.paxManDirection.y;
+            nodeDistance = map.verticalNodeDistance * gameManager.GameData.paxManDirection.y;
             targetDirection = Vector2.up;
         }
         for (uint i = _maxDistance; i > 0; i--)
         {
-            Node n = map.PositionToNode(GameManager.instance.GameData.paxManPosition + (targetDirection * i * nodeDistance));
+            Node n = map.PositionToNode(gameManager.GameData.paxManPosition + (targetDirection * i * nodeDistance));
 
             if (!n.IsObstacle && n.Index != map.PositionToNode(transform.position).Index)
                 return n;
@@ -49,12 +49,5 @@ public class Pinky : Ghost
         return null;
     }
 
-    public override void Chase()
-    {
-        if (!FindPaxMan())
-        {
-            ia.fsm.SendEvent((int)Flags.onStartPatrol);
-            UpdatePath();
-        }
-    }
+    
 }

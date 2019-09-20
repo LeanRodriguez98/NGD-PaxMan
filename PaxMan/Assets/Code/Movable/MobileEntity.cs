@@ -13,12 +13,13 @@ public class MobileEntity : MonoBehaviour
 
     public MovementSettings movementSettings;
     protected Map map;
+    protected GameManager gameManager;
     protected bool canMove = true;
 
     public virtual void Start()
     {
         map = Map.instance;
-
+        gameManager = GameManager.instance;
     }
 
     protected void Reset(out float _currentSpeed, out float _itarations)

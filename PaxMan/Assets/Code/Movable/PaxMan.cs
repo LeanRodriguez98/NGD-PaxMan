@@ -12,7 +12,6 @@ public class PaxMan : MobileEntity
     private Animator animator;
     private Node currentNode;
     private Node destinationNode;
-    private GameManager gameManager; 
     private const string animationHorizontalTriggerName = "Horizontal";
     private const string animationVerticalTriggerName = "Vertical";
     private const string animationIdleTriggerName = "Idle";
@@ -33,7 +32,6 @@ public class PaxMan : MobileEntity
     {
         base.Start();
         animator = GetComponent<Animator>();
-        gameManager = GameManager.instance;
         InitMovement();
     }
 

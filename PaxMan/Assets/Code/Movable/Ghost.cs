@@ -220,7 +220,14 @@ public class Ghost : MobileEntity
         return false;
     }
 
-    public virtual void Chase() { }
+    public void Chase()
+    {
+        if (!FindPaxMan())
+        {
+            ia.fsm.SendEvent((int)Flags.onStartPatrol);
+            UpdatePath();
+        }
+    }
 
     protected void UpdatePath()
     {
@@ -352,6 +359,13 @@ public class Ghost : MobileEntity
         ia.pathFinding.IgnoreNode(map.PositionToNode(ia.currentPath[ia.pathStepIndex]));
     }
 
+    protected bool IsPaxManInsideRadius(Vector2 center, uint radius)
+    {
+        uint a = ia.pathFinding.ManhattanDistance(map.PositionToNode(center).Position, map.PositionToNode(gameManager.GameData.paxManPosition).Position);
+        if (a <= radius)
+            return true;
+        return false;
+    }
     public virtual void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
