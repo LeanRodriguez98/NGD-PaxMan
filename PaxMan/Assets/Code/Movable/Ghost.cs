@@ -40,6 +40,8 @@ public class Ghost : MobileEntity
         public uint endPositionNodeID;
         [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
         public uint leavingPositionNodeID;
+
+        public uint dotsNecesaryToLeave;
     }
     [System.Serializable]
     public struct PatrolPatron
@@ -428,5 +430,10 @@ public class Ghost : MobileEntity
     public void SetPanic()
     {
         ia.fsm.SendEvent((int)Flags.onPanic);
+    }
+
+    public void LeaveHose()
+    {
+        ia.fsm.SendEvent((int)Flags.onOpenDoor);
     }
 }

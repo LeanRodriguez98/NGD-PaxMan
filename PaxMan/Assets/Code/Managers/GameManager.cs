@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     private Inky inky;
     private Pinky pinky;
     private Clyde clyde;
-
+    private Ghost[] ghosts;
     public GlobalGameData GameData
     {
         get { return globalGameData; }
@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
         inky = FindObjectOfType<Inky>();
         pinky = FindObjectOfType<Pinky>();
         clyde = FindObjectOfType<Clyde>();
+        ghosts = FindObjectsOfType<Ghost>();
     }
     void Update()
     {
@@ -68,6 +69,7 @@ public class GameManager : MonoBehaviour
                 map.smallDots[i].gameObject.SetActive(false);
                 dotCount++;
                 CheckSpawnCherry();
+                CheckGhostLeaving();
                 break;
             }
         }
@@ -83,6 +85,7 @@ public class GameManager : MonoBehaviour
                 dotCount++;
                 CheckSpawnCherry();
                 SetPoweredPaxMan();
+                CheckGhostLeaving();
                 break;
             }
         }
@@ -103,6 +106,17 @@ public class GameManager : MonoBehaviour
             if (dotsToSpawnCherry[i] == dotCount)
             {
                 map.EnableCherry();
+            }
+        }
+    }
+
+    private void CheckGhostLeaving()
+    {
+        foreach (Ghost ghost in ghosts)
+        {
+            if (ghost.homePatron.dotsNecesaryToLeave <= dotCount)
+            {
+                ghost.LeaveHose();
             }
         }
     }
