@@ -12,9 +12,11 @@ public class PaxMan : MobileEntity
     private Animator animator;
     private Node currentNode;
     private Node destinationNode;
+    private bool dead;
     private const string animationHorizontalTriggerName = "Horizontal";
     private const string animationVerticalTriggerName = "Vertical";
     private const string animationIdleTriggerName = "Idle";
+    private const string animationDeadTriggerName = "Dead";
     private const string horizontalAxis = "Horizontal";
     private const string verticalAxis = "Vertical";
     private const string ghostTag = "Ghost";
@@ -43,6 +45,7 @@ public class PaxMan : MobileEntity
         currentNode = map.IdToNode(startNodeId);
         transform.position = currentNode.Position;
         destinationNode = map.GetNextNode(currentNode, movement);
+        dead = false;
         StartCoroutine(Movement());
     }
 
@@ -117,14 +120,23 @@ public class PaxMan : MobileEntity
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag(ghostTag))
+        if (!dead && collision.gameObject.CompareTag(ghostTag))
         {
             BoxCollider2D collider2D = collision.gameObject.GetComponent<BoxCollider2D>();
             if (collider2D.bounds.Contains(transform.position))
             {
-                StopAllCoroutines();
-                gameManager.OnDeadPaxMan();
+                gameManager.StopAllGameCorrutines();
+                animator.SetTrigger(animationDeadTriggerName);
+                dead = true;
             }
         }
+    }
+
+    // This function are be called by a animation event.
+    // AE = Animation Event
+    public void AE_Dead()
+    {
+        gameManager.OnDeadPaxMan();
+        animator.SetTrigger("Restart");
     }
 }

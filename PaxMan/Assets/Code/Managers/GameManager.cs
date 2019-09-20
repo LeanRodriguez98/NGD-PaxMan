@@ -24,7 +24,6 @@ public class GameManager : MonoBehaviour
     private Inky inky;
     private Pinky pinky;
     private Clyde clyde;
-    private Ghost[] ghosts;
 
     public GlobalGameData GameData
     {
@@ -48,7 +47,6 @@ public class GameManager : MonoBehaviour
         inky = FindObjectOfType<Inky>();
         pinky = FindObjectOfType<Pinky>();
         clyde = FindObjectOfType<Clyde>();
-        ghosts = FindObjectsOfType<Ghost>();
     }
     void Update()
     {
@@ -108,15 +106,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void StopAllGameCorrutines()
+    {
+        player.StopAllCoroutines();
+        blinky.StopAllCoroutines();
+        pinky.StopAllCoroutines();
+        inky.StopAllCoroutines();
+        clyde.StopAllCoroutines();
+    }
+
     public void OnDeadPaxMan()
     {
-
         player.InitMovement();
-        foreach (Ghost ghost in ghosts)
-        {
-            ghost.StopAllCoroutines();
-            ghost.StartIA();
-        }
+        blinky.StartIA();
+        pinky.StartIA();
+        inky.StartIA();
+        clyde.StartIA();
     }
 
 }
