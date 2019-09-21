@@ -4,25 +4,24 @@ using UnityEngine;
 public class PathFinding
 {
     private Map map;
-    private Node startNode;
-    private Node destinationNode;
-    private List<Node> openNodes;
-    private List<Node> closedNodes;
-    private uint totalWeight;
+    private Tile startTile;
+    private Tile destinationTile;
+    private List<Tile> openTiles;
+    private List<Tile> closedTiles;
 
     public PathFinding()
     {
-        openNodes = new List<Node>();
-        closedNodes = new List<Node>();
+        openTiles = new List<Tile>();
+        closedTiles = new List<Tile>();
     }
 
-    public void IgnoreNode(Node n)
+    public void IgnoreTile(Tile n)
     {
-        n.CloseNode();
-        closedNodes.Add(n);
+        n.CloseTile();
+        closedTiles.Add(n);
     }
 
-    public List<Vector2> GetPath(Node _startNode, Node _destinationNode)
+    public List<Vector2> GetPath(Tile _startTile, Tile _destinationTile)
     {
         if (Map.instance == null)
         {
@@ -30,91 +29,91 @@ public class PathFinding
         }
         map = Map.instance;
 
-        if (map.nodes == null)
+        if (map.tiles == null)
         {
             return new List<Vector2>();
         }
-        startNode = _startNode;
-        destinationNode = _destinationNode;
+        startTile = _startTile;
+        destinationTile = _destinationTile;
 
-        startNode.OpenNode();
-        openNodes.Add(startNode);
-        while (openNodes.Count > 0)
+        startTile.OpenTile();
+        openTiles.Add(startTile);
+        while (openTiles.Count > 0)
         {
-            Node n = GetNearestNode(destinationNode, openNodes);
-            if (n == destinationNode)
+            Tile n = GetNearestTile(destinationTile, openTiles);
+            if (n == destinationTile)
             {
-                List<Node> nodePath = new List<Node>();
-                nodePath.Add(n);
-                nodePath = GeneratePath(nodePath, n);
+                List<Tile> tilePath = new List<Tile>();
+                tilePath.Add(n);
+                tilePath = GeneratePath(tilePath, n);
 
                 List<Vector2> path = new List<Vector2>();
-                for (int i = 0; i < nodePath.Count; i++)
+                for (int i = 0; i < tilePath.Count; i++)
                 {
-                    path.Add(nodePath[i].Position);
+                    path.Add(tilePath[i].Position);
                 }
 
-                if (path[0] == destinationNode.Position)
+                if (path[0] == destinationTile.Position)
                 {
                     path.Reverse();
                 }
 
-                ResetNodes();
+                ResetTiles();
                 return path;
             }
-            n.CloseNode();
-            openNodes.Remove(n);
-            closedNodes.Add(n);
+            n.CloseTile();
+            openTiles.Remove(n);
+            closedTiles.Add(n);
             for (int i = 0; i < n.Adjacents.Count; i++)
             {
-                if (map.nodes[n.Adjacents[i]].GetState() == Node.NodeStates.Ready)
+                if (map.tiles[n.Adjacents[i]].GetState() == Tile.TileStates.Ready)
                 {
-                    if (!map.nodes[n.Adjacents[i]].IsObstacle)
+                    if (!map.tiles[n.Adjacents[i]].IsObstacle)
                     {
-                        map.nodes[n.Adjacents[i]].OpenNode(n);
+                        map.tiles[n.Adjacents[i]].OpenTile(n);
 
-                        openNodes.Add(map.nodes[n.Adjacents[i]]);
+                        openTiles.Add(map.tiles[n.Adjacents[i]]);
                     }
                 }
             }
         }
-        ResetNodes();
+        ResetTiles();
         List<Vector2> nullPath = new List<Vector2>();
-        nullPath.Add(startNode.Position);
+        nullPath.Add(startTile.Position);
         return nullPath;
     }
 
-    private void ResetNodes()
+    private void ResetTiles()
     {
-        for (int i = 0; i < openNodes.Count; i++)
+        for (int i = 0; i < openTiles.Count; i++)
         {
-            openNodes[i].RestartNode();
+            openTiles[i].RestartTile();
         }
-        openNodes.Clear();
-        for (int i = 0; i < closedNodes.Count; i++)
+        openTiles.Clear();
+        for (int i = 0; i < closedTiles.Count; i++)
         {
-            closedNodes[i].RestartNode();
+            closedTiles[i].RestartTile();
         }
-        closedNodes.Clear();
+        closedTiles.Clear();
     }
-    private List<Node> GeneratePath(List<Node> list, Node n)
+    private List<Tile> GeneratePath(List<Tile> list, Tile n)
     {
-        if (n.ParentNode != null)
+        if (n.ParentTile != null)
         {
-            list.Add(n.ParentNode);
-            GeneratePath(list, n.ParentNode);
+            list.Add(n.ParentTile);
+            GeneratePath(list, n.ParentTile);
         }
         list.Reverse();
         return list;
     }
 
-    public Node GetNearestNode(Node _currentNode, List<Node> _targets)
+    public Tile GetNearestTile(Tile _currentTile, List<Tile> _targets)
     {
-        Node n = null;
+        Tile n = null;
         uint currentMinDistance = int.MaxValue;
         for (int i = 0; i < _targets.Count; i++)
         {
-            uint manhattanDistance = ManhattanDistance(_currentNode.Position, _targets[i].Position);
+            uint manhattanDistance = ManhattanDistance(_currentTile.Position, _targets[i].Position);
             if (manhattanDistance < currentMinDistance)
             {
                 n = _targets[i];
@@ -124,15 +123,15 @@ public class PathFinding
         return n;
     }
 
-    public Node GetNearestValidNode(Node _target, Vector2 _currentPosition)
+    public Tile GetNearestValidTile(Tile _target, Vector2 _currentPosition)
     {
-        if (!_target.IsObstacle && _target.Position != map.PositionToNode(_currentPosition).Position )
+        if (!_target.IsObstacle && _target.Position != map.PositionToTile(_currentPosition).Position )
         {
             return _target;
         }
         for (int i = 0; i < _target.Adjacents.Count; i++)
         {
-            Node n = GetNearestValidNode(map.nodes[_target.Adjacents[i]], _currentPosition);
+            Tile n = GetNearestValidTile(map.tiles[_target.Adjacents[i]], _currentPosition);
             if (n != null)
             {
                 return n;
@@ -142,11 +141,11 @@ public class PathFinding
     }
     public uint ManhattanDistance(Vector2 origin, Vector2 destination)
     {
-        origin.x /= map.horizontalNodeDistance;
-        destination.x /= map.horizontalNodeDistance;
+        origin.x /= map.horizontalTileDistance;
+        destination.x /= map.horizontalTileDistance;
 
-        origin.y /= map.verticalNodeDistance;
-        destination.y /= map.verticalNodeDistance;
+        origin.y /= map.verticalTileDistance;
+        destination.y /= map.verticalTileDistance;
 
         uint x = (uint)Mathf.Abs(origin.x - destination.x);
         uint y = (uint)Mathf.Abs(origin.y - destination.y);

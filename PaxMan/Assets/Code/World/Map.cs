@@ -11,40 +11,40 @@ public class Map : MonoBehaviour
     [System.Serializable]
     public struct ConectionColors
     {
-        public Color obstacleNodeColor;
-        public Color zeroConectionNodeColor;
-        public Color oneConectionNodeColor;
-        public Color twoConectionNodeColor;
-        public Color threeConectionNodeColor;
-        public Color fourConectionNodeColor;
+        public Color obstacleTileColor;
+        public Color zeroConectionTileColor;
+        public Color oneConectionTileColor;
+        public Color twoConectionTileColor;
+        public Color threeConectionTileColor;
+        public Color fourConectionTileColor;
     }
 
     [System.Serializable]
     public struct TypeColor
     {
-        public Color emptyNodeColor;
-        public Color smallDotNodeColor;
-        public Color bigDotNodeColor;
-        public Color obstacleNodeColor;
-        public Color unexpectedNodeColor;
+        public Color emptyTileColor;
+        public Color smallDotTileColor;
+        public Color bigDotTileColor;
+        public Color obstacleTileColor;
+        public Color unexpectedTileColor;
     }
 
     [System.Serializable]
     public class WarpZone
     {
-        public WarpZone(Node a, Node b)
+        public WarpZone(Tile _a, Tile _b)
         {
-            warpNodeA = a;
-            warpNodeB = b;
+            warpTileA = _a;
+            warpTileB = _b;
         }
-        public Node warpNodeA;
-        public Node warpNodeB;
+        public Tile warpTileA;
+        public Tile warpTileB;
     }
 
     public Rect gameArea;
     public Vector2Int divisions;
 
-    public List<Node> nodes = new List<Node>();
+    public List<Tile> tiles = new List<Tile>();
     public GameObject SmallDotPrefab;
     public GameObject BigDotPrefab;
 
@@ -53,14 +53,14 @@ public class Map : MonoBehaviour
 
     public bool drawGizmos;
     public bool drawGrid;
-    public bool drawNodeID;
-    public bool drawNodesType;
-    public TypeColor nodeTypeColors;
-    public bool drawNodesConections;
-    public ConectionColors nodeConectionsColors;
+    public bool drawTileID;
+    public bool drawTilesType;
+    public TypeColor tileTypeColors;
+    public bool drawTilesConections;
+    public ConectionColors tileConectionsColors;
     private string[] lines;
-    public float horizontalNodeDistance;
-    public float verticalNodeDistance;
+    public float horizontalTileDistance;
+    public float verticalTileDistance;
 
     public List<WarpZone> warpZones = new List<WarpZone>();
 
@@ -73,7 +73,7 @@ public class Map : MonoBehaviour
     }
     void Start()
     {
-        if (nodes == null)
+        if (tiles == null)
         {
             InitMap();
             Debug.LogWarning("The map was inited in ejecuton, plase use the \"Init Map\" button in this object", this.gameObject);
@@ -91,9 +91,9 @@ public class Map : MonoBehaviour
 
     public void ClearMap()
     {
-        if (nodes != null)
+        if (tiles != null)
         {
-            nodes.Clear();
+            tiles.Clear();
         }
         if (smallDots.Count > 0)
         {
@@ -137,48 +137,48 @@ public class Map : MonoBehaviour
 
     public void GenerateMap(string[] _lines)
     {
-        horizontalNodeDistance = gameArea.width / divisions.x;
-        verticalNodeDistance = gameArea.height / divisions.y;
+        horizontalTileDistance = gameArea.width / divisions.x;
+        verticalTileDistance = gameArea.height / divisions.y;
         uint iterations = 0;
         for (int y = 0; y < _lines.Length; y++)
         {
             char[] line = _lines[y].ToCharArray();
             for (int x = 0; x < line.Length; x++)
             {
-                Vector2 nodePosition;
-                nodePosition.x = gameArea.xMin + (x * horizontalNodeDistance) + (horizontalNodeDistance / 2.0f);
-                nodePosition.y = gameArea.yMax - (y * verticalNodeDistance) - (verticalNodeDistance / 2.0f);
+                Vector2 tilePosition;
+                tilePosition.x = gameArea.xMin + (x * horizontalTileDistance) + (horizontalTileDistance / 2.0f);
+                tilePosition.y = gameArea.yMax - (y * verticalTileDistance) - (verticalTileDistance / 2.0f);
                 bool isObstacle = false;
                 char charFile = line[x];
-                Rect area = new Rect(new Vector2(gameArea.xMin + (x * horizontalNodeDistance), gameArea.yMax - (y * verticalNodeDistance) - verticalNodeDistance), new Vector2(horizontalNodeDistance, verticalNodeDistance));
-                nodes.Add(new Node(nodePosition, Node.NodeStates.Ready, isObstacle, area, iterations, charFile));
+                Rect area = new Rect(new Vector2(gameArea.xMin + (x * horizontalTileDistance), gameArea.yMax - (y * verticalTileDistance) - verticalTileDistance), new Vector2(horizontalTileDistance, verticalTileDistance));
+                tiles.Add(new Tile(tilePosition, Tile.TileStates.Ready, isObstacle, area, iterations, charFile));
                 iterations++;
             }
         }
-        AddDots(nodes);
-        ConectNodes();
+        AddDots(tiles);
+        ConectTiles();
     }
 
-    public void AddDots(List<Node> _nodes)
+    public void AddDots(List<Tile> _tiles)
     {
         GameObject smallDotsParent = new GameObject("SmallDots");
         smallDotsParent.transform.parent = this.gameObject.transform;
         GameObject bigDotsParent = new GameObject("BigDots");
         bigDotsParent.transform.parent = this.gameObject.transform;
-        foreach (Node node in _nodes)
+        foreach (Tile tile in _tiles)
         {
-            switch (node.CharFile)
+            switch (tile.CharFile)
             {
                 case 'x':
-                    node.IsObstacle = true;
+                    tile.IsObstacle = true;
                     break;
                 case '.':
-                    PickupableObject smallDot = Instantiate(SmallDotPrefab, node.Position, Quaternion.identity, smallDotsParent.transform).GetComponent<PickupableObject>();
+                    PickupableObject smallDot = Instantiate(SmallDotPrefab, tile.Position, Quaternion.identity, smallDotsParent.transform).GetComponent<PickupableObject>();
                     smallDot.SetCollider();
                     smallDots.Add(smallDot);
                     break;
                 case 'o':
-                    PickupableObject bigDot = Instantiate(BigDotPrefab, node.Position, Quaternion.identity, bigDotsParent.transform).GetComponent<PickupableObject>();
+                    PickupableObject bigDot = Instantiate(BigDotPrefab, tile.Position, Quaternion.identity, bigDotsParent.transform).GetComponent<PickupableObject>();
                     bigDot.SetCollider();
                     bigDots.Add(bigDot);
                     break;
@@ -200,99 +200,99 @@ public class Map : MonoBehaviour
         cherrys.gameObject.SetActive(false);
         CancelInvoke("DisableCherry");
     }
-    public void ConectNodes()
+    public void ConectTiles()
     {
-        Vector2 rightDistance = new Vector2(horizontalNodeDistance, 0.0f);
-        Vector2 upDistance = new Vector2(0.0f, verticalNodeDistance);
+        Vector2 rightDistance = new Vector2(horizontalTileDistance, 0.0f);
+        Vector2 upDistance = new Vector2(0.0f, verticalTileDistance);
 
-        foreach (Node currentNode in nodes)
+        foreach (Tile currentTile in tiles)
         {
-            if (!currentNode.IsObstacle)
+            if (!currentTile.IsObstacle)
             {
-                foreach (Node node in nodes)
+                foreach (Tile tile in tiles)
                 {
-                    if (!node.IsObstacle)
+                    if (!tile.IsObstacle)
                     {
-                        if (currentNode.Position + upDistance == node.Position || currentNode.Position + rightDistance == node.Position)
+                        if (currentTile.Position + upDistance == tile.Position || currentTile.Position + rightDistance == tile.Position)
                         {
-                            AddNodeConection(currentNode, node);
+                            AddTileConection(currentTile, tile);
                         }
                     }
                 }
             }
         }
     }
-    public void AddNodeConection(Node a, Node b)
+    public void AddTileConection(Tile _a, Tile _b)
     {
-        a.AddConection(b, nodes);
-        b.AddConection(a, nodes);
+        _a.AddConection(_b, tiles);
+        _b.AddConection(_a, tiles);
     }
-    public Node PositionToNode(Vector2 objectPosition)
+    public Tile PositionToTile(Vector2 _objectPosition)
     {
         float distance = float.PositiveInfinity;
-        Node currentNode = null;
-        for (int i = 0; i < nodes.Count; i++)
+        Tile currentTile = null;
+        for (int i = 0; i < tiles.Count; i++)
         {
-            if (!nodes[i].IsObstacle)
+            if (!tiles[i].IsObstacle)
             {
-                float currentDistance = Vector2.Distance(nodes[i].Position, objectPosition);
+                float currentDistance = Vector2.Distance(tiles[i].Position, _objectPosition);
                 if (currentDistance < distance)
                 {
-                    currentNode = nodes[i];
+                    currentTile = tiles[i];
                     distance = currentDistance;
                 }
             }
         }
-        return currentNode;
+        return currentTile;
     }
 
-    public Node IdToNode(uint i)
+    public Tile IdToTile(uint _i)
     {
-        return nodes[(int)i];
+        return tiles[(int)_i];
     }
 
-    public Node GetNextNode(Node currentNode, Vector2 direction)
+    public Tile GetNextTile(Tile _currentTile, Vector2 _direction)
     {
 
-        if (horizontalNodeDistance == 0)
-            horizontalNodeDistance = gameArea.width / divisions.x;
-        if (verticalNodeDistance == 0)
-            verticalNodeDistance = gameArea.height / divisions.y;
+        if (horizontalTileDistance == 0)
+            horizontalTileDistance = gameArea.width / divisions.x;
+        if (verticalTileDistance == 0)
+            verticalTileDistance = gameArea.height / divisions.y;
 
-        direction *= new Vector2(horizontalNodeDistance, verticalNodeDistance);
+        _direction *= new Vector2(horizontalTileDistance, verticalTileDistance);
 
-        for (int i = 0; i < currentNode.Adjacents.Count; i++)
+        for (int i = 0; i < _currentTile.Adjacents.Count; i++)
         {
-            if (currentNode.Position + direction == nodes[currentNode.Adjacents[i]].Position)
+            if (_currentTile.Position + _direction == tiles[_currentTile.Adjacents[i]].Position)
             {
-                return nodes[currentNode.Adjacents[i]];
+                return tiles[_currentTile.Adjacents[i]];
             }
         }
 
-        return GetWarpNode(currentNode);
+        return GetWarpTile(_currentTile);
     }
 
-    public Node GetWarpNode(Node currentNode)
+    public Tile GetWarpTile(Tile _currentTile)
     {
         for (int i = 0; i < warpZones.Count; i++)
         {
-            if (currentNode.Position == warpZones[i].warpNodeA.Position)
+            if (_currentTile.Position == warpZones[i].warpTileA.Position)
             {
-                return warpZones[i].warpNodeB;
+                return warpZones[i].warpTileB;
             }
-            else if (currentNode.Position == warpZones[i].warpNodeB.Position)
+            else if (_currentTile.Position == warpZones[i].warpTileB.Position)
             {
-                return warpZones[i].warpNodeA;
+                return warpZones[i].warpTileA;
             }
         }
         return null;
     }
 
-    public bool IsWarpZone(Node currentNode)
+    public bool IsWarpZone(Tile _currentTile)
     {
         for (int i = 0; i < warpZones.Count; i++)
         {
-            if (currentNode.Position == warpZones[i].warpNodeA.Position || currentNode.Position == warpZones[i].warpNodeB.Position)
+            if (_currentTile.Position == warpZones[i].warpTileA.Position || _currentTile.Position == warpZones[i].warpTileB.Position)
             {
                 return true;
             }
@@ -300,90 +300,90 @@ public class Map : MonoBehaviour
         return false;
     }
 
-    public Vector2 GetWarpDestination(Node currentNode)
+    public Vector2 GetWarpDestination(Tile _currentTile)
     {
         for (int i = 0; i < warpZones.Count; i++)
         {
-            if (currentNode.Position == warpZones[i].warpNodeA.Position)
+            if (_currentTile.Position == warpZones[i].warpTileA.Position)
             {
-                return warpZones[i].warpNodeB.Position;
+                return warpZones[i].warpTileB.Position;
             }
-            else if (currentNode.Position == warpZones[i].warpNodeB.Position)
+            else if (_currentTile.Position == warpZones[i].warpTileB.Position)
             {
-                return warpZones[i].warpNodeA.Position;
+                return warpZones[i].warpTileA.Position;
             }
         }
         return Vector2.zero;
     }
 
-    public void AddWarpZone(Node a, Node b)
+    public void AddWarpZone(Tile _a, Tile _b)
     {
-        WarpZone warp = new WarpZone(a, b);
+        WarpZone warp = new WarpZone(_a, _b);
         warpZones.Add(warp);
     }
 
-    public List<Node> GetAllNodesOfConectionsNumber(int[] indexes)
+    public List<Tile> GetAllTilesOfConectionsNumber(int[] _indexes)
     {
-        List<Node> _nodes = new List<Node>();
-        foreach (Node node in nodes)
+        List<Tile> auxTiles = new List<Tile>();
+        foreach (Tile tile in tiles)
         {
-            for (int i = 0; i < indexes.Length; i++)
+            for (int i = 0; i < _indexes.Length; i++)
             {
-                if (node.Adjacents.Count == indexes[i])
+                if (tile.Adjacents.Count == _indexes[i])
                 {
-                    _nodes.Add(node);
+                    auxTiles.Add(tile);
                 }
             }
 
         }
-        return _nodes;
+        return auxTiles;
     }
 
-    public bool IsPaxManVisible(Vector2 currentPosition)
+    public bool IsPaxManVisible(Vector2 _currentPosition)
     {
-        Node currentNode = PositionToNode(currentPosition);
-        Node paxManNode = PositionToNode(GameManager.instance.GameData.paxManPosition);
+        Tile currentTile = PositionToTile(_currentPosition);
+        Tile paxManTile = PositionToTile(GameManager.instance.GameData.paxManPosition);
 
         int iterations = 0;
-        Node auxNode = nodes[currentNode.Index + iterations];
-        while (!auxNode.IsObstacle)
+        Tile auxTile = tiles[currentTile.Index + iterations];
+        while (!auxTile.IsObstacle)
         {
             iterations++;
-            auxNode = nodes[currentNode.Index + iterations];
-            if (paxManNode.Position == auxNode.Position)
+            auxTile = tiles[currentTile.Index + iterations];
+            if (paxManTile.Position == auxTile.Position)
                 return true;
         }
 
 
         iterations = 0;
-        auxNode = nodes[currentNode.Index + iterations];
-        while (!auxNode.IsObstacle)
+        auxTile = tiles[currentTile.Index + iterations];
+        while (!auxTile.IsObstacle)
         {
             iterations--;
-            auxNode = nodes[currentNode.Index + iterations];
-            if (paxManNode.Position == auxNode.Position)
+            auxTile = tiles[currentTile.Index + iterations];
+            if (paxManTile.Position == auxTile.Position)
                 return true;
         }
 
 
         iterations = 0;
-        auxNode = nodes[currentNode.Index + iterations];
-        while (!auxNode.IsObstacle)
+        auxTile = tiles[currentTile.Index + iterations];
+        while (!auxTile.IsObstacle)
         {
             iterations += divisions.x;
-            auxNode = nodes[currentNode.Index + iterations];
-            if (paxManNode.Position == auxNode.Position)
+            auxTile = tiles[currentTile.Index + iterations];
+            if (paxManTile.Position == auxTile.Position)
                 return true;
         }
 
 
         iterations = 0;
-        auxNode = nodes[currentNode.Index + iterations];
-        while (!auxNode.IsObstacle)
+        auxTile = tiles[currentTile.Index + iterations];
+        while (!auxTile.IsObstacle)
         {
             iterations -= divisions.x;
-            auxNode = nodes[currentNode.Index + iterations];
-            if (paxManNode.Position == auxNode.Position)
+            auxTile = tiles[currentTile.Index + iterations];
+            if (paxManTile.Position == auxTile.Position)
                 return true;
         }
 
@@ -416,88 +416,76 @@ public class Map : MonoBehaviour
                     Gizmos.DrawLine(new Vector2(gameArea.position.x, gameArea.position.y + ((gameArea.height / (float)divisions.y) * i)), new Vector2(gameArea.position.x + gameArea.width, gameArea.position.y + ((gameArea.height / (float)divisions.y) * i)));
                 }
 
-                /* foreach (Node node in nodes)
-                 {
-                     Gizmos.color = new Color(UnityEngine.Random.Range(0F, 1F), UnityEngine.Random.Range(0, 1F), UnityEngine.Random.Range(0, 1F));
-
-                     Gizmos.DrawLine(node.Area.position, node.Area.position + new Vector2(node.Area.width, 0.0f));
-                     Gizmos.DrawLine(node.Area.position, node.Area.position + new Vector2(0.0f, node.Area.height));
-                     Gizmos.DrawLine(node.Area.position + new Vector2(node.Area.width, 0.0f), node.Area.position + new Vector2(node.Area.width, node.Area.height));
-                     Gizmos.DrawLine(node.Area.position + new Vector2(0.0f, node.Area.height), node.Area.position + new Vector2(node.Area.width, node.Area.height));
-                 }*/
-
-
-
             }
-            if (drawNodeID)
+            if (drawTileID)
             {
                 GUIStyle style = new GUIStyle();
                 style.fontSize = 15;
                 style.normal.textColor = Color.blue;
-                for (int i = 0; i < nodes.Count; i++)
+                for (int i = 0; i < tiles.Count; i++)
                 {
-                    Handles.Label(nodes[i].Position, nodes[i].Index.ToString(), style);
+                    Handles.Label(tiles[i].Position, tiles[i].Index.ToString(), style);
                 }
             }
-            if (drawNodesType)
+            if (drawTilesType)
             {
-                foreach (Node tile in nodes)
+                foreach (Tile tile in tiles)
                 {
                     if (tile.CharFile == 'x')
                     {
-                        Gizmos.color = nodeTypeColors.obstacleNodeColor;
+                        Gizmos.color = tileTypeColors.obstacleTileColor;
                     }
                     else if (tile.CharFile == '.')
                     {
-                        Gizmos.color = nodeTypeColors.smallDotNodeColor;
+                        Gizmos.color = tileTypeColors.smallDotTileColor;
                     }
                     else if (tile.CharFile == 'o')
                     {
-                        Gizmos.color = nodeTypeColors.bigDotNodeColor;
+                        Gizmos.color = tileTypeColors.bigDotTileColor;
                     }
                     else if (tile.CharFile == ' ')
                     {
-                        Gizmos.color = nodeTypeColors.emptyNodeColor;
+                        Gizmos.color = tileTypeColors.emptyTileColor;
                     }
                     else
                     {
-                        Gizmos.color = nodeTypeColors.unexpectedNodeColor;
+                        Gizmos.color = tileTypeColors.unexpectedTileColor;
                     }
                     Gizmos.DrawWireSphere(new Vector3(tile.Position.x, tile.Position.y, 0.0f), 0.05f);
                 }
 
             }
-            else if (drawNodesConections)
+            else if (drawTilesConections)
             {
-                foreach (Node node in nodes)
+                foreach (Tile tile in tiles)
                 {
-                    if (node.IsObstacle)
+                    if (tile.IsObstacle)
                     {
-                        Gizmos.color = nodeConectionsColors.obstacleNodeColor;
+                        Gizmos.color = tileConectionsColors.obstacleTileColor;
                     }
                     else
                     {
-                        switch (node.Adjacents.Count)
+                        switch (tile.Adjacents.Count)
                         {
                             case 0:
-                                Gizmos.color = nodeConectionsColors.zeroConectionNodeColor;
+                                Gizmos.color = tileConectionsColors.zeroConectionTileColor;
                                 break;
                             case 1:
-                                Gizmos.color = nodeConectionsColors.oneConectionNodeColor;
+                                Gizmos.color = tileConectionsColors.oneConectionTileColor;
                                 break;
                             case 2:
-                                Gizmos.color = nodeConectionsColors.twoConectionNodeColor;
+                                Gizmos.color = tileConectionsColors.twoConectionTileColor;
                                 break;
                             case 3:
-                                Gizmos.color = nodeConectionsColors.threeConectionNodeColor;
+                                Gizmos.color = tileConectionsColors.threeConectionTileColor;
                                 break;
                             case 4:
-                                Gizmos.color = nodeConectionsColors.fourConectionNodeColor;
+                                Gizmos.color = tileConectionsColors.fourConectionTileColor;
                                 break;
                         }
 
                     }
-                    Gizmos.DrawWireSphere(new Vector3((float)node.Position.x, (float)node.Position.y, 0.0f), 0.05f);
+                    Gizmos.DrawWireSphere(new Vector3((float)tile.Position.x, (float)tile.Position.y, 0.0f), 0.05f);
                 }
             }
         }

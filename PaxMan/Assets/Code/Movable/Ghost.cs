@@ -34,28 +34,28 @@ public class Ghost : MobileEntity
     [System.Serializable]
     public struct OnHomePatron
     {
-        [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
-        public uint startPositionNodeID;
-        [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
-        public uint endPositionNodeID;
-        [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
-        public uint leavingPositionNodeID;
+        [Tooltip("You can see the tiles ID checking the \"Show tiles ID\" toggle on the Map script")]
+        public uint startPositionTileID;
+        [Tooltip("You can see the tiles ID checking the \"Show tiles ID\" toggle on the Map script")]
+        public uint endPositionTileID;
+        [Tooltip("You can see the tiles ID checking the \"Show tiles ID\" toggle on the Map script")]
+        public uint leavingPositionTileID;
 
         public uint dotsNecesaryToLeave;
     }
     [System.Serializable]
     public struct PatrolPatron
     {
-        public int[] countOfNodesConectionPosibleTarget;
-        [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
-        public int[] excludedNodesID;
+        public int[] countOfTilesConectionPosibleTarget;
+        [Tooltip("You can see the tiles ID checking the \"Show tiles ID\" toggle on the Map script")]
+        public int[] excludedTilesID;
     }
 
     [System.Serializable]
     public struct ScatterPatron
     {
-        [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
-        public uint[] scatterPosibleStartNodeID;
+        [Tooltip("You can see the tiles ID checking the \"Show tiles ID\" toggle on the Map script")]
+        public uint[] scatterPosibleStartTileID;
         [Range(0, 100)] public float goToScattProbability;
         [Range(0, 100)] public float leaveScattProbability;
         [HideInInspector] public uint iterations;
@@ -95,8 +95,8 @@ public class Ghost : MobileEntity
         public List<Vector2> currentPath;
     }
 
-    [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
-    public uint StartPositionNodeID;
+    [Tooltip("You can see the tiles ID checking the \"Show tiles ID\" toggle on the Map script")]
+    public uint StartPositionTileID;
     protected IA ia;
     public Sprites sprites;
     public OnHomePatron homePatron;
@@ -116,9 +116,9 @@ public class Ghost : MobileEntity
 
     public void StartIA()
     {
-        transform.position = map.IdToNode(StartPositionNodeID).Position;
+        transform.position = map.IdToTile(StartPositionTileID).Position;
         ia.pathStepIndex = 0;
-        ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(homePatron.startPositionNodeID));
+        ia.currentPath = ia.pathFinding.GetPath(map.PositionToTile(transform.position), map.IdToTile(homePatron.startPositionTileID));
         sprites.spriteRenderer = GetComponent<SpriteRenderer>();
         sprites.spriteRenderer.sprite = sprites.defaultSprite;
         ia.fsm.SetState((int)States.idle);
@@ -210,9 +210,9 @@ public class Ghost : MobileEntity
         switch (ia.fsm.GetState())
         {
             case (int)States.goToScatter:
-                for (int i = 0; i < scatterPatron.scatterPosibleStartNodeID.Length; i++)
+                for (int i = 0; i < scatterPatron.scatterPosibleStartTileID.Length; i++)
                 {
-                    if (map.PositionToNode(transform.position) == map.IdToNode(scatterPatron.scatterPosibleStartNodeID[i]))
+                    if (map.PositionToTile(transform.position) == map.IdToTile(scatterPatron.scatterPosibleStartTileID[i]))
                     {
                         ia.fsm.SendEvent((int)Flags.onScatter);
                         UpdatePath();
@@ -226,11 +226,11 @@ public class Ghost : MobileEntity
                 }
                 break;
             case (int)States.goToHome:
-                if (map.PositionToNode(transform.position).Index == homePatron.startPositionNodeID)
+                if (map.PositionToTile(transform.position).Index == homePatron.startPositionTileID)
                 {
                     ia.fsm.SendEvent((int)Flags.onIdle);
                     ia.pathStepIndex = 0;
-                    ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(homePatron.startPositionNodeID));
+                    ia.currentPath = ia.pathFinding.GetPath(map.PositionToTile(transform.position), map.IdToTile(homePatron.startPositionTileID));
                     sprites.spriteRenderer.sprite = sprites.defaultSprite;
                 }
                 break;
@@ -282,17 +282,17 @@ public class Ghost : MobileEntity
 
     private void Idle()
     {
-        ia.currentPath = ia.pathFinding.GetPath(map.IdToNode(homePatron.startPositionNodeID), map.IdToNode(homePatron.endPositionNodeID));
-        uint auxID = homePatron.startPositionNodeID;
-        homePatron.startPositionNodeID = homePatron.endPositionNodeID;
-        homePatron.endPositionNodeID = auxID;
+        ia.currentPath = ia.pathFinding.GetPath(map.IdToTile(homePatron.startPositionTileID), map.IdToTile(homePatron.endPositionTileID));
+        uint auxID = homePatron.startPositionTileID;
+        homePatron.startPositionTileID = homePatron.endPositionTileID;
+        homePatron.endPositionTileID = auxID;
         ia.pathStepIndex = 0;
 
     }
 
     private void LeavingHome()
     {
-        ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(homePatron.leavingPositionNodeID));
+        ia.currentPath = ia.pathFinding.GetPath(map.PositionToTile(transform.position), map.IdToTile(homePatron.leavingPositionTileID));
         ia.fsm.SendEvent((int)Flags.onStartPatrol);
         ia.pathStepIndex = 0;
 
@@ -307,26 +307,26 @@ public class Ghost : MobileEntity
         }
         else
         {
-            Node destinationNode = null;
-            List<Node> posibleDestinations = new List<Node>();
-            bool addNode = true;
+            Tile destinationTile = null;
+            List<Tile> posibleDestinations = new List<Tile>();
+            bool addTile = true;
 
-            foreach (Node node in map.GetAllNodesOfConectionsNumber(patrolPatron.countOfNodesConectionPosibleTarget))
+            foreach (Tile tile in map.GetAllTilesOfConectionsNumber(patrolPatron.countOfTilesConectionPosibleTarget))
             {
-                if (node.Position != map.PositionToNode(transform.position).Position)
+                if (tile.Position != map.PositionToTile(transform.position).Position)
                 {
 
-                    for (int i = 0; i < patrolPatron.excludedNodesID.Length; i++)
-                        if (node == map.IdToNode((uint)patrolPatron.excludedNodesID[i]))
-                            addNode = false;
-                    if (addNode)
-                        posibleDestinations.Add(node);
-                    addNode = true;
+                    for (int i = 0; i < patrolPatron.excludedTilesID.Length; i++)
+                        if (tile == map.IdToTile((uint)patrolPatron.excludedTilesID[i]))
+                            addTile = false;
+                    if (addTile)
+                        posibleDestinations.Add(tile);
+                    addTile = true;
                 }
             }
-            destinationNode = posibleDestinations[UnityEngine.Random.Range(0, (posibleDestinations.Count))];
+            destinationTile = posibleDestinations[UnityEngine.Random.Range(0, (posibleDestinations.Count))];
             LockPreviousPosition();
-            ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), destinationNode);
+            ia.currentPath = ia.pathFinding.GetPath(map.PositionToTile(transform.position), destinationTile);
             posibleDestinations.Clear();
         }
         ia.pathStepIndex = 0;
@@ -336,14 +336,14 @@ public class Ghost : MobileEntity
     private void GoToScatter()
     {
         LockPreviousPosition();
-        List<Node> scatterPosibleStartNodes = new List<Node>();
-        for (int i = 0; i < scatterPatron.scatterPosibleStartNodeID.Length; i++)
-            scatterPosibleStartNodes.Add(map.IdToNode(scatterPatron.scatterPosibleStartNodeID[i]));
-        Node destinationNode = ia.pathFinding.GetNearestNode(map.PositionToNode(transform.position), scatterPosibleStartNodes);
+        List<Tile> scatterPosibleStartTiles = new List<Tile>();
+        for (int i = 0; i < scatterPatron.scatterPosibleStartTileID.Length; i++)
+            scatterPosibleStartTiles.Add(map.IdToTile(scatterPatron.scatterPosibleStartTileID[i]));
+        Tile destinationTile = ia.pathFinding.GetNearestTile(map.PositionToTile(transform.position), scatterPosibleStartTiles);
         scatterPatron.iterations = 0;
         ia.fsm.SendEvent((int)Flags.onScatter);
-        if (destinationNode.Position != map.PositionToNode(transform.position).Position)
-            ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), destinationNode);
+        if (destinationTile.Position != map.PositionToTile(transform.position).Position)
+            ia.currentPath = ia.pathFinding.GetPath(map.PositionToTile(transform.position), destinationTile);
         else
             UpdatePath();
 
@@ -355,15 +355,15 @@ public class Ghost : MobileEntity
     {
         LockPreviousPosition();
         int targetIndex = 0;
-        Node currentNode = map.PositionToNode(transform.position);
-        for (int i = 0; i < scatterPatron.scatterPosibleStartNodeID.Length; i++)
-            if (currentNode == map.IdToNode(scatterPatron.scatterPosibleStartNodeID[i]))
+        Tile currentTile = map.PositionToTile(transform.position);
+        for (int i = 0; i < scatterPatron.scatterPosibleStartTileID.Length; i++)
+            if (currentTile == map.IdToTile(scatterPatron.scatterPosibleStartTileID[i]))
                 targetIndex = i + 1;
-        if (targetIndex >= scatterPatron.scatterPosibleStartNodeID.Length)
+        if (targetIndex >= scatterPatron.scatterPosibleStartTileID.Length)
             targetIndex = 0;
-        ia.currentPath = ia.pathFinding.GetPath(currentNode, map.IdToNode(scatterPatron.scatterPosibleStartNodeID[targetIndex]));
+        ia.currentPath = ia.pathFinding.GetPath(currentTile, map.IdToTile(scatterPatron.scatterPosibleStartTileID[targetIndex]));
         scatterPatron.iterations++;
-        if (scatterPatron.iterations >= scatterPatron.scatterPosibleStartNodeID.Length)
+        if (scatterPatron.iterations >= scatterPatron.scatterPosibleStartTileID.Length)
         {
             if (UnityEngine.Random.Range(0, 101) < scatterPatron.leaveScattProbability)
                 ia.fsm.SendEvent((int)Flags.onStartPatrol);
@@ -376,8 +376,8 @@ public class Ghost : MobileEntity
 
     private void Panic()
     {
-        ia.pathFinding.IgnoreNode(map.PositionToNode(transform.position + (Vector3)(ia.destinationPosition - ia.currentPosition)));
-        ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position + (Vector3)(ia.destinationPosition - ia.currentPosition)), map.PositionToNode(ia.currentPath[0]));
+        ia.pathFinding.IgnoreTile(map.PositionToTile(transform.position + (Vector3)(ia.destinationPosition - ia.currentPosition)));
+        ia.currentPath = ia.pathFinding.GetPath(map.PositionToTile(transform.position + (Vector3)(ia.destinationPosition - ia.currentPosition)), map.PositionToTile(ia.currentPath[0]));
         if (ia.currentPath.Count == 2)
         {
             ;
@@ -401,12 +401,12 @@ public class Ghost : MobileEntity
 
     private void LockPreviousPosition()
     {
-        ia.pathFinding.IgnoreNode(map.PositionToNode(ia.currentPath[ia.pathStepIndex]));
+        ia.pathFinding.IgnoreTile(map.PositionToTile(ia.currentPath[ia.pathStepIndex]));
     }
 
     protected bool IsPaxManInsideRadius(Vector2 center, uint radius)
     {
-        uint distanceToPaxMan = ia.pathFinding.ManhattanDistance(map.PositionToNode(center).Position, map.PositionToNode(gameManager.GameData.paxManPosition).Position);
+        uint distanceToPaxMan = ia.pathFinding.ManhattanDistance(map.PositionToTile(center).Position, map.PositionToTile(gameManager.GameData.paxManPosition).Position);
         if (distanceToPaxMan <= radius)
             return true;
         return false;
@@ -429,7 +429,7 @@ public class Ghost : MobileEntity
 
     private void GoToHome()
     {
-        ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(homePatron.startPositionNodeID));
+        ia.currentPath = ia.pathFinding.GetPath(map.PositionToTile(transform.position), map.IdToTile(homePatron.startPositionTileID));
         ia.currentPath.Insert(0, (Vector2)transform.position);
         ia.pathStepIndex = 0;
         sprites.spriteRenderer.sprite = sprites.deadSprite;

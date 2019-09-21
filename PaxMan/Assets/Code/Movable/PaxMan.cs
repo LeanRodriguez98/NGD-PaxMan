@@ -6,12 +6,12 @@ using UnityEngine;
 public class PaxMan : MobileEntity
 {
     public uint lifes;
-    public uint startNodeId;
+    public uint startTileId;
     private Vector2 movement;
     private Vector2 previousMovement;
     private Animator animator;
-    private Node currentNode;
-    private Node destinationNode;
+    private Tile currentTile;
+    private Tile destinationTile;
     private bool powered;
     private const string animationHorizontalTriggerName = "Horizontal";
     private const string animationVerticalTriggerName = "Vertical";
@@ -42,9 +42,9 @@ public class PaxMan : MobileEntity
         movement = Vector2.left;
         previousMovement = movement;
         UpdateAnimations();
-        currentNode = map.IdToNode(startNodeId);
-        transform.position = currentNode.Position;
-        destinationNode = map.GetNextNode(currentNode, movement);
+        currentTile = map.IdToTile(startTileId);
+        transform.position = currentTile.Position;
+        destinationTile = map.GetNextTile(currentTile, movement);
         dead = false;
         powered = false;
         StartCoroutine(Movement());
@@ -57,31 +57,31 @@ public class PaxMan : MobileEntity
         while (canMove)
         {
             Reset(out currentSpeed,out iterations);
-            while (IsEqualToPosition(destinationNode.Position))
+            while (IsEqualToPosition(destinationTile.Position))
             {
-                MoveOnTile(currentNode.Position, destinationNode.Position, iterations, currentSpeed);
+                MoveOnTile(currentTile.Position, destinationTile.Position, iterations, currentSpeed);
                 iterations++;
                 yield return new WaitForFixedUpdate();
             }
-            currentNode = destinationNode;
+            currentTile = destinationTile;
             do
             {
-                if (map.GetNextNode(currentNode, movement) != null)
+                if (map.GetNextTile(currentTile, movement) != null)
                 {
-                    destinationNode = map.GetNextNode(currentNode, movement);
+                    destinationTile = map.GetNextTile(currentTile, movement);
                     previousMovement = movement;
                 }
                 else
                 {
-                    destinationNode = map.GetNextNode(currentNode, previousMovement);
+                    destinationTile = map.GetNextTile(currentTile, previousMovement);
                     movement = previousMovement;
                 }
                 UpdateAnimations();
-                if (destinationNode == null)
+                if (destinationTile == null)
                     yield return new WaitForFixedUpdate();
-            } while (destinationNode == null);
+            } while (destinationTile == null);
 
-            CheckWarpZone(currentNode);
+            CheckWarpZone(currentTile);
         }
     }
 
@@ -128,7 +128,7 @@ public class PaxMan : MobileEntity
         animator.SetFloat(animationHorizontalTriggerName, movement.x);
         animator.SetFloat(animationVerticalTriggerName, movement.y);
 
-        if (destinationNode == null)
+        if (destinationTile == null)
             animator.SetBool(animationIdleTriggerName, true);
         else
             animator.SetBool(animationIdleTriggerName, false);

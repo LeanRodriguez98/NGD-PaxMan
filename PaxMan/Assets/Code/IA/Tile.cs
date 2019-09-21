@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 [System.Serializable]
-public class Node
+public class Tile
 {
     [SerializeField] private List<int> adjacentsIndex;
     [SerializeField] private Vector2 position;
-    [SerializeField] private NodeStates nodeState;
-    [SerializeField] private NodeStates originalState;
+    [SerializeField] private TileStates tileState;
+    [SerializeField] private TileStates originalState;
     [SerializeField] private bool isObstacle;
-    [SerializeField] private Node parentNode;
+    [SerializeField] private Tile parentTile;
     [SerializeField] private bool used;
     [SerializeField] private char charFile;
     [SerializeField] private Rect area;
@@ -31,10 +31,10 @@ public class Node
         get { return (int)index; }
     }
 
-    public NodeStates NodeState
+    public TileStates TileState
     {
-        get { return nodeState;  }
-        set { nodeState = value; }
+        get { return tileState;  }
+        set { tileState = value; }
     }
 
     public Rect Area
@@ -43,10 +43,10 @@ public class Node
         set { area = value; }
     }
 
-    public Node ParentNode
+    public Tile ParentTile
     {
-        get { return parentNode; }
-        set { parentNode = value; }
+        get { return parentTile; }
+        set { parentTile = value; }
     }
 
     public Vector2 Position
@@ -67,7 +67,7 @@ public class Node
         set { charFile = value; }
     }
 
-    public enum NodeStates
+    public enum TileStates
     {
         Open,
         Close,
@@ -75,23 +75,23 @@ public class Node
         [HideInInspector]_count
     }
 
-    public Node(Vector2 _position, NodeStates _state, bool _isObstacle, Rect _area, uint _index ,char _charFile)
+    public Tile(Vector2 _position, TileStates _state, bool _isObstacle, Rect _area, uint _index ,char _charFile)
     {
         isObstacle = _isObstacle;
         position = _position;
-        nodeState = originalState = _state;
+        tileState = originalState = _state;
         used = false;
         area = _area;
         index = _index;
         charFile = _charFile;
     }
 
-    public NodeStates GetState()
+    public TileStates GetState()
     {
-        return nodeState;
+        return tileState;
     }
 
-    public void AddConection(Node node, List<Node> list)
+    public void AddConection(Tile tile, List<Tile> list)
     {
         if (adjacentsIndex == null)
         {
@@ -99,7 +99,7 @@ public class Node
         }
         for (int i = 0; i < list.Count; i++)
         {
-            if (list[i] == node)
+            if (list[i] == tile)
             {
                 adjacentsIndex.Add(i);
                 return;
@@ -107,31 +107,31 @@ public class Node
         }
     }
 
-    public void OpenNode()
+    public void OpenTile()
     {
         if (!IsObstacle && !used)
-            nodeState = NodeStates.Open;
+            tileState = TileStates.Open;
     }
 
-    public void OpenNode(Node n)
+    public void OpenTile(Tile tile)
     {
         if (!IsObstacle && !used)
         {
-            parentNode = n;
-            nodeState = NodeStates.Open;
+            parentTile = tile;
+            tileState = TileStates.Open;
         }
     }
 
-    public void CloseNode() 
+    public void CloseTile() 
     {
-        nodeState = NodeStates.Close;
+        tileState = TileStates.Close;
         used = true;
     }
 
-    public void RestartNode()
+    public void RestartTile()
     {
-        nodeState = originalState;
+        tileState = originalState;
         used = false;
-        parentNode = null;
+        parentTile = null;
     }
 }

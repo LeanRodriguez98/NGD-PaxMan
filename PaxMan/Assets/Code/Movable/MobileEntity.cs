@@ -43,11 +43,11 @@ public class MobileEntity : MonoBehaviour
         return (transform.position != (Vector3)_positionToComparate);
     }
 
-    protected void CheckWarpZone(Node _currentNode)
+    protected void CheckWarpZone(Tile _currentTile)
     {
-        if (map.IsWarpZone(_currentNode))
+        if (map.IsWarpZone(_currentTile))
         {
-            transform.position = map.GetWarpDestination(_currentNode);
+            transform.position = map.GetWarpDestination(_currentTile);
         }
     }
 }

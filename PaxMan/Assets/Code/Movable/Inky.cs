@@ -18,35 +18,35 @@ public class Inky : Ghost
         if (IsPaxManInsideRadius(transform.position, 12))//<---- Change this
         {
             ia.fsm.SendEvent((int)Flags.onSeePaxMan);
-            ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), GetDestinationNode());
+            ia.currentPath = ia.pathFinding.GetPath(map.PositionToTile(transform.position), GetDestinationTile());
             ia.pathStepIndex = -1;
             return true;
         }
         return false;
     }
 
-    private Node GetDestinationNode()
+    private Tile GetDestinationTile()
     {
-        float nodeDistance = 0.0f;
+        float tileDistance = 0.0f;
         Vector2 targetDirection = Vector2.zero;
         if (gameManager.GameData.paxManDirection.x != 0.0f)
         {
-            nodeDistance = map.horizontalNodeDistance * gameManager.GameData.paxManDirection.x;
+            tileDistance = map.horizontalTileDistance * gameManager.GameData.paxManDirection.x;
             targetDirection = Vector2.right;
         }
         else if (gameManager.GameData.paxManDirection.y != 0.0f)
         {
-            nodeDistance = map.verticalNodeDistance * gameManager.GameData.paxManDirection.y;
+            tileDistance = map.verticalTileDistance * gameManager.GameData.paxManDirection.y;
             targetDirection = Vector2.up;
         }
 
         Vector2 paxmanPosition = gameManager.GameData.paxManPosition;
-        Vector2 middleDestination = map.PositionToNode(paxmanPosition + (targetDirection * nodeDistance * 2)).Position;//<--- Change this / dos al frente de pac man
+        Vector2 middleDestination = map.PositionToTile(paxmanPosition + (targetDirection * tileDistance * 2)).Position;//<--- Change this / dos al frente de pac man
 
-        Vector2 blinkyNodePosition = map.PositionToNode(gameManager.GameData.blinkyPosition).Position;
+        Vector2 blinkyTilePosition = map.PositionToTile(gameManager.GameData.blinkyPosition).Position;
 
-        Node target = map.PositionToNode((middleDestination - blinkyNodePosition) * 2);//<--- Change this / el doble de la distancia
-        target = ia.pathFinding.GetNearestValidNode(target, transform.position);
+        Tile target = map.PositionToTile((middleDestination - blinkyTilePosition) * 2);//<--- Change this / el doble de la distancia
+        target = ia.pathFinding.GetNearestValidTile(target, transform.position);
         return target;
     }
 }

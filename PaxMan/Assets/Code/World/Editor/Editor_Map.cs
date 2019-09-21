@@ -4,24 +4,24 @@ using UnityEditor;
 public class Editor_Map : Editor
 {
     private GUIStyle style;
-    private string[] nodeStates;
+    private string[] tileStates;
     private int from;
     private int to;
-    private int nodeIndexA;
-    private int nodeIndexB;
+    private int tileIndexA;
+    private int tileIndexB;
 
 
     private bool gridFoldOut = false;
     private bool prefabsFoldOut = false;
     private bool cherrySettingsFoldOut = false;
-    private bool nodesFoldOut = false;
+    private bool tilesFoldOut = false;
     private bool dotsFadeOut = false;
     private void OnEnable()
     {
-        nodeStates = new string[(int)Node.NodeStates._count];
-        for (Node.NodeStates n = Node.NodeStates.Open; n < Node.NodeStates._count; n++)
+        tileStates = new string[(int)Tile.TileStates._count];
+        for (Tile.TileStates tile = Tile.TileStates.Open; tile < Tile.TileStates._count; tile++)
         {
-            nodeStates[(int)n] = n.ToString();
+            tileStates[(int)tile] = tile.ToString();
         }
     }
 
@@ -67,16 +67,16 @@ public class Editor_Map : Editor
             EditorGUILayout.PropertyField(list, new GUIContent("Time of Cherry life posible values"), true);
         }
         EditorGUILayout.Space();
-        nodesFoldOut = EditorGUILayout.Foldout(nodesFoldOut, "Nodes");
-        if (nodesFoldOut)
+        tilesFoldOut = EditorGUILayout.Foldout(tilesFoldOut, "Tiles");
+        if (tilesFoldOut)
         {
             EditorGUILayout.LabelField("Add a warp zone");
-            nodeIndexA = EditorGUILayout.IntField("Node Index A", nodeIndexA);
-            nodeIndexB = EditorGUILayout.IntField("Node Index B", nodeIndexB);
+            tileIndexA = EditorGUILayout.IntField("Tile Index A", tileIndexA);
+            tileIndexB = EditorGUILayout.IntField("Tile Index B", tileIndexB);
             if (GUILayout.Button("Add warp"))
             {
-                map.AddWarpZone(map.IdToNode((uint)nodeIndexA), map.IdToNode((uint)nodeIndexB));
-                map.AddNodeConection(map.IdToNode((uint)nodeIndexA), map.IdToNode((uint)nodeIndexB));
+                map.AddWarpZone(map.IdToTile((uint)tileIndexA), map.IdToTile((uint)tileIndexB));
+                map.AddTileConection(map.IdToTile((uint)tileIndexA), map.IdToTile((uint)tileIndexB));
             }
             if (GUILayout.Button("Remove Warps"))
             {
@@ -89,7 +89,7 @@ public class Editor_Map : Editor
             }
 
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Show nodes data");
+            EditorGUILayout.LabelField("Show tiles data");
             from = EditorGUILayout.IntField("Show From", from);
             to = EditorGUILayout.IntField("To", to);
             if (from < 0)
@@ -98,15 +98,15 @@ public class Editor_Map : Editor
                 to = from;
             EditorGUILayout.BeginVertical();
             int i = 0;
-            foreach (Node n in map.nodes)
+            foreach (Tile tile in map.tiles)
             {
                 if (i >= from && i <= to)
                 {
-                    EditorGUILayout.LabelField("Node[" + i.ToString() + "] " + "Data", style, GUILayout.Height(50), GUILayout.ExpandWidth(true));
-                    EditorGUILayout.Popup("State", (int)n.NodeState, nodeStates);
-                    EditorGUILayout.Vector2Field("Position", n.Position);
-                    EditorGUILayout.Toggle("Is Obstacle", n.IsObstacle);
-                    EditorGUILayout.LabelField("Conections: " + n.Adjacents.Count.ToString());
+                    EditorGUILayout.LabelField("Tile[" + i.ToString() + "] " + "Data", style, GUILayout.Height(50), GUILayout.ExpandWidth(true));
+                    EditorGUILayout.Popup("State", (int)tile.TileState, tileStates);
+                    EditorGUILayout.Vector2Field("Position", tile.Position);
+                    EditorGUILayout.Toggle("Is Obstacle", tile.IsObstacle);
+                    EditorGUILayout.LabelField("Conections: " + tile.Adjacents.Count.ToString());
                 }
                 i++;
             }
@@ -127,25 +127,25 @@ public class Editor_Map : Editor
         {
             EditorGUILayout.BeginHorizontal();
             map.drawGrid = EditorGUILayout.Toggle("Draw Grid", map.drawGrid);
-            map.drawNodeID = EditorGUILayout.Toggle("Draw Node ID", map.drawNodeID);
+            map.drawTileID = EditorGUILayout.Toggle("Draw Tile ID", map.drawTileID);
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
-            map.drawNodesType = EditorGUILayout.Toggle("Draw Type Nodes", map.drawNodesType);
-            if (map.drawNodesType)
-                map.drawNodesConections = false;
-            map.drawNodesConections = EditorGUILayout.Toggle("Draw Connection Nodes", map.drawNodesConections);
-            if (map.drawNodesConections)
-                map.drawNodesType = false;
+            map.drawTilesType = EditorGUILayout.Toggle("Draw Type Tiles", map.drawTilesType);
+            if (map.drawTilesType)
+                map.drawTilesConections = false;
+            map.drawTilesConections = EditorGUILayout.Toggle("Draw Connection Tiles", map.drawTilesConections);
+            if (map.drawTilesConections)
+                map.drawTilesType = false;
             EditorGUILayout.EndHorizontal();
-            if (map.drawNodesType)
+            if (map.drawTilesType)
             {
-                SerializedProperty nodeTypeColors = serializedObject.FindProperty("nodeTypeColors");
-                EditorGUILayout.PropertyField(nodeTypeColors, new GUIContent("Node Type Colors"), true);
+                SerializedProperty tileTypeColors = serializedObject.FindProperty("tileTypeColors");
+                EditorGUILayout.PropertyField(tileTypeColors, new GUIContent("Tile Type Colors"), true);
             }
-            if (map.drawNodesConections)
+            if (map.drawTilesConections)
             {
-                SerializedProperty nodeConectionsColors = serializedObject.FindProperty("nodeConectionsColors");
-                EditorGUILayout.PropertyField(nodeConectionsColors, new GUIContent("Node Connections Colors"), true);
+                SerializedProperty tileConectionsColors = serializedObject.FindProperty("tileConectionsColors");
+                EditorGUILayout.PropertyField(tileConectionsColors, new GUIContent("Tile Connections Colors"), true);
             }
         }
         serializedObject.ApplyModifiedProperties();
