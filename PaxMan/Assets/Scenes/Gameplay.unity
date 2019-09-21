@@ -18501,6 +18501,7 @@ MonoBehaviour:
     iterations: 0
   scaredPatron:
     scaredTime: 10
+    scaredPorcentualSpeed: 0.4
     isScared: 0
   paxManOffsetToCalcuclateChase: 4
 --- !u!61 &376081982
@@ -27804,6 +27805,9 @@ MonoBehaviour:
     porcentualSpeed: 0.8
   lifes: 3
   startTileId: 704
+  powerSettings:
+    powerDuration: 10
+    poweredPorcentualSpeed: 1
 --- !u!212 &1108523030
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -29021,6 +29025,7 @@ MonoBehaviour:
     iterations: 0
   scaredPatron:
     scaredTime: 10
+    scaredPorcentualSpeed: 0.4
     isScared: 0
   targetRadius: 8
 --- !u!1 &1210738596
@@ -38490,6 +38495,7 @@ MonoBehaviour:
     iterations: 0
   scaredPatron:
     scaredTime: 10
+    scaredPorcentualSpeed: 0.4
     isScared: 0
   targetRadius: 12
   paxManOffsetToCalcuclateChase: 2
@@ -43848,6 +43854,7 @@ MonoBehaviour:
     iterations: 0
   scaredPatron:
     scaredTime: 10
+    scaredPorcentualSpeed: 0.4
     isScared: 0
 --- !u!61 &1982106156
 BoxCollider2D:

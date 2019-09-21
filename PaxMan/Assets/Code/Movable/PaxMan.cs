@@ -5,8 +5,17 @@ using UnityEngine;
 
 public class PaxMan : MobileEntity
 {
+    [System.Serializable]
+    public struct PowerSettings
+    {
+        public float powerDuration;
+        [Range(0.0f, 1.0f)] public float poweredPorcentualSpeed;
+
+    }
+
     public uint lifes;
     public uint startTileId;
+    public PowerSettings powerSettings;
     private Vector2 movement;
     private Vector2 previousMovement;
     private Animator animator;
@@ -56,7 +65,7 @@ public class PaxMan : MobileEntity
         float currentSpeed;
         while (canMove)
         {
-            Reset(out currentSpeed,out iterations);
+            Reset(out currentSpeed, out iterations);
             while (IsEqualToPosition(destinationTile.Position))
             {
                 MoveOnTile(currentTile.Position, destinationTile.Position, iterations, currentSpeed);
@@ -99,12 +108,14 @@ public class PaxMan : MobileEntity
     {
         powered = true;
         CancelInvoke("DesablePower");
-        Invoke("DesablePower", 10.0f);
+        Invoke("DesablePower", powerSettings.powerDuration);
+        movementSettings.porcentualSpeed = powerSettings.poweredPorcentualSpeed;
     }
 
     public void DesablePower()
     {
         powered = false;
+        movementSettings.porcentualSpeed = defaultPorcentuslSpeed;
     }
 
     private void InputMovement()

@@ -65,6 +65,7 @@ public class Ghost : MobileEntity
     public struct ScaredPatron
     {
         public float scaredTime;
+        [Range(0.0f,1.0f)] public float scaredPorcentualSpeed;
         [HideInInspector] public bool isScared;
     }
 
@@ -369,34 +370,30 @@ public class Ghost : MobileEntity
                 ia.fsm.SendEvent((int)Flags.onStartPatrol);
             scatterPatron.iterations = 0;
         }
-
         ia.pathStepIndex = 0;
-
     }
 
     private void Panic()
     {
         ia.pathFinding.IgnoreTile(map.PositionToTile(transform.position + (Vector3)(ia.destinationPosition - ia.currentPosition)));
         ia.currentPath = ia.pathFinding.GetPath(map.PositionToTile(transform.position + (Vector3)(ia.destinationPosition - ia.currentPosition)), map.PositionToTile(ia.currentPath[0]));
-        if (ia.currentPath.Count == 2)
-        {
-            ;
-        }
         ia.pathStepIndex = -1;
         sprites.spriteRenderer.sprite = sprites.scaredSprite;
-        CancelInvoke("SetDefaultSprite");
-        Invoke("SetDefaultSprite", scaredPatron.scaredTime);
+        CancelInvoke("SetAsDefault");
+        Invoke("SetAsDefault", scaredPatron.scaredTime);
         scaredPatron.isScared = true;
+        movementSettings.porcentualSpeed = scaredPatron.scaredPorcentualSpeed;
         ia.fsm.SendEvent((int)Flags.onStartPatrol);
     }
 
-    public void SetDefaultSprite()
+    public void SetAsDefault()
     {
         if (sprites.spriteRenderer.sprite == sprites.scaredSprite)
         {
             sprites.spriteRenderer.sprite = sprites.defaultSprite;
         }
         scaredPatron.isScared = false;
+        movementSettings.porcentualSpeed = defaultPorcentuslSpeed;
     }
 
     private void LockPreviousPosition()
@@ -455,8 +452,8 @@ public class Ghost : MobileEntity
         }
         else
         {
-            CancelInvoke("SetDefaultSprite");
-            Invoke("SetDefaultSprite", scaredPatron.scaredTime);
+            CancelInvoke("SetAsDefault");
+            Invoke("SetAsDefault", scaredPatron.scaredTime);
         }
     }
 
