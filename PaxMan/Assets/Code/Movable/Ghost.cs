@@ -422,6 +422,7 @@ public class Ghost : MobileEntity
                 ia.fsm.SendEvent((int)Flags.onDead);
                 dead = true;
                 GoToHome();
+                gameManager.OnGhostIsEaten(transform.position);
             }
         }
     }

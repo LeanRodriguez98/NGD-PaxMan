@@ -89,6 +89,10 @@ public class PaxMan : MobileEntity
     void Update()
     {
         InputMovement();
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            EnablePower();
+        }
     }
 
     public void EnablePower()

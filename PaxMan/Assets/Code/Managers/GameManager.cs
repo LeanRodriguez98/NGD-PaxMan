@@ -12,18 +12,24 @@ public class GameManager : MonoBehaviour
         public Vector2 blinkyPosition;
     }
 
+    [System.Serializable]
+    public struct GhostPoints
+    {
+        public GameObject popUpTextPrefab;
+        public uint eatGhostPointsValue;
+        public uint eatGhostPointsMultiplier;
+    }
+
     public static GameManager instance;
     public uint dotCount;
     public uint points;
     public int[] dotsToSpawnCherry;
+    public GhostPoints ghostPoints;
     private GlobalGameData globalGameData;
     private Map map;
     private UI_CanvasManager canvasManager;
     private PaxMan player;
     private Blinky blinky;
-    private Inky inky;
-    private Pinky pinky;
-    private Clyde clyde;
     private Ghost[] ghosts;
     public GlobalGameData GameData
     {
@@ -44,20 +50,20 @@ public class GameManager : MonoBehaviour
         canvasManager = UI_CanvasManager.instance;
         player = FindObjectOfType<PaxMan>();
         blinky = FindObjectOfType<Blinky>();
-        inky = FindObjectOfType<Inky>();
-        pinky = FindObjectOfType<Pinky>();
-        clyde = FindObjectOfType<Clyde>();
         ghosts = FindObjectsOfType<Ghost>();
     }
     void Update()
     {
         CheckCollisions();
+        UpdateGlobalGameData();
+    }
 
+    private void UpdateGlobalGameData()
+    {
         globalGameData.paxManPosition = player.transform.position;
         globalGameData.paxManDirection = player.Direction;
         globalGameData.blinkyPosition = blinky.transform.position;
     }
-
     private void CheckCollisions()
     {
         for (int i = 0; i < map.smallDots.Count; i++)
@@ -124,28 +130,35 @@ public class GameManager : MonoBehaviour
     private void SetPoweredPaxMan()
     {
         player.EnablePower();
-        blinky.SetPanic();
-        pinky.SetPanic();
-        inky.SetPanic();
-        clyde.SetPanic();
+        foreach (Ghost ghost in ghosts)
+        {
+            ghost.SetPanic();
+        }
     }
 
     public void StopAllGameCorrutines()
     {
         player.StopAllCoroutines();
-        blinky.StopAllCoroutines();
-        pinky.StopAllCoroutines();
-        inky.StopAllCoroutines();
-        clyde.StopAllCoroutines();
+        foreach (Ghost ghost in ghosts)
+        {
+            ghost.StopAllCoroutines();
+        }
     }
 
     public void OnDeadPaxMan()
     {
         player.InitMovement();
-        blinky.StartIA();
-        pinky.StartIA();
-        inky.StartIA();
-        clyde.StartIA();
+        foreach (Ghost ghost in ghosts)
+        {
+            ghost.StartIA();
+        }
     }
 
+    public void OnGhostIsEaten(Vector2 _position)
+    {
+        points += ghostPoints.eatGhostPointsValue;
+        GameObject popUpText = Instantiate(ghostPoints.popUpTextPrefab, _position, Quaternion.identity);
+        popUpText.GetComponent<UI_PopUpText>().DisplayText(ghostPoints.eatGhostPointsValue.ToString(), _position, 1.5f);
+        ghostPoints.eatGhostPointsValue *= ghostPoints.eatGhostPointsMultiplier;
+    }
 }
