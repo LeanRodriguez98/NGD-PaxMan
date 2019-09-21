@@ -97,7 +97,7 @@ public class Ghost : MobileEntity
 
     [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
     public uint StartPositionNodeID;
-    /*protected*/ public IA ia;
+    protected IA ia;
     public Sprites sprites;
     public OnHomePatron homePatron;
     public PatrolPatron patrolPatron;
@@ -113,8 +113,6 @@ public class Ghost : MobileEntity
         SetFSMRelations();
         StartIA();
     }
-
-
 
     public void StartIA()
     {
@@ -251,6 +249,7 @@ public class Ghost : MobileEntity
             ia.fsm.SendEvent((int)Flags.onStartPatrol);
             UpdatePath();
         }
+        ia.pathStepIndex = 0;
     }
 
     protected void UpdatePath()
@@ -259,36 +258,24 @@ public class Ghost : MobileEntity
         {
             case (int)States.idle:
                 Idle();
-                ia.pathStepIndex = 0;
-
                 break;
             case (int)States.leaveingHome:
                 LeavingHome();
-                ia.pathStepIndex = 0;
-
                 break;
             case (int)States.patrol:
                 Patrol();
-                ia.pathStepIndex = 0;
-
                 break;
             case (int)States.goToScatter:
                 GoToScatter();
-                ia.pathStepIndex = 0;
-
                 break;
             case (int)States.scatter:
                 Scatter();
-                ia.pathStepIndex = 0;
-
                 break;
             case (int)States.panic:
                 Panic();
                 break;
             case (int)States.chase:
                 Chase();
-                ia.pathStepIndex = 0;
-
                 break;
         }
     }
@@ -299,12 +286,16 @@ public class Ghost : MobileEntity
         uint auxID = homePatron.startPositionNodeID;
         homePatron.startPositionNodeID = homePatron.endPositionNodeID;
         homePatron.endPositionNodeID = auxID;
+        ia.pathStepIndex = 0;
+
     }
 
     private void LeavingHome()
     {
         ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(homePatron.leavingPositionNodeID));
         ia.fsm.SendEvent((int)Flags.onStartPatrol);
+        ia.pathStepIndex = 0;
+
     }
 
     private void Patrol()
@@ -338,6 +329,8 @@ public class Ghost : MobileEntity
             ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), destinationNode);
             posibleDestinations.Clear();
         }
+        ia.pathStepIndex = 0;
+
     }
 
     private void GoToScatter()
@@ -353,6 +346,9 @@ public class Ghost : MobileEntity
             ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), destinationNode);
         else
             UpdatePath();
+
+        ia.pathStepIndex = 0;
+
     }
 
     private void Scatter()
@@ -373,6 +369,9 @@ public class Ghost : MobileEntity
                 ia.fsm.SendEvent((int)Flags.onStartPatrol);
             scatterPatron.iterations = 0;
         }
+
+        ia.pathStepIndex = 0;
+
     }
 
     private void Panic()

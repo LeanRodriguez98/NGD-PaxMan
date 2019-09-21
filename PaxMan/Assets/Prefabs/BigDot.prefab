@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9071753521365911511}
   - component: {fileID: 2987295495305410857}
   - component: {fileID: 2758350205055452334}
+  - component: {fileID: 6728497073559472949}
   m_Layer: 0
   m_Name: BigDot
   m_TagString: Untagged
@@ -109,4 +110,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a878549881a59bd4791b9684b0eb6b38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointsValue: 25
+  pointsValue: 50
+  pickUpZone: {fileID: 0}
+--- !u!95 &6728497073559472949
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8769900793030285900}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: be955cd1dcc22c64887ae012f87b2777, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
