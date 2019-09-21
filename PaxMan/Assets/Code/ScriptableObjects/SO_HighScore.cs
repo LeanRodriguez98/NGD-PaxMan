@@ -1,18 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class SO_HighScore : MonoBehaviour
+﻿using UnityEngine;
+[CreateAssetMenu(fileName = "HighScore", menuName = "SO/HighScoreData")]
+public class SO_HighScore : ScriptableObject
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public int highScorePoints;
 }

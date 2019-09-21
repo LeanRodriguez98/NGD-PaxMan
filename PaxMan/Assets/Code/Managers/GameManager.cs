@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
         public GameObject popUpTextPrefab;
         public uint eatGhostPointsValue;
         public uint eatGhostPointsMultiplier;
+        public float popUpTextDuration;
     }
 
     public static GameManager instance;
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
     public uint points;
     public int[] dotsToSpawnCherry;
     public GhostPoints ghostPoints;
+    public SO_HighScore highScoreData;
     private GlobalGameData globalGameData;
     private Map map;
     private UI_CanvasManager canvasManager;
@@ -48,6 +50,8 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60;
         map = Map.instance;
         canvasManager = UI_CanvasManager.instance;
+        SerializeSystem.LoadGame(highScoreData);
+        canvasManager.UpdateHighScore((uint)highScoreData.highScorePoints);
         player = FindObjectOfType<PaxMan>();
         blinky = FindObjectOfType<Blinky>();
         ghosts = FindObjectsOfType<Ghost>();
@@ -72,6 +76,7 @@ public class GameManager : MonoBehaviour
             {
                 points += map.smallDots[i].pointsValue;
                 canvasManager.UpdateScore(points);
+                CheckUpdateHighScore();
                 map.smallDots[i].gameObject.SetActive(false);
                 dotCount++;
                 CheckSpawnCherry();
@@ -87,6 +92,7 @@ public class GameManager : MonoBehaviour
             {
                 points += map.bigDots[i].pointsValue;
                 canvasManager.UpdateScore(points);
+                CheckUpdateHighScore();
                 map.bigDots[i].gameObject.SetActive(false);
                 dotCount++;
                 CheckSpawnCherry();
@@ -100,8 +106,18 @@ public class GameManager : MonoBehaviour
         {
             points += map.cherrys.pointsValue;
             canvasManager.UpdateScore(points);
+            CheckUpdateHighScore();
             canvasManager.ShowOneMoreCherry();
             map.DisableCherry();
+        }
+    }
+
+    private void CheckUpdateHighScore()
+    {
+        if (points > highScoreData.highScorePoints)
+        {
+            canvasManager.UpdateHighScore(points);
+            highScoreData.highScorePoints = (int)points;
         }
     }
 
@@ -159,6 +175,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            SerializeSystem.SaveGame(highScoreData);
             Time.timeScale = 0;
             Debug.Log("GameOver");
         }
@@ -168,7 +185,9 @@ public class GameManager : MonoBehaviour
     {
         points += ghostPoints.eatGhostPointsValue;
         GameObject popUpText = Instantiate(ghostPoints.popUpTextPrefab, _position, Quaternion.identity);
-        popUpText.GetComponent<UI_PopUpText>().DisplayText(ghostPoints.eatGhostPointsValue.ToString(), _position, 1.5f);
+        popUpText.GetComponent<UI_PopUpText>().DisplayText(ghostPoints.eatGhostPointsValue.ToString(), _position, ghostPoints.popUpTextDuration);
         ghostPoints.eatGhostPointsValue *= ghostPoints.eatGhostPointsMultiplier;
+        canvasManager.UpdateScore(points);
+        CheckUpdateHighScore();
     }
 }

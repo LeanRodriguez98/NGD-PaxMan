@@ -27,6 +27,11 @@ public class UI_CanvasManager : MonoBehaviour
         scorePoints.text = _score.ToString("0000");
     }
 
+    public void UpdateHighScore(uint _highScore)
+    {
+        highScorePoints.text = _highScore.ToString("00000");
+    }
+
     public void ShowOneMoreCherry()
     {
         for (int i = 0; i < cherrysIcons.Length; i++)
