@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Inky : Ghost
 {
+
+    public uint targetRadius;
+    public uint paxManOffsetToCalcuclateChase;
+    public int distanceMuliplier;
     public override void Start()
     {
         base.Start();
@@ -15,7 +19,7 @@ public class Inky : Ghost
 
     public override bool FindPaxMan()
     {
-        if (IsPaxManInsideRadius(transform.position, 12))//<---- Change this
+        if (IsPaxManInsideRadius(transform.position, targetRadius))
         {
             ia.fsm.SendEvent((int)Flags.onSeePaxMan);
             ia.currentPath = ia.pathFinding.GetPath(map.PositionToTile(transform.position), GetDestinationTile());
@@ -41,11 +45,11 @@ public class Inky : Ghost
         }
 
         Vector2 paxmanPosition = gameManager.GameData.paxManPosition;
-        Vector2 middleDestination = map.PositionToTile(paxmanPosition + (targetDirection * tileDistance * 2)).Position;//<--- Change this / dos al frente de pac man
+        Vector2 middleDestination = map.PositionToTile(paxmanPosition + (targetDirection * tileDistance * paxManOffsetToCalcuclateChase)).Position;
 
         Vector2 blinkyTilePosition = map.PositionToTile(gameManager.GameData.blinkyPosition).Position;
 
-        Tile target = map.PositionToTile((middleDestination - blinkyTilePosition) * 2);//<--- Change this / el doble de la distancia
+        Tile target = map.PositionToTile((middleDestination - blinkyTilePosition) * distanceMuliplier);
         target = ia.pathFinding.GetNearestValidTile(target, transform.position);
         return target;
     }

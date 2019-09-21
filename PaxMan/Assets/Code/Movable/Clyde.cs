@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Clyde : Ghost
 {
+    public uint targetRadius;
+
     public override void Start()
     {
         base.Start();
@@ -15,7 +17,7 @@ public class Clyde : Ghost
 
     public override bool FindPaxMan()
     {
-        if (!IsPaxManInsideRadius(transform.position, 8))//<---- change this
+        if (!IsPaxManInsideRadius(transform.position, targetRadius))
         {
             if (map.IsPaxManVisible(transform.position))
             {

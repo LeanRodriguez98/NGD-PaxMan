@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Pinky : Ghost
 {
+
+    public uint paxManOffsetToCalcuclateChase;
+
     public override void Start()
     {
         base.Start();
@@ -18,7 +21,7 @@ public class Pinky : Ghost
         if (map.IsPaxManVisible(transform.position))
         {
             ia.fsm.SendEvent((int)Flags.onSeePaxMan);
-            ia.currentPath = ia.pathFinding.GetPath(map.PositionToTile(transform.position),TileToGo(4));//<---- Change this
+            ia.currentPath = ia.pathFinding.GetPath(map.PositionToTile(transform.position),TileToGo(paxManOffsetToCalcuclateChase));
             ia.pathStepIndex = -1;
             return true;
         }

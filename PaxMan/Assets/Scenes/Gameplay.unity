@@ -18502,6 +18502,7 @@ MonoBehaviour:
   scaredPatron:
     scaredTime: 10
     isScared: 0
+  paxManOffsetToCalcuclateChase: 4
 --- !u!61 &376081982
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -29021,6 +29022,7 @@ MonoBehaviour:
   scaredPatron:
     scaredTime: 10
     isScared: 0
+  targetRadius: 8
 --- !u!1 &1210738596
 GameObject:
   m_ObjectHideFlags: 0
@@ -38489,6 +38491,9 @@ MonoBehaviour:
   scaredPatron:
     scaredTime: 10
     isScared: 0
+  targetRadius: 12
+  paxManOffsetToCalcuclateChase: 2
+  distanceMuliplier: 2
 --- !u!61 &1789962500
 BoxCollider2D:
   m_ObjectHideFlags: 0
