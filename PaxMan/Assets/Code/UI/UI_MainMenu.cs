@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class UI_MainMenu : MonoBehaviour
@@ -27,12 +28,13 @@ public class UI_MainMenu : MonoBehaviour
     public RectTransform selector;
     public MenuOptions[] menuOptions;
     private uint selectorIndex;
-
+    public SO_ScoreData scoreData;
+    public Text highScoreDisplayText;
     public GameObject mainMenuPanel;
     public GameObject creditsPanel;
     public GameObject creditsPanelSelectPoint;
-
     private DisplayedPanel displayedPanel;
+    private const string gamePlaySceneName = "Gameplay";
     void Start()
     {
         selector.transform.SetParent(menuOptions[0].selectPoint.transform);
@@ -41,6 +43,9 @@ public class UI_MainMenu : MonoBehaviour
         displayedPanel = DisplayedPanel.mainMenu;
         mainMenuPanel.SetActive(true);
         creditsPanel.SetActive(false);
+        SerializeSystem.LoadGame(scoreData);
+        scoreData.currentScore = 0;
+        UpdateHighscoreDisplay();
     }
 
     void Update()
@@ -89,12 +94,16 @@ public class UI_MainMenu : MonoBehaviour
                 break;
         }
 
-
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            scoreData.highScore = 0;
+            UpdateHighscoreDisplay();
+        }
     }
 
     public void Play()
     {
-        SceneManager.LoadScene("Gameplay");
+        SceneManager.LoadScene(gamePlaySceneName);
     }
 
     public void ShowCredits()
@@ -113,5 +122,11 @@ public class UI_MainMenu : MonoBehaviour
         selector.localPosition = Vector3.zero;
         mainMenuPanel.SetActive(true);
         creditsPanel.SetActive(false);
+    }
+
+    private void UpdateHighscoreDisplay()
+    {
+        highScoreDisplayText.text = "Current highscore: " + scoreData.highScore.ToString("00000") + " \nPress 'X' to reset";
+        SerializeSystem.SaveGame(scoreData);
     }
 }

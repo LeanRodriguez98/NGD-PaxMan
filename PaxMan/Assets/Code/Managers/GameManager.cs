@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -33,6 +34,7 @@ public class GameManager : MonoBehaviour
     private PaxMan player;
     private Blinky blinky;
     private Ghost[] ghosts;
+    private const string mainMenuSceneName = "MainMenu";
     public GlobalGameData GameData
     {
         get { return globalGameData; }
@@ -70,10 +72,9 @@ public class GameManager : MonoBehaviour
     {
         if (dotCount >= (map.smallDots.Count + map.bigDots.Count))
         {
-            Time.timeScale = 0;
             scoreData.currentScore = (int)points;
             SerializeSystem.SaveGame(scoreData);
-            Debug.Log("Win");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
@@ -192,8 +193,7 @@ public class GameManager : MonoBehaviour
         {
             scoreData.currentScore = 0;
             SerializeSystem.SaveGame(scoreData);
-            Time.timeScale = 0;
-            Debug.Log("GameOver");
+            SceneManager.LoadScene(mainMenuSceneName);
         }
     }
 
