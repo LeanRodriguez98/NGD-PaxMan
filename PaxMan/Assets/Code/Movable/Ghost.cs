@@ -65,7 +65,7 @@ public class Ghost : MobileEntity
     public struct ScaredPatron
     {
         public float scaredTime;
-        [Range(0.0f,1.0f)] public float scaredPorcentualSpeed;
+        [Range(0.0f, 1.0f)] public float scaredPorcentualSpeed;
         [HideInInspector] public bool isScared;
     }
 
@@ -159,50 +159,57 @@ public class Ghost : MobileEntity
     {
         float iterations;
         float currentSpeed;
-        while (canMove)
+        while (true)
         {
-            if (ia.currentPath.Count >= 2)
+            if (canMove)
             {
-                ia.currentPosition = ia.currentPath[ia.pathStepIndex];
-                ia.destinationPosition = ia.currentPath[ia.pathStepIndex + 1];
-                Reset(out currentSpeed, out iterations);
-                while (IsEqualToPosition(ia.destinationPosition))
+
+                if (ia.currentPath.Count >= 2)
                 {
-                    MoveOnTile(ia.currentPosition, ia.destinationPosition, iterations, currentSpeed);
-                    if (ia.fsm.GetState() != (int)States.panic)
-                        iterations++;
-                    else
+                    ia.currentPosition = ia.currentPath[ia.pathStepIndex];
+                    ia.destinationPosition = ia.currentPath[ia.pathStepIndex + 1];
+                    SetMovementSettings(out currentSpeed, out iterations);
+                    while (IsEqualToPosition(ia.destinationPosition))
                     {
-                        if ((Vector2)transform.position == ia.currentPosition)
+                        MoveOnTile(ia.currentPosition, ia.destinationPosition, iterations, currentSpeed);
+                        if (ia.fsm.GetState() != (int)States.panic)
+                            iterations++;
+                        else
                         {
-                            UpdatePath();
-                            break;
+                            if ((Vector2)transform.position == ia.currentPosition)
+                            {
+                                UpdatePath();
+                                break;
+                            }
+                            iterations--;
                         }
-                        iterations--;
+                        yield return new WaitForFixedUpdate();
                     }
-                    yield return new WaitForFixedUpdate();
+
                 }
+                NewTileVerifications();
 
-            }
-            NewTileVerifications();
-
-            try // <----- remove this
-            {
-                if (ia.currentPath.Count - 1 < 0)
+                try // <----- remove this
                 {
-                    throw new System.Exception();
+                    if (ia.currentPath.Count - 1 < 0)
+                    {
+                        throw new System.Exception();
+                    }
+                    if (ia.destinationPosition == ia.currentPath[ia.currentPath.Count - 1])
+                        UpdatePath();
+                    else
+                        ia.pathStepIndex++;
                 }
-                if (ia.destinationPosition == ia.currentPath[ia.currentPath.Count - 1])
-                    UpdatePath();
-                else
-                    ia.pathStepIndex++;
+                catch (System.Exception)
+                {
+                    Debug.Log(ia.currentPath.Count);
+                    throw;
+                }
             }
-            catch (System.Exception)
+            else
             {
-                Debug.Log(ia.currentPath.Count);
-                throw;
+                yield return new WaitForFixedUpdate();
             }
-
         }
     }
 
@@ -419,7 +426,7 @@ public class Ghost : MobileEntity
                 ia.fsm.SendEvent((int)Flags.onDead);
                 dead = true;
                 GoToHome();
-                gameManager.OnGhostIsEaten(transform.position);
+                gameManager.OnGhostIsEaten(this);
             }
         }
     }

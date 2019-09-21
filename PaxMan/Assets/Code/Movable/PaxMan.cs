@@ -10,7 +10,6 @@ public class PaxMan : MobileEntity
     {
         public float powerDuration;
         [Range(0.0f, 1.0f)] public float poweredPorcentualSpeed;
-
     }
 
     public uint lifes;
@@ -63,34 +62,41 @@ public class PaxMan : MobileEntity
     {
         float iterations;
         float currentSpeed;
-        while (canMove)
+        while (true)
         {
-            Reset(out currentSpeed, out iterations);
-            while (IsEqualToPosition(destinationTile.Position))
+            if (canMove)
             {
-                MoveOnTile(currentTile.Position, destinationTile.Position, iterations, currentSpeed);
-                iterations++;
+                SetMovementSettings(out currentSpeed, out iterations);
+                while (IsEqualToPosition(destinationTile.Position))
+                {
+                    MoveOnTile(currentTile.Position, destinationTile.Position, iterations, currentSpeed);
+                    iterations++;
+                    yield return new WaitForFixedUpdate();
+                }
+                currentTile = destinationTile;
+                do
+                {
+                    if (map.GetNextTile(currentTile, movement) != null)
+                    {
+                        destinationTile = map.GetNextTile(currentTile, movement);
+                        previousMovement = movement;
+                    }
+                    else
+                    {
+                        destinationTile = map.GetNextTile(currentTile, previousMovement);
+                        movement = previousMovement;
+                    }
+                    UpdateAnimations();
+                    if (destinationTile == null)
+                        yield return new WaitForFixedUpdate();
+                } while (destinationTile == null);
+
+                CheckWarpZone(currentTile);
+            }
+            else
+            {
                 yield return new WaitForFixedUpdate();
             }
-            currentTile = destinationTile;
-            do
-            {
-                if (map.GetNextTile(currentTile, movement) != null)
-                {
-                    destinationTile = map.GetNextTile(currentTile, movement);
-                    previousMovement = movement;
-                }
-                else
-                {
-                    destinationTile = map.GetNextTile(currentTile, previousMovement);
-                    movement = previousMovement;
-                }
-                UpdateAnimations();
-                if (destinationTile == null)
-                    yield return new WaitForFixedUpdate();
-            } while (destinationTile == null);
-
-            CheckWarpZone(currentTile);
         }
     }
 

@@ -14,18 +14,21 @@ public class MobileEntity : MonoBehaviour
     public MovementSettings movementSettings;
     protected Map map;
     protected GameManager gameManager;
-    protected bool canMove = true;
+    protected bool canMove;
     protected bool dead;
     protected float defaultPorcentuslSpeed;
+    private SpriteRenderer spriteRenderer;
 
     public virtual void Start()
     {
         map = Map.instance;
         gameManager = GameManager.instance;
         defaultPorcentuslSpeed = movementSettings.porcentualSpeed;
+        canMove = true;
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    protected void Reset(out float _currentSpeed, out float _itarations)
+    protected void SetMovementSettings(out float _currentSpeed, out float _itarations)
     {
         if (movementSettings.speed > movementSettings.maxSpeed)
             movementSettings.speed = movementSettings.maxSpeed;
@@ -51,5 +54,29 @@ public class MobileEntity : MonoBehaviour
         {
             transform.position = map.GetWarpDestination(_currentTile);
         }
+    }
+
+    public void PauseMovement(float _duration)
+    {
+        canMove = false;
+        CancelInvoke("ReasumeMovement");
+        Invoke("ReasumeMovement", _duration);
+    }
+
+    public void ReasumeMovement()
+    {
+        canMove = true;
+    }
+
+    public void TurnOffSprite(float _duration)
+    {
+        spriteRenderer.enabled = false;
+        CancelInvoke("TurnOnSprite");
+        Invoke("TurnOnSprite", _duration);
+    }
+
+    public void TurnOnSprite()
+    {
+        spriteRenderer.enabled = true;
     }
 }

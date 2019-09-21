@@ -197,13 +197,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void OnGhostIsEaten(Vector2 _position)
+    public void OnGhostIsEaten(Ghost _ghost)
     {
         points += ghostPoints.eatGhostPointsValue;
-        GameObject popUpText = Instantiate(ghostPoints.popUpTextPrefab, _position, Quaternion.identity);
-        popUpText.GetComponent<UI_PopUpText>().DisplayText(ghostPoints.eatGhostPointsValue.ToString(), _position, ghostPoints.popUpTextDuration);
+        GameObject popUpText = Instantiate(ghostPoints.popUpTextPrefab, _ghost.transform.position, Quaternion.identity);
+        popUpText.GetComponent<UI_PopUpText>().DisplayText(ghostPoints.eatGhostPointsValue.ToString(), _ghost.transform.position, ghostPoints.popUpTextDuration);
         ghostPoints.eatGhostPointsValue *= ghostPoints.eatGhostPointsMultiplier;
         canvasManager.UpdateScore(points);
         CheckUpdateHighScore();
+        player.PauseMovement(1.5f);
+        foreach (Ghost ghost in ghosts)
+        {
+            ghost.PauseMovement(1.5f);
+        }
+        player.TurnOffSprite(1.5f);
+        _ghost.TurnOffSprite(1.5f);
     }
 }
