@@ -97,7 +97,7 @@ public class Ghost : MobileEntity
 
     [Tooltip("You can see the nodes ID checking the \"Show nodes ID\" toggle on the Map script")]
     public uint StartPositionNodeID;
-    protected IA ia;
+    /*protected*/ public IA ia;
     public Sprites sprites;
     public OnHomePatron homePatron;
     public PatrolPatron patrolPatron;
@@ -122,7 +122,7 @@ public class Ghost : MobileEntity
         ia.pathStepIndex = 0;
         ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position), map.IdToNode(homePatron.startPositionNodeID));
         sprites.spriteRenderer = GetComponent<SpriteRenderer>();
-        SetDefaultSprite();
+        sprites.spriteRenderer.sprite = sprites.defaultSprite;
         ia.fsm.SetState((int)States.idle);
         dead = false;
         StartCoroutine(Movement());
@@ -259,27 +259,38 @@ public class Ghost : MobileEntity
         {
             case (int)States.idle:
                 Idle();
+                ia.pathStepIndex = 0;
+
                 break;
             case (int)States.leaveingHome:
                 LeavingHome();
+                ia.pathStepIndex = 0;
+
                 break;
             case (int)States.patrol:
                 Patrol();
+                ia.pathStepIndex = 0;
+
                 break;
             case (int)States.goToScatter:
                 GoToScatter();
+                ia.pathStepIndex = 0;
+
                 break;
             case (int)States.scatter:
                 Scatter();
+                ia.pathStepIndex = 0;
+
                 break;
             case (int)States.panic:
                 Panic();
                 break;
             case (int)States.chase:
                 Chase();
+                ia.pathStepIndex = 0;
+
                 break;
         }
-        ia.pathStepIndex = 0;
     }
 
     private void Idle()
@@ -368,6 +379,10 @@ public class Ghost : MobileEntity
     {
         ia.pathFinding.IgnoreNode(map.PositionToNode(transform.position + (Vector3)(ia.destinationPosition - ia.currentPosition)));
         ia.currentPath = ia.pathFinding.GetPath(map.PositionToNode(transform.position + (Vector3)(ia.destinationPosition - ia.currentPosition)), map.PositionToNode(ia.currentPath[0]));
+        if (ia.currentPath.Count == 2)
+        {
+            ;
+        }
         ia.pathStepIndex = -1;
         sprites.spriteRenderer.sprite = sprites.scaredSprite;
         CancelInvoke("SetDefaultSprite");
@@ -378,7 +393,10 @@ public class Ghost : MobileEntity
 
     public void SetDefaultSprite()
     {
-        sprites.spriteRenderer.sprite = sprites.defaultSprite;
+        if (sprites.spriteRenderer.sprite == sprites.scaredSprite)
+        {
+            sprites.spriteRenderer.sprite = sprites.defaultSprite;
+        }
         scaredPatron.isScared = false;
     }
 
@@ -405,7 +423,6 @@ public class Ghost : MobileEntity
                 ia.fsm.SendEvent((int)Flags.onDead);
                 dead = true;
                 GoToHome();
-                Debug.Log(gameObject.name + " Dead");
             }
         }
     }
@@ -416,6 +433,8 @@ public class Ghost : MobileEntity
         ia.currentPath.Insert(0, (Vector2)transform.position);
         ia.pathStepIndex = 0;
         sprites.spriteRenderer.sprite = sprites.deadSprite;
+        scaredPatron.isScared = false;
+
     }
 
     public virtual void Update()
@@ -424,12 +443,21 @@ public class Ghost : MobileEntity
             ia.fsm.SendEvent((int)Flags.onOpenDoor);
 
         if (Input.GetKeyDown(KeyCode.M))
-            ia.fsm.SendEvent((int)Flags.onPanic);
+            if (!scaredPatron.isScared)
+                ia.fsm.SendEvent((int)Flags.onPanic);
     }
 
     public void SetPanic()
     {
-        ia.fsm.SendEvent((int)Flags.onPanic);
+        if (!scaredPatron.isScared)
+        {
+            ia.fsm.SendEvent((int)Flags.onPanic);
+        }
+        else
+        {
+            CancelInvoke("SetDefaultSprite");
+            Invoke("SetDefaultSprite", scaredPatron.scaredTime);
+        }
     }
 
     public void LeaveHose()
