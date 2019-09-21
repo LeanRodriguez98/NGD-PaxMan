@@ -15,10 +15,10 @@ public class PathFinding
         closedTiles = new List<Tile>();
     }
 
-    public void IgnoreTile(Tile n)
+    public void IgnoreTile(Tile _tile)
     {
-        n.CloseTile();
-        closedTiles.Add(n);
+        _tile.CloseTile();
+        closedTiles.Add(_tile);
     }
 
     public List<Vector2> GetPath(Tile _startTile, Tile _destinationTile)
@@ -40,12 +40,12 @@ public class PathFinding
         openTiles.Add(startTile);
         while (openTiles.Count > 0)
         {
-            Tile n = GetNearestTile(destinationTile, openTiles);
-            if (n == destinationTile)
+            Tile tile = GetNearestTile(destinationTile, openTiles);
+            if (tile == destinationTile)
             {
                 List<Tile> tilePath = new List<Tile>();
-                tilePath.Add(n);
-                tilePath = GeneratePath(tilePath, n);
+                tilePath.Add(tile);
+                tilePath = GeneratePath(tilePath, tile);
 
                 List<Vector2> path = new List<Vector2>();
                 for (int i = 0; i < tilePath.Count; i++)
@@ -61,18 +61,18 @@ public class PathFinding
                 ResetTiles();
                 return path;
             }
-            n.CloseTile();
-            openTiles.Remove(n);
-            closedTiles.Add(n);
-            for (int i = 0; i < n.Adjacents.Count; i++)
+            tile.CloseTile();
+            openTiles.Remove(tile);
+            closedTiles.Add(tile);
+            for (int i = 0; i < tile.Adjacents.Count; i++)
             {
-                if (map.tiles[n.Adjacents[i]].GetState() == Tile.TileStates.Ready)
+                if (map.tiles[tile.Adjacents[i]].GetState() == Tile.TileStates.Ready)
                 {
-                    if (!map.tiles[n.Adjacents[i]].IsObstacle)
+                    if (!map.tiles[tile.Adjacents[i]].IsObstacle)
                     {
-                        map.tiles[n.Adjacents[i]].OpenTile(n);
+                        map.tiles[tile.Adjacents[i]].OpenTile(tile);
 
-                        openTiles.Add(map.tiles[n.Adjacents[i]]);
+                        openTiles.Add(map.tiles[tile.Adjacents[i]]);
                     }
                 }
             }
@@ -96,31 +96,31 @@ public class PathFinding
         }
         closedTiles.Clear();
     }
-    private List<Tile> GeneratePath(List<Tile> list, Tile n)
+    private List<Tile> GeneratePath(List<Tile> _list, Tile _tile)
     {
-        if (n.ParentTile != null)
+        if (_tile.ParentTile != null)
         {
-            list.Add(n.ParentTile);
-            GeneratePath(list, n.ParentTile);
+            _list.Add(_tile.ParentTile);
+            GeneratePath(_list, _tile.ParentTile);
         }
-        list.Reverse();
-        return list;
+        _list.Reverse();
+        return _list;
     }
 
     public Tile GetNearestTile(Tile _currentTile, List<Tile> _targets)
     {
-        Tile n = null;
+        Tile tile = null;
         uint currentMinDistance = int.MaxValue;
         for (int i = 0; i < _targets.Count; i++)
         {
             uint manhattanDistance = ManhattanDistance(_currentTile.Position, _targets[i].Position);
             if (manhattanDistance < currentMinDistance)
             {
-                n = _targets[i];
+                tile = _targets[i];
                 currentMinDistance = manhattanDistance;
             }
         }
-        return n;
+        return tile;
     }
 
     public Tile GetNearestValidTile(Tile _target, Vector2 _currentPosition)
@@ -139,16 +139,16 @@ public class PathFinding
         }
         return null;
     }
-    public uint ManhattanDistance(Vector2 origin, Vector2 destination)
+    public uint ManhattanDistance(Vector2 _origin, Vector2 _destination)
     {
-        origin.x /= map.horizontalTileDistance;
-        destination.x /= map.horizontalTileDistance;
+        _origin.x /= map.horizontalTileDistance;
+        _destination.x /= map.horizontalTileDistance;
 
-        origin.y /= map.verticalTileDistance;
-        destination.y /= map.verticalTileDistance;
+        _origin.y /= map.verticalTileDistance;
+        _destination.y /= map.verticalTileDistance;
 
-        uint x = (uint)Mathf.Abs(origin.x - destination.x);
-        uint y = (uint)Mathf.Abs(origin.y - destination.y);
+        uint x = (uint)Mathf.Abs(_origin.x - _destination.x);
+        uint y = (uint)Mathf.Abs(_origin.y - _destination.y);
 
          return x + y;
     }

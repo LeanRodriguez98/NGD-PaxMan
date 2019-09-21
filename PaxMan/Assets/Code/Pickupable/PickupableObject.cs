@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PickupableObject : MonoBehaviour
 {
@@ -12,12 +10,12 @@ public class PickupableObject : MonoBehaviour
         pickUpZone = GetComponent<Collider2D>();
     }
 
-    public bool CheckIsPickUped(Transform transform)
+    public bool CheckIsPickUped(Transform _transform)
     {
         if (pickUpZone == null)
             SetCollider();
 
-        if (pickUpZone.OverlapPoint(transform.position))
+        if (pickUpZone.OverlapPoint(_transform.position))
             return true;
         return false;
     }

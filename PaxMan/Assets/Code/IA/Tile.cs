@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 [System.Serializable]
 public class Tile
@@ -91,15 +90,15 @@ public class Tile
         return tileState;
     }
 
-    public void AddConection(Tile tile, List<Tile> list)
+    public void AddConection(Tile _tile, List<Tile> _list)
     {
         if (adjacentsIndex == null)
         {
             adjacentsIndex = new List<int>();
         }
-        for (int i = 0; i < list.Count; i++)
+        for (int i = 0; i < _list.Count; i++)
         {
-            if (list[i] == tile)
+            if (_list[i] == _tile)
             {
                 adjacentsIndex.Add(i);
                 return;
@@ -113,11 +112,11 @@ public class Tile
             tileState = TileStates.Open;
     }
 
-    public void OpenTile(Tile tile)
+    public void OpenTile(Tile _tile)
     {
         if (!IsObstacle && !used)
         {
-            parentTile = tile;
+            parentTile = _tile;
             tileState = TileStates.Open;
         }
     }

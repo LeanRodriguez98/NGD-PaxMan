@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -25,14 +23,18 @@ public class UI_MainMenu : MonoBehaviour
         public Options menuOptions;
     }
 
-    public RectTransform selector;
     public MenuOptions[] menuOptions;
+    public RectTransform selector;
     private uint selectorIndex;
+    [Space(10)]
     public SO_ScoreData scoreData;
+    [Space(10)]
     public Text highScoreDisplayText;
+    [Space(10)]
     public GameObject mainMenuPanel;
     public GameObject creditsPanel;
     public GameObject creditsPanelSelectPoint;
+
     private DisplayedPanel displayedPanel;
     private const string gamePlaySceneName = "Gameplay";
     void Start()

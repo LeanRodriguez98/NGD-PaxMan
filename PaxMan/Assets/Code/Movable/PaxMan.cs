@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 public class PaxMan : MobileEntity
@@ -11,16 +9,20 @@ public class PaxMan : MobileEntity
         public float powerDuration;
         [Range(0.0f, 1.0f)] public float poweredPorcentualSpeed;
     }
-
-    public uint lifes;
-    public uint startTileId;
+    [Space(10)]
     public PowerSettings powerSettings;
+    [Space(10)]
+    public uint lifes;
+    [Space(10)]
+    public uint startTileId;
+
     private Vector2 movement;
     private Vector2 previousMovement;
     private Animator animator;
     private Tile currentTile;
     private Tile destinationTile;
     private bool powered;
+
     private const string animationHorizontalTriggerName = "Horizontal";
     private const string animationVerticalTriggerName = "Vertical";
     private const string animationIdleTriggerName = "Idle";
@@ -104,10 +106,6 @@ public class PaxMan : MobileEntity
     void Update()
     {
         InputMovement();
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            EnablePower();
-        }
     }
 
     public void EnablePower()
@@ -152,11 +150,11 @@ public class PaxMan : MobileEntity
     }
 
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D _collision)
     {
-        if (!powered && !dead && collision.gameObject.CompareTag(ghostTag))
+        if (!powered && !dead && _collision.gameObject.CompareTag(ghostTag))
         {
-            BoxCollider2D collider2D = collision.gameObject.GetComponent<BoxCollider2D>();
+            BoxCollider2D collider2D = _collision.gameObject.GetComponent<BoxCollider2D>();
             if (collider2D.bounds.Contains(transform.position))
             {
                 gameManager.StopAllGameCorrutines();
@@ -166,7 +164,7 @@ public class PaxMan : MobileEntity
         }
     }
 
-    // This function are be called by a animation event.
+    // This function are be called by a animation event in the dead animation of PaxMan
     // AE = Animation Event
     public void AE_Dead()
     {

@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Inky : Ghost
 {
 
+    [Space(10)]
     public uint targetRadius;
     public uint paxManOffsetToCalcuclateChase;
     public int distanceMuliplier;
@@ -12,10 +11,7 @@ public class Inky : Ghost
     {
         base.Start();
     }
-    public override void Update()
-    {
-        base.Update();
-    }
+
 
     public override bool FindPaxMan()
     {

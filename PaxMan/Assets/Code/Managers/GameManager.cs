@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -23,11 +21,17 @@ public class GameManager : MonoBehaviour
     }
 
     public static GameManager instance;
-    public int[] dotsToSpawnCherry;
+    [Space(10)]
+    public int[] dotsNesesatyToSpawnCherry;
+    [Space(10)]
     public GhostPoints ghostPoints;
+    [Space(10)]
     public SO_ScoreData scoreData;
+    [Space(10)]
     public float gameOverSignDuration;
+
     [HideInInspector] public bool gameOver;
+
     private uint points;
     private uint dotCount;
     private GlobalGameData globalGameData;
@@ -36,6 +40,7 @@ public class GameManager : MonoBehaviour
     private PaxMan player;
     private Blinky blinky;
     private Ghost[] ghosts;
+
     private const string mainMenuSceneName = "MainMenu";
     public GlobalGameData GameData
     {
@@ -69,6 +74,8 @@ public class GameManager : MonoBehaviour
         CheckCollisions();
         UpdateGlobalGameData();
         CheckVictory();
+        if (Input.GetKeyDown(KeyCode.X))
+            BackToMainMenu();
     }
 
     private void CheckVictory()
@@ -142,9 +149,9 @@ public class GameManager : MonoBehaviour
 
     private void CheckSpawnCherry()
     {
-        for (int i = 0; i < dotsToSpawnCherry.Length; i++)
+        for (int i = 0; i < dotsNesesatyToSpawnCherry.Length; i++)
         {
-            if (dotsToSpawnCherry[i] == dotCount)
+            if (dotsNesesatyToSpawnCherry[i] == dotCount)
             {
                 map.EnableCherry();
             }

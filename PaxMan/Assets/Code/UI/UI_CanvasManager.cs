@@ -5,10 +5,14 @@ public class UI_CanvasManager : MonoBehaviour
 {
 
     public static UI_CanvasManager instance;
+
     public Text scorePoints;
     public Text highScorePoints;
+    [Space(10)]
     public GameObject[] lifesIcons;
+    [Space(10)]
     public GameObject[] cherrysIcons;
+    [Space(10)]
     public GameObject gameOverSign;
     private void Awake()
     {

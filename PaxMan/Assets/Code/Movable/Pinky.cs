@@ -1,20 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Pinky : Ghost
 {
-
+    [Space(10)]
     public uint paxManOffsetToCalcuclateChase;
 
     public override void Start()
     {
         base.Start();
     }
-    public override void Update()
-    {
-        base.Update();
-    }
+   
 
     public override bool FindPaxMan()
     {
