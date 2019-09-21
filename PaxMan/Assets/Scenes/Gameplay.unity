@@ -29083,7 +29083,7 @@ MonoBehaviour:
     maxSpeed: 20
     speed: 10
     porcentualSpeed: 0.8
-  lifes: 5
+  lifes: 3
   startNodeId: 704
 --- !u!212 &1108523030
 SpriteRenderer:
@@ -37275,7 +37275,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scorePoints: {fileID: 1246062915}
   highScorePoints: {fileID: 0}
-  lifesIcons: []
+  lifesIcons:
+  - {fileID: 18716734}
+  - {fileID: 1870412186}
   cherrysIcons:
   - {fileID: 1781113691}
   - {fileID: 518458134}

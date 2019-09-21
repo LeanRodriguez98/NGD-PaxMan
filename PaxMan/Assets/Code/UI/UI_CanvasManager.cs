@@ -22,11 +22,6 @@ public class UI_CanvasManager : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        
-    }
-
     public void UpdateScore(uint _score)
     {
         scorePoints.text = _score.ToString("0000");
@@ -39,6 +34,18 @@ public class UI_CanvasManager : MonoBehaviour
             if (!cherrysIcons[i].activeSelf)
             {
                 cherrysIcons[i].SetActive(true);
+                return;
+            }
+        }
+    }
+
+    public void RemoveOneLifeIcon()
+    {
+        for (int i = 0; i < lifesIcons.Length; i++)
+        {
+            if (lifesIcons[i].activeSelf)
+            {
+                lifesIcons[i].SetActive(false);
                 return;
             }
         }

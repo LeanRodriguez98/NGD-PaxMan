@@ -153,6 +153,7 @@ public class PaxMan : MobileEntity
     // AE = Animation Event
     public void AE_Dead()
     {
+        lifes--;
         gameManager.OnDeadPaxMan();
         animator.SetTrigger("Restart");
     }

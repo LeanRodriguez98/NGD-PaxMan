@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     {
         get { return globalGameData; }
     }
-        
+
 
     private void Awake()
     {
@@ -147,10 +147,20 @@ public class GameManager : MonoBehaviour
 
     public void OnDeadPaxMan()
     {
-        player.InitMovement();
-        foreach (Ghost ghost in ghosts)
+        if (player.lifes > 0)
         {
-            ghost.StartIA();
+            player.InitMovement();
+            foreach (Ghost ghost in ghosts)
+            {
+                ghost.StartIA();
+            }
+            CheckGhostLeaving();
+            canvasManager.RemoveOneLifeIcon();
+        }
+        else
+        {
+            Time.timeScale = 0;
+            Debug.Log("GameOver");
         }
     }
 
