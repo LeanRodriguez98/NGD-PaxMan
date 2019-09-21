@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     public uint points;
     public int[] dotsToSpawnCherry;
     public GhostPoints ghostPoints;
-    public SO_HighScore highScoreData;
+    public SO_ScoreData scoreData;
     private GlobalGameData globalGameData;
     private Map map;
     private UI_CanvasManager canvasManager;
@@ -50,16 +50,31 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60;
         map = Map.instance;
         canvasManager = UI_CanvasManager.instance;
-        SerializeSystem.LoadGame(highScoreData);
-        canvasManager.UpdateHighScore((uint)highScoreData.highScorePoints);
+        SerializeSystem.LoadGame(scoreData);
+        points = (uint)scoreData.currentScore;
+        canvasManager.UpdateScore(points);
+        canvasManager.UpdateHighScore((uint)scoreData.highScore);
         player = FindObjectOfType<PaxMan>();
         blinky = FindObjectOfType<Blinky>();
         ghosts = FindObjectsOfType<Ghost>();
+
     }
     void Update()
     {
         CheckCollisions();
         UpdateGlobalGameData();
+        CheckVictory();
+    }
+
+    private void CheckVictory()
+    {
+        if (dotCount >= (map.smallDots.Count + map.bigDots.Count))
+        {
+            Time.timeScale = 0;
+            scoreData.currentScore = (int)points;
+            SerializeSystem.SaveGame(scoreData);
+            Debug.Log("Win");
+        }
     }
 
     private void UpdateGlobalGameData()
@@ -114,10 +129,10 @@ public class GameManager : MonoBehaviour
 
     private void CheckUpdateHighScore()
     {
-        if (points > highScoreData.highScorePoints)
+        if (points > scoreData.highScore)
         {
             canvasManager.UpdateHighScore(points);
-            highScoreData.highScorePoints = (int)points;
+            scoreData.highScore = (int)points;
         }
     }
 
@@ -175,7 +190,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            SerializeSystem.SaveGame(highScoreData);
+            scoreData.currentScore = 0;
+            SerializeSystem.SaveGame(scoreData);
             Time.timeScale = 0;
             Debug.Log("GameOver");
         }

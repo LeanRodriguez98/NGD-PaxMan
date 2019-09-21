@@ -44051,7 +44051,7 @@ MonoBehaviour:
     eatGhostPointsValue: 200
     eatGhostPointsMultiplier: 2
     popUpTextDuration: 1.5
-  highScoreData: {fileID: 11400000, guid: d07b85346d4034c4792081f43e49c9a5, type: 2}
+  scoreData: {fileID: 11400000, guid: d07b85346d4034c4792081f43e49c9a5, type: 2}
 --- !u!4 &1982107645
 Transform:
   m_ObjectHideFlags: 0
