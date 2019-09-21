@@ -9,6 +9,7 @@ public class UI_CanvasManager : MonoBehaviour
     public Text highScorePoints;
     public GameObject[] lifesIcons;
     public GameObject[] cherrysIcons;
+    public GameObject gameOverSign;
     private void Awake()
     {
         instance = this;
@@ -20,6 +21,7 @@ public class UI_CanvasManager : MonoBehaviour
         {
             cherrys.SetActive(false);
         }
+        gameOverSign.SetActive(false);
     }
 
     public void UpdateScore(uint _score)
@@ -54,5 +56,10 @@ public class UI_CanvasManager : MonoBehaviour
                 return;
             }
         }
+    }
+
+    public void ShowGameOverSign()
+    {
+        gameOverSign.SetActive(true);
     }
 }

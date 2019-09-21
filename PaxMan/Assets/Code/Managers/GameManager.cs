@@ -23,11 +23,13 @@ public class GameManager : MonoBehaviour
     }
 
     public static GameManager instance;
-    public uint dotCount;
-    public uint points;
     public int[] dotsToSpawnCherry;
     public GhostPoints ghostPoints;
     public SO_ScoreData scoreData;
+    public float gameOverSignDuration;
+    [HideInInspector] public bool gameOver;
+    private uint points;
+    private uint dotCount;
     private GlobalGameData globalGameData;
     private Map map;
     private UI_CanvasManager canvasManager;
@@ -59,6 +61,7 @@ public class GameManager : MonoBehaviour
         player = FindObjectOfType<PaxMan>();
         blinky = FindObjectOfType<Blinky>();
         ghosts = FindObjectsOfType<Ghost>();
+        gameOver = false;
 
     }
     void Update()
@@ -193,8 +196,16 @@ public class GameManager : MonoBehaviour
         {
             scoreData.currentScore = 0;
             SerializeSystem.SaveGame(scoreData);
-            SceneManager.LoadScene(mainMenuSceneName);
+            gameOver = true;
+            canvasManager.ShowGameOverSign();
+            player.TurnOffSprite();
+            Invoke("BackToMainMenu", gameOverSignDuration);
         }
+    }
+
+    public void BackToMainMenu()
+    {
+        SceneManager.LoadScene(mainMenuSceneName);
     }
 
     public void OnGhostIsEaten(Ghost _ghost)
@@ -205,12 +216,12 @@ public class GameManager : MonoBehaviour
         ghostPoints.eatGhostPointsValue *= ghostPoints.eatGhostPointsMultiplier;
         canvasManager.UpdateScore(points);
         CheckUpdateHighScore();
-        player.PauseMovement(1.5f);
+        player.PauseMovement(ghostPoints.popUpTextDuration);
         foreach (Ghost ghost in ghosts)
         {
-            ghost.PauseMovement(1.5f);
+            ghost.PauseMovement(ghostPoints.popUpTextDuration);
         }
-        player.TurnOffSprite(1.5f);
-        _ghost.TurnOffSprite(1.5f);
+        player.TurnOffSprite(ghostPoints.popUpTextDuration);
+        _ghost.TurnOffSprite(ghostPoints.popUpTextDuration);
     }
 }

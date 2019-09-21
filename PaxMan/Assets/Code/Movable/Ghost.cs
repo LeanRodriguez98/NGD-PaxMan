@@ -159,7 +159,7 @@ public class Ghost : MobileEntity
     {
         float iterations;
         float currentSpeed;
-        while (true)
+        while (!gameManager.gameOver)
         {
             if (canMove)
             {

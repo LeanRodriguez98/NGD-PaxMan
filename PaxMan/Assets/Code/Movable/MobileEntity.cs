@@ -56,6 +56,10 @@ public class MobileEntity : MonoBehaviour
         }
     }
 
+    public void PauseMovement()
+    {
+        canMove = false;
+    }
     public void PauseMovement(float _duration)
     {
         canMove = false;
@@ -63,11 +67,15 @@ public class MobileEntity : MonoBehaviour
         Invoke("ReasumeMovement", _duration);
     }
 
-    public void ReasumeMovement()
+    private void ReasumeMovement()
     {
         canMove = true;
     }
 
+    public void TurnOffSprite()
+    {
+        spriteRenderer.enabled = false;
+    }
     public void TurnOffSprite(float _duration)
     {
         spriteRenderer.enabled = false;
@@ -75,7 +83,7 @@ public class MobileEntity : MonoBehaviour
         Invoke("TurnOnSprite", _duration);
     }
 
-    public void TurnOnSprite()
+    private void TurnOnSprite()
     {
         spriteRenderer.enabled = true;
     }

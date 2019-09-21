@@ -62,7 +62,7 @@ public class PaxMan : MobileEntity
     {
         float iterations;
         float currentSpeed;
-        while (true)
+        while (!gameManager.gameOver)
         {
             if (canMove)
             {
@@ -91,7 +91,7 @@ public class PaxMan : MobileEntity
                         yield return new WaitForFixedUpdate();
                 } while (destinationTile == null);
 
-                CheckWarpZone(currentTile);
+                CheckWarpZone(currentTile); 
             }
             else
             {

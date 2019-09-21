@@ -126,7 +126,7 @@ public class UI_MainMenu : MonoBehaviour
 
     private void UpdateHighscoreDisplay()
     {
-        highScoreDisplayText.text = "Current highscore: " + scoreData.highScore.ToString("00000") + " \nPress 'X' to reset";
+        highScoreDisplayText.text = "Current highscore " + scoreData.highScore.ToString("00000") + " \nPress 'X' to reset them";
         SerializeSystem.SaveGame(scoreData);
     }
 }
