@@ -16,14 +16,14 @@ public class Pinky : Ghost
         if (map.IsPaxManVisible(transform.position))
         {
             ia.fsm.SendEvent((int)Flags.onSeePaxMan);
-            ia.currentPath = ia.pathFinding.GetPath(map.PositionToTile(transform.position),TileToGo(paxManOffsetToCalcuclateChase));
+            ia.currentPath = ia.pathFinding.GetPath(map.PositionToTile(transform.position), GetDestinationTile(paxManOffsetToCalcuclateChase));
             ia.pathStepIndex = -1;
             return true;
         }
         return false;
     }
 
-    private Tile TileToGo(uint _maxDistance)
+    private Tile GetDestinationTile(uint _maxDistance)
     {
         float tileDistance = 0.0f;
         Vector2 targetDirection = Vector2.zero;

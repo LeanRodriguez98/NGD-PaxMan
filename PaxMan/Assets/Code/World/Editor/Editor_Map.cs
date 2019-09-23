@@ -130,10 +130,10 @@ public class Editor_Map : Editor
             map.drawTileID = EditorGUILayout.Toggle("Draw Tile ID", map.drawTileID);
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
-            map.drawTilesType = EditorGUILayout.Toggle("Draw Type Tiles", map.drawTilesType);
+            map.drawTilesType = EditorGUILayout.Toggle("Draw Tiles Type", map.drawTilesType);
             if (map.drawTilesType)
                 map.drawTilesConections = false;
-            map.drawTilesConections = EditorGUILayout.Toggle("Draw Connection Tiles", map.drawTilesConections);
+            map.drawTilesConections = EditorGUILayout.Toggle("Draw Tiles Connection", map.drawTilesConections);
             if (map.drawTilesConections)
                 map.drawTilesType = false;
             EditorGUILayout.EndHorizontal();

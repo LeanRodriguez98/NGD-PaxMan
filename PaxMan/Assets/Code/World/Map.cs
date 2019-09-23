@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -47,7 +46,6 @@ public class Map : MonoBehaviour
     public List<Tile> tiles = new List<Tile>();
     public GameObject SmallDotPrefab;
     public GameObject BigDotPrefab;
-
     public PickupableObject cherrys;
     public List<float> cherrysDuration = new List<float>();
 
@@ -58,22 +56,26 @@ public class Map : MonoBehaviour
     public TypeColor tileTypeColors;
     public bool drawTilesConections;
     public ConectionColors tileConectionsColors;
-    private string[] lines;
     public float horizontalTileDistance;
     public float verticalTileDistance;
+    private string[] lines;
 
     public List<WarpZone> warpZones = new List<WarpZone>();
-
     public List<PickupableObject> smallDots = new List<PickupableObject>();
     public List<PickupableObject> bigDots = new List<PickupableObject>();
 
+    private const string mapFilePath = "Assets/Data/map.txt";
+    private const char obstacleTile = 'x';
+    private const char voidTile = ' ';
+    private const char samllDotTile = '.';
+    private const char bigDotTile = 'o';
     private void Awake()
     {
         instance = this;
     }
     void Start()
     {
-        if (tiles == null)
+        if (tiles.Count == 0)
         {
             InitMap();
             Debug.LogWarning("The map was inited in ejecuton, plase use the \"Init Map\" button in this object", this.gameObject);
@@ -83,7 +85,7 @@ public class Map : MonoBehaviour
     public void InitMap()
     {
         ClearMap();
-        if (InitMapFile("Assets/Data/map.txt", out lines))
+        if (InitMapFile(mapFilePath, out lines))
         {
             GenerateMap(lines);
         }
@@ -169,15 +171,15 @@ public class Map : MonoBehaviour
         {
             switch (tile.CharFile)
             {
-                case 'x':
+                case obstacleTile:
                     tile.IsObstacle = true;
                     break;
-                case '.':
+                case samllDotTile:
                     PickupableObject smallDot = Instantiate(SmallDotPrefab, tile.Position, Quaternion.identity, smallDotsParent.transform).GetComponent<PickupableObject>();
                     smallDot.SetCollider();
                     smallDots.Add(smallDot);
                     break;
-                case 'o':
+                case bigDotTile:
                     PickupableObject bigDot = Instantiate(BigDotPrefab, tile.Position, Quaternion.identity, bigDotsParent.transform).GetComponent<PickupableObject>();
                     bigDot.SetCollider();
                     bigDots.Add(bigDot);
@@ -254,10 +256,10 @@ public class Map : MonoBehaviour
     public Tile GetNextTile(Tile _currentTile, Vector2 _direction)
     {
 
-        if (horizontalTileDistance == 0)
-            horizontalTileDistance = gameArea.width / divisions.x;
-        if (verticalTileDistance == 0)
-            verticalTileDistance = gameArea.height / divisions.y;
+        if (horizontalTileDistance == 0)                            // <--- Change this, make property
+            horizontalTileDistance = gameArea.width / divisions.x;  // <--- Change this, make property
+        if (verticalTileDistance == 0)                              // <--- Change this, make property
+            verticalTileDistance = gameArea.height / divisions.y;   // <--- Change this, make property
 
         _direction *= new Vector2(horizontalTileDistance, verticalTileDistance);
 
@@ -276,11 +278,11 @@ public class Map : MonoBehaviour
     {
         for (int i = 0; i < warpZones.Count; i++)
         {
-            if (_currentTile.Position == warpZones[i].warpTileA.Position)
+            if (_currentTile.Index == warpZones[i].warpTileA.Index)
             {
                 return warpZones[i].warpTileB;
             }
-            else if (_currentTile.Position == warpZones[i].warpTileB.Position)
+            else if (_currentTile.Index == warpZones[i].warpTileB.Index)
             {
                 return warpZones[i].warpTileA;
             }
@@ -292,7 +294,7 @@ public class Map : MonoBehaviour
     {
         for (int i = 0; i < warpZones.Count; i++)
         {
-            if (_currentTile.Position == warpZones[i].warpTileA.Position || _currentTile.Position == warpZones[i].warpTileB.Position)
+            if (_currentTile.Index == warpZones[i].warpTileA.Index || _currentTile.Index == warpZones[i].warpTileB.Index)
             {
                 return true;
             }
@@ -304,11 +306,11 @@ public class Map : MonoBehaviour
     {
         for (int i = 0; i < warpZones.Count; i++)
         {
-            if (_currentTile.Position == warpZones[i].warpTileA.Position)
+            if (_currentTile.Index == warpZones[i].warpTileA.Index)
             {
                 return warpZones[i].warpTileB.Position;
             }
-            else if (_currentTile.Position == warpZones[i].warpTileB.Position)
+            else if (_currentTile.Index == warpZones[i].warpTileB.Index)
             {
                 return warpZones[i].warpTileA.Position;
             }
@@ -350,7 +352,7 @@ public class Map : MonoBehaviour
         {
             iterations++;
             auxTile = tiles[currentTile.Index + iterations];
-            if (paxManTile.Position == auxTile.Position)
+            if (paxManTile.Index == auxTile.Index)
                 return true;
         }
 
@@ -361,7 +363,7 @@ public class Map : MonoBehaviour
         {
             iterations--;
             auxTile = tiles[currentTile.Index + iterations];
-            if (paxManTile.Position == auxTile.Position)
+            if (paxManTile.Index == auxTile.Index)
                 return true;
         }
 
@@ -372,7 +374,7 @@ public class Map : MonoBehaviour
         {
             iterations += divisions.x;
             auxTile = tiles[currentTile.Index + iterations];
-            if (paxManTile.Position == auxTile.Position)
+            if (paxManTile.Index == auxTile.Index)
                 return true;
         }
 
@@ -383,7 +385,7 @@ public class Map : MonoBehaviour
         {
             iterations -= divisions.x;
             auxTile = tiles[currentTile.Index + iterations];
-            if (paxManTile.Position == auxTile.Position)
+            if (paxManTile.Index == auxTile.Index)
                 return true;
         }
 
@@ -431,19 +433,19 @@ public class Map : MonoBehaviour
             {
                 foreach (Tile tile in tiles)
                 {
-                    if (tile.CharFile == 'x')
+                    if (tile.CharFile == obstacleTile)
                     {
                         Gizmos.color = tileTypeColors.obstacleTileColor;
                     }
-                    else if (tile.CharFile == '.')
+                    else if (tile.CharFile == samllDotTile)
                     {
                         Gizmos.color = tileTypeColors.smallDotTileColor;
                     }
-                    else if (tile.CharFile == 'o')
+                    else if (tile.CharFile == bigDotTile)
                     {
                         Gizmos.color = tileTypeColors.bigDotTileColor;
                     }
-                    else if (tile.CharFile == ' ')
+                    else if (tile.CharFile == voidTile)
                     {
                         Gizmos.color = tileTypeColors.emptyTileColor;
                     }
