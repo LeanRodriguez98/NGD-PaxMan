@@ -13,6 +13,7 @@ public class UI_CanvasManager : MonoBehaviour
     [Space(10)]
     public GameObject[] cherrysIcons;
     [Space(10)]
+    public GameObject readySing;
     public GameObject gameOverSign;
     private void Awake()
     {
@@ -65,5 +66,10 @@ public class UI_CanvasManager : MonoBehaviour
     public void ShowGameOverSign()
     {
         gameOverSign.SetActive(true);
+    }
+
+    public void TurnOffReadySign()
+    {
+        readySing.SetActive(false);
     }
 }

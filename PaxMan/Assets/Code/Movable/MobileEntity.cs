@@ -22,7 +22,7 @@ public class MobileEntity : MonoBehaviour
         map = Map.instance;
         gameManager = GameManager.instance;
         defaultPorcentuslSpeed = movementSettings.porcentualSpeed;
-        canMove = true;
+        canMove = false;
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -65,7 +65,7 @@ public class MobileEntity : MonoBehaviour
         Invoke("ReasumeMovement", _duration);
     }
 
-    private void ReasumeMovement()
+    public void ReasumeMovement()
     {
         canMove = true;
     }

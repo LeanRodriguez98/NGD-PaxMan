@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     [Space(10)]
     public SO_ScoreData scoreData;
     [Space(10)]
+    public float readySignDuration;
     public float gameOverSignDuration;
 
     [HideInInspector] public bool gameOver;
@@ -40,7 +41,7 @@ public class GameManager : MonoBehaviour
     private PaxMan player;
     private Blinky blinky;
     private Ghost[] ghosts;
-
+    private bool initedGame;
     private const string mainMenuSceneName = "MainMenu";
     public GlobalGameData GameData
     {
@@ -52,6 +53,7 @@ public class GameManager : MonoBehaviour
     {
         if (instance == null)
             instance = this;
+
     }
 
     void Start()
@@ -67,17 +69,36 @@ public class GameManager : MonoBehaviour
         blinky = FindObjectOfType<Blinky>();
         ghosts = FindObjectsOfType<Ghost>();
         gameOver = false;
-
+        initedGame = false;
+        InitGame();
     }
     void Update()
     {
-        CheckCollisions();
-        UpdateGlobalGameData();
-        CheckVictory();
-        if (Input.GetKeyDown(KeyCode.X))
-            BackToMainMenu();
+        if (initedGame)
+        {
+            CheckCollisions();
+            UpdateGlobalGameData();
+            CheckVictory();
+            if (Input.GetKeyDown(KeyCode.X))
+                BackToMainMenu();
+        }
     }
 
+    private void InitGame()
+    {
+        player.Invoke("ReasumeMovement", readySignDuration);
+        foreach (Ghost ghost in ghosts)
+        {
+            ghost.Invoke("ReasumeMovement", readySignDuration);
+        }
+        canvasManager.Invoke("TurnOffReadySign", readySignDuration);
+        Invoke("GameStart", readySignDuration);
+    }
+
+    private void GameStart()
+    {
+        initedGame = true;
+    }
     private void CheckVictory()
     {
         if (dotCount >= (map.smallDots.Count + map.bigDots.Count))
