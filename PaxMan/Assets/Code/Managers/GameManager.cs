@@ -201,8 +201,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            scoreData.currentScore = 0;
-            SerializeSystem.SaveGame(scoreData);
             gameOver = true;
             canvasManager.ShowGameOverSign();
             player.TurnOffSprite();
@@ -212,6 +210,8 @@ public class GameManager : MonoBehaviour
 
     public void BackToMainMenu()
     {
+        scoreData.currentScore = 0;
+        SerializeSystem.SaveGame(scoreData);
         SceneManager.LoadScene(mainMenuSceneName);
     }
 
