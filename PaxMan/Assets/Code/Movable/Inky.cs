@@ -31,12 +31,12 @@ public class Inky : Ghost
         Vector2 targetDirection = Vector2.zero;
         if (gameManager.GameData.paxManDirection.x != 0.0f)
         {
-            tileDistance = map.horizontalTileDistance * gameManager.GameData.paxManDirection.x;
+            tileDistance = map.HorizontalTileDistance * gameManager.GameData.paxManDirection.x;
             targetDirection = Vector2.right;
         }
         else if (gameManager.GameData.paxManDirection.y != 0.0f)
         {
-            tileDistance = map.verticalTileDistance * gameManager.GameData.paxManDirection.y;
+            tileDistance = map.VerticalTileDistance * gameManager.GameData.paxManDirection.y;
             targetDirection = Vector2.up;
         }
 

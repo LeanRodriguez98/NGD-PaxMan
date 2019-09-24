@@ -3,16 +3,16 @@ using UnityEngine;
 [System.Serializable]
 public class Tile
 {
-    [SerializeField] private List<int> adjacentsIndex;
     [SerializeField] private Vector2 position;
-    [SerializeField] private TileStates tileState;
-    [SerializeField] private TileStates originalState;
-    [SerializeField] private bool isObstacle;
-    [SerializeField] private Tile parentTile;
-    [SerializeField] private bool used;
-    [SerializeField] private char charFile;
-    [SerializeField] private Rect area;
     [SerializeField] private uint index;
+    [SerializeField] [HideInInspector] private List<int> adjacentsIndex;
+    [SerializeField] [HideInInspector] private TileStates tileState;
+    [SerializeField] [HideInInspector] private TileStates originalState;
+    [SerializeField] [HideInInspector] private bool isObstacle;
+    [SerializeField] [HideInInspector] private Tile parentTile;
+    [SerializeField] [HideInInspector] private bool used;
+    [SerializeField] [HideInInspector] private char charFile;
+    [SerializeField] [HideInInspector] private Rect area;
     public List<int> Adjacents
     {
         get {

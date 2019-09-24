@@ -56,8 +56,8 @@ public class Map : MonoBehaviour
     public TypeColor tileTypeColors;
     public bool drawTilesConections;
     public ConectionColors tileConectionsColors;
-    public float horizontalTileDistance;
-    public float verticalTileDistance;
+    private float horizontalTileDistance;
+    private float verticalTileDistance;
     private string[] lines;
 
     public List<WarpZone> warpZones = new List<WarpZone>();
@@ -136,11 +136,25 @@ public class Map : MonoBehaviour
         }
         return true;
     }
+    public float HorizontalTileDistance
+    {
+        get {
+            if (horizontalTileDistance == 0)                            
+                horizontalTileDistance = gameArea.width / divisions.x;
+            return horizontalTileDistance; }
+    }
 
+    public float VerticalTileDistance
+    {
+        get
+        {
+            if (verticalTileDistance == 0)
+                verticalTileDistance = gameArea.height / divisions.y;
+            return verticalTileDistance;
+        }
+    }
     public void GenerateMap(string[] _lines)
     {
-        horizontalTileDistance = gameArea.width / divisions.x;
-        verticalTileDistance = gameArea.height / divisions.y;
         uint iterations = 0;
         for (int y = 0; y < _lines.Length; y++)
         {
@@ -148,11 +162,11 @@ public class Map : MonoBehaviour
             for (int x = 0; x < line.Length; x++)
             {
                 Vector2 tilePosition;
-                tilePosition.x = gameArea.xMin + (x * horizontalTileDistance) + (horizontalTileDistance / 2.0f);
-                tilePosition.y = gameArea.yMax - (y * verticalTileDistance) - (verticalTileDistance / 2.0f);
+                tilePosition.x = gameArea.xMin + (x * HorizontalTileDistance) + (HorizontalTileDistance / 2.0f);
+                tilePosition.y = gameArea.yMax - (y * VerticalTileDistance) - (VerticalTileDistance / 2.0f);
                 bool isObstacle = false;
                 char charFile = line[x];
-                Rect area = new Rect(new Vector2(gameArea.xMin + (x * horizontalTileDistance), gameArea.yMax - (y * verticalTileDistance) - verticalTileDistance), new Vector2(horizontalTileDistance, verticalTileDistance));
+                Rect area = new Rect(new Vector2(gameArea.xMin + (x * HorizontalTileDistance), gameArea.yMax - (y * VerticalTileDistance) - VerticalTileDistance), new Vector2(HorizontalTileDistance, VerticalTileDistance));
                 tiles.Add(new Tile(tilePosition, Tile.TileStates.Ready, isObstacle, area, iterations, charFile));
                 iterations++;
             }
@@ -204,8 +218,8 @@ public class Map : MonoBehaviour
     }
     public void ConectTiles()
     {
-        Vector2 rightDistance = new Vector2(horizontalTileDistance, 0.0f);
-        Vector2 upDistance = new Vector2(0.0f, verticalTileDistance);
+        Vector2 rightDistance = new Vector2(HorizontalTileDistance, 0.0f);
+        Vector2 upDistance = new Vector2(0.0f, VerticalTileDistance);
 
         foreach (Tile currentTile in tiles)
         {
@@ -255,13 +269,7 @@ public class Map : MonoBehaviour
 
     public Tile GetNextTile(Tile _currentTile, Vector2 _direction)
     {
-
-        if (horizontalTileDistance == 0)                            // <--- Change this, make property
-            horizontalTileDistance = gameArea.width / divisions.x;  // <--- Change this, make property
-        if (verticalTileDistance == 0)                              // <--- Change this, make property
-            verticalTileDistance = gameArea.height / divisions.y;   // <--- Change this, make property
-
-        _direction *= new Vector2(horizontalTileDistance, verticalTileDistance);
+        _direction *= new Vector2(HorizontalTileDistance, VerticalTileDistance);
 
         for (int i = 0; i < _currentTile.Adjacents.Count; i++)
         {

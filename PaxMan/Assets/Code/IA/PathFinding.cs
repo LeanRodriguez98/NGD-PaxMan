@@ -141,11 +141,11 @@ public class PathFinding
     }
     public uint ManhattanDistance(Vector2 _origin, Vector2 _destination)
     {
-        _origin.x /= map.horizontalTileDistance;
-        _destination.x /= map.horizontalTileDistance;
+        _origin.x /= map.HorizontalTileDistance;
+        _destination.x /= map.HorizontalTileDistance;
 
-        _origin.y /= map.verticalTileDistance;
-        _destination.y /= map.verticalTileDistance;
+        _origin.y /= map.VerticalTileDistance;
+        _destination.y /= map.VerticalTileDistance;
 
         uint x = (uint)Mathf.Abs(_origin.x - _destination.x);
         uint y = (uint)Mathf.Abs(_origin.y - _destination.y);
