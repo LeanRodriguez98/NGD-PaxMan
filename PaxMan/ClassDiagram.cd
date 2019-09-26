@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FSM" Collapsed="true">
+    <Position X="2.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABEAAAAAAAAAIIAAACAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Assets\Code\IA\FSM.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IA" Collapsed="true">
+    <Position X="2.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAACAAAAAABACIAAAAAAAAg=</HashCode>
+      <FileName>Assets\Code\IA\IA.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="pathFinding" />
+      <Field Name="fsm" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PathFinding" Collapsed="true">
+    <Position X="0.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEEAAAAgAgAAIAAAAAAAAAAACAAAQAQAAAABQCIA=</HashCode>
+      <FileName>Assets\Code\IA\PathFinding.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameManager" Collapsed="true">
+    <Position X="13.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQEGAGAACACAUAQwAUAQAABAAFAACSBgEQAgAggAsg=</HashCode>
+      <FileName>Assets\Code\Managers\GameManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Blinky" Collapsed="true">
+    <Position X="11.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Code\Movable\Blinky.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Clyde" Collapsed="true">
+    <Position X="5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAEAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Code\Movable\Clyde.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ghost" Collapsed="true">
+    <Position X="8.5" Y="7.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Ghost.States" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Code\Movable\Ghost.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Ghost.Flags" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Code\Movable\Ghost.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Struct Name="Ghost.OnHomePatron" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Code\Movable\Ghost.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="Ghost.PatrolPatron" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Code\Movable\Ghost.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="Ghost.ScatterPatron" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Code\Movable\Ghost.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="Ghost.ScaredPatron" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Code\Movable\Ghost.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="Ghost.Sprites" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Code\Movable\Ghost.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>CABARkFAACBAA4AEFgAAQAAAAAAKAgASAAAAQAGAAAQ=</HashCode>
+      <FileName>Assets\Code\Movable\Ghost.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="ia" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Inky" Collapsed="true">
+    <Position X="9.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAGAAAAAASAAAAAEAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Code\Movable\Inky.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MobileEntity" Collapsed="true">
+    <Position X="9.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ANAAUAAAACEgACACAAAgAAACQgAABAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Code\Movable\MobileEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PaxMan" Collapsed="true">
+    <Position X="13.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>JAQQKEAQECDEAAAgBCgAAAQAAAoAAEAgAQIAAAAECAQ=</HashCode>
+      <FileName>Assets\Code\Movable\PaxMan.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinky" Collapsed="true">
+    <Position X="7.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAASAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Code\Movable\Pinky.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PickupableObject" Collapsed="true">
+    <Position X="13.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAIgAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Code\Pickupable\PickupableObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SO_ScoreData" Collapsed="true">
+    <Position X="17.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Code\ScriptableObjects\SO_ScoreData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SerializeSystem" Collapsed="true">
+    <Position X="15.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Assets\Code\Systems\SerializeSystem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UI_CanvasManager" Collapsed="true">
+    <Position X="5" Y="4.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>BQAAAEIAACgAAAAAABAAAAAoAABAAEAAAAAAAAAAANA=</HashCode>
+      <FileName>Assets\Code\UI\UI_CanvasManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="instance" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UI_MainMenu" Collapsed="true">
+    <Position X="15.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAQIgACAACAAAQAAAAAAAgAACQAQgAAIgEBAAAAAAAA=</HashCode>
+      <FileName>Assets\Code\UI\UI_MainMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UI_PopUpText" Collapsed="true">
+    <Position X="17.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Code\UI\UI_PopUpText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Map" Collapsed="true">
+    <Position X="13" Y="4" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="Map.ConectionColors" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Code\World\Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="Map.TypeColor" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Code\World\Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Class Name="Map.WarpZone" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Code\World\Map.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>igIEAAAAASAEAQAiIAFAEVCAOyLwADAEHIAAgDQBEEI=</HashCode>
+      <FileName>Assets\Code\World\Map.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="instance" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="tiles" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Tile" Collapsed="true">
+    <Position X="15.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAEAAIAMQAAAhAAABIAAAEAIAADAAAAEBUQQBABE=</HashCode>
+      <FileName>Assets\Code\World\Tile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
