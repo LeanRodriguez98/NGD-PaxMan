@@ -14,8 +14,8 @@
       <FileName>Assets\Code\IA\IA.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="pathFinding" />
       <Field Name="fsm" />
+      <Field Name="pathFinding" />
     </ShowAsAssociation>
   </Class>
   <Class Name="PathFinding" Collapsed="true">
@@ -26,14 +26,40 @@
     </TypeIdentifier>
   </Class>
   <Class Name="GameManager" Collapsed="true">
-    <Position X="13.75" Y="0.5" Width="1.5" />
+    <Position X="9" Y="2.25" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="GameManager.GlobalGameData" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Code\Managers\GameManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="GameManager.GhostPoints" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Code\Managers\GameManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
     <TypeIdentifier>
       <HashCode>AAQEGAGAACACAUAQwAUAQAABAAFAACSBgEQAgAggAsg=</HashCode>
       <FileName>Assets\Code\Managers\GameManager.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="canvasManager" />
+      <Field Name="map" />
+      <Field Name="instance" />
+      <Field Name="scoreData" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="Blinky" Collapsed="true">
     <Position X="11.75" Y="10" Width="1.5" />
+    <InheritanceLine Type="Ghost" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="9" Y="8.191" />
+        <Point X="9" Y="9.567" />
+        <Point X="12.5" Y="9.567" />
+        <Point X="12.5" Y="10" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Assets\Code\Movable\Blinky.cs</FileName>
@@ -41,13 +67,21 @@
   </Class>
   <Class Name="Clyde" Collapsed="true">
     <Position X="5" Y="10" Width="1.5" />
+    <InheritanceLine Type="Ghost" FixedFromPoint="true">
+      <Path>
+        <Point X="8" Y="8.191" />
+        <Point X="8" Y="9.625" />
+        <Point X="5.75" Y="9.625" />
+        <Point X="5.75" Y="10" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAEAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Assets\Code\Movable\Clyde.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Ghost" Collapsed="true">
-    <Position X="8.5" Y="7.5" Width="1.5" />
+    <Position X="7.75" Y="7.5" Width="1.5" />
     <NestedTypes>
       <Enum Name="Ghost.States" Collapsed="true">
         <TypeIdentifier>
@@ -85,6 +119,14 @@
         </TypeIdentifier>
       </Struct>
     </NestedTypes>
+    <InheritanceLine Type="MobileEntity" FixedFromPoint="true">
+      <Path>
+        <Point X="10" Y="6.691" />
+        <Point X="10" Y="7.125" />
+        <Point X="8.5" Y="7.125" />
+        <Point X="8.5" Y="7.5" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>CABARkFAACBAA4AEFgAAQAAAAAAKAgASAAAAQAGAAAQ=</HashCode>
       <FileName>Assets\Code\Movable\Ghost.cs</FileName>
@@ -95,6 +137,14 @@
   </Class>
   <Class Name="Inky" Collapsed="true">
     <Position X="9.5" Y="10" Width="1.5" />
+    <InheritanceLine Type="Ghost" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="8.688" Y="8.191" />
+        <Point X="8.688" Y="9.748" />
+        <Point X="10.25" Y="9.748" />
+        <Point X="10.25" Y="10" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAGAAAAAASAAAAAEAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Assets\Code\Movable\Inky.cs</FileName>
@@ -102,13 +152,32 @@
   </Class>
   <Class Name="MobileEntity" Collapsed="true">
     <Position X="9.5" Y="6" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="MobileEntity.MovementSettings" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Code\Movable\MobileEntity.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
     <TypeIdentifier>
       <HashCode>ANAAUAAAACEgACACAAAgAAACQgAABAAIAAAAAAAAAAA=</HashCode>
       <FileName>Assets\Code\Movable\MobileEntity.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="gameManager" />
+      <Field Name="map" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="PaxMan" Collapsed="true">
     <Position X="13.25" Y="7.5" Width="1.5" />
+    <InheritanceLine Type="MobileEntity" FixedFromPoint="true">
+      <Path>
+        <Point X="10.5" Y="6.691" />
+        <Point X="10.5" Y="7.125" />
+        <Point X="14" Y="7.125" />
+        <Point X="14" Y="7.5" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>JAQQKEAQECDEAAAgBCgAAAQAAAoAAEAgAQIAAAAECAQ=</HashCode>
       <FileName>Assets\Code\Movable\PaxMan.cs</FileName>
@@ -116,34 +185,35 @@
   </Class>
   <Class Name="Pinky" Collapsed="true">
     <Position X="7.25" Y="10" Width="1.5" />
+    <InheritanceLine Type="Ghost" ManuallyRouted="true" FixedFromPoint="true">
+      <Path>
+        <Point X="8.375" Y="8.191" />
+        <Point X="8.375" Y="9.74" />
+        <Point X="8" Y="9.74" />
+        <Point X="8" Y="10" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AACAAAAAASAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Assets\Code\Movable\Pinky.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="PickupableObject" Collapsed="true">
-    <Position X="13.75" Y="1.5" Width="1.5" />
+    <Position X="15.25" Y="5.25" Width="3.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAEAAAAIgAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
       <FileName>Assets\Code\Pickupable\PickupableObject.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SO_ScoreData" Collapsed="true">
-    <Position X="17.25" Y="1.5" Width="1.5" />
+    <Position X="7" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Assets\Code\ScriptableObjects\SO_ScoreData.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SerializeSystem" Collapsed="true">
-    <Position X="15.5" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
-      <FileName>Assets\Code\Systems\SerializeSystem.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="UI_CanvasManager" Collapsed="true">
-    <Position X="5" Y="4.5" Width="2.25" />
+    <Position X="4" Y="3.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>BQAAAEIAACgAAAAAABAAAAAoAABAAEAAAAAAAAAAANA=</HashCode>
       <FileName>Assets\Code\UI\UI_CanvasManager.cs</FileName>
@@ -152,22 +222,8 @@
       <Field Name="instance" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="UI_MainMenu" Collapsed="true">
-    <Position X="15.5" Y="2.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>IAQIgACAACAAAQAAAAAAAgAACQAQgAAIgEBAAAAAAAA=</HashCode>
-      <FileName>Assets\Code\UI\UI_MainMenu.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="UI_PopUpText" Collapsed="true">
-    <Position X="17.25" Y="2.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAABAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Assets\Code\UI\UI_PopUpText.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Map" Collapsed="true">
-    <Position X="13" Y="4" Width="1.5" />
+    <Position X="12.75" Y="3.75" Width="1.5" />
     <NestedTypes>
       <Struct Name="Map.ConectionColors" Collapsed="true">
         <TypeIdentifier>
@@ -185,19 +241,30 @@
         </TypeIdentifier>
       </Class>
     </NestedTypes>
+    <AssociationLine Name="tiles" Type="Tile" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="14.062" Y="4.441" />
+        <Point X="14.062" Y="4.953" />
+        <Point X="13.688" Y="4.953" />
+        <Point X="13.688" Y="5.25" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>igIEAAAAASAEAQAiIAFAEVCAOyLwADAEHIAAgDQBEEI=</HashCode>
       <FileName>Assets\Code\World\Map.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="instance" />
+      <Field Name="cherrys" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Field Name="tiles" />
+      <Field Name="bigDots" />
+      <Field Name="smallDots" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Tile" Collapsed="true">
-    <Position X="15.25" Y="4" Width="1.5" />
+    <Position X="13" Y="5.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>BAAAAEAAIAMQAAAhAAABIAAAEAIAADAAAAEBUQQBABE=</HashCode>
       <FileName>Assets\Code\World\Tile.cs</FileName>

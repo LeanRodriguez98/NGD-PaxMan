@@ -13,21 +13,20 @@ public class Ghost : MobileEntity
         scatter = 4,
         chase = 5,
         panic = 6,
-        goToHome = 7,
+        goToBase = 7,
         _count
     }
 
     public enum Flags
     {
-        onStartGame = 0,
-        onIdle = 1,
-        onOpenDoor = 2,
-        onStartPatrol = 3,
-        onGoToScatter = 4,
-        onScatter = 5,
-        onSeePaxMan = 6,
-        onPanic = 7,
-        onDead = 8,
+        onIdle = 0,
+        onOpenDoor = 1,
+        onStartPatrol = 2,
+        onGoToScatter = 3,
+        onScatter = 4,
+        onSeePaxMan = 5,
+        onPanic = 6,
+        onDead = 7,
         _count
     }
 
@@ -129,11 +128,11 @@ public class Ghost : MobileEntity
         ia.fsm.SetRelation((int)States.panic,           (int)Flags.onStartPatrol,   (int)States.patrol);
         ia.fsm.SetRelation((int)States.patrol,          (int)Flags.onSeePaxMan,     (int)States.chase);
         ia.fsm.SetRelation((int)States.chase,           (int)Flags.onStartPatrol,   (int)States.patrol);
-        ia.fsm.SetRelation((int)States.panic,           (int)Flags.onDead,          (int)States.goToHome);
-        ia.fsm.SetRelation((int)States.patrol,          (int)Flags.onDead,          (int)States.goToHome);
-        ia.fsm.SetRelation((int)States.goToScatter,     (int)Flags.onDead,          (int)States.goToHome);
-        ia.fsm.SetRelation((int)States.scatter,         (int)Flags.onDead,          (int)States.goToHome);
-        ia.fsm.SetRelation((int)States.goToHome,        (int)Flags.onIdle,          (int)States.idle);
+        ia.fsm.SetRelation((int)States.panic,           (int)Flags.onDead,          (int)States.goToBase);
+        ia.fsm.SetRelation((int)States.patrol,          (int)Flags.onDead,          (int)States.goToBase);
+        ia.fsm.SetRelation((int)States.goToScatter,     (int)Flags.onDead,          (int)States.goToBase);
+        ia.fsm.SetRelation((int)States.scatter,         (int)Flags.onDead,          (int)States.goToBase);
+        ia.fsm.SetRelation((int)States.goToBase,        (int)Flags.onIdle,          (int)States.idle);
     }
 
     public IEnumerator Movement()
@@ -202,7 +201,7 @@ public class Ghost : MobileEntity
                     FindPaxMan();
                 }
                 break;
-            case (int)States.goToHome:
+            case (int)States.goToBase:
                 if (map.PositionToTile(transform.position).Index == homePatron.startPositionTileID)
                 {
                     ia.fsm.SendEvent((int)Flags.onIdle);
